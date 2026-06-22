@@ -1,0 +1,13 @@
+name: CI Checkout Service
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm install  # ERRO: Sem cache, baixa tudo toda vez
+      - name: Build
+        run: npm run build
+      - name: Run Tests
+        run: npm test

@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nexus-conn-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: tester
+        image: nexus-bot:v1
+        # O segredo: usamos o nome do SERVICE do localstack como hostname
+        command: ["python", "-c", "import boto3, os; url=os.getenv('AWS_ENDPOINT_URL'); s3=boto3.client('s3', endpoint_url=url); print(f'Conectado em {url}!', s3.list_buckets())"]
+        env:
+        - name: AWS_ENDPOINT_URL
+          value: "http://localstack:4566"
+        - name: AWS_ACCESS_KEY_ID
+          value: "test"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "test"
+        - name: AWS_DEFAULT_REGION
+          value: "us-east-1"
+      restartPolicy: Never

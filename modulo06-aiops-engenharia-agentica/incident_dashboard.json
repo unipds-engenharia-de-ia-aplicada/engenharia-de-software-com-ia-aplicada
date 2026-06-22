@@ -1,0 +1,23 @@
+{
+  "title": "Dynamic Incident Dashboard: Disk Saturation",
+  "panels": [
+    {
+      "title": "Disk Usage Prediction",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "node_filesystem_avail_bytes"
+        }
+      ]
+    },
+    {
+      "title": "Error Rate Spike",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{status='500'}[5m])"
+        }
+      ]
+    }
+  ]
+}

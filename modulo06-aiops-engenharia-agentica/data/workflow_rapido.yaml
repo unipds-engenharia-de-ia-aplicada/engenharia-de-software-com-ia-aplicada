@@ -1,0 +1,28 @@
+name: CI Checkout Service
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v4
+
+      - name: Cache e Instala Dependências
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Instala Dependências
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Tests
+        run: npm test

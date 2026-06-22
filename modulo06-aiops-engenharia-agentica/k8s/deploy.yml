@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-bot
+  labels:
+    app: nexus-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus-bot
+  template:
+    metadata:
+      labels:
+        app: nexus-bot
+    spec:
+      containers:
+      - name: nexus-bot
+        image: nexus-bot:v1
+        # Crucial para o Minikube não tentar buscar a imagem na internet
+        imagePullPolicy: Never 
+        
+        # Boas práticas de SRE: Limites de recursos
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+
+        env:
+        # Injeção da Chave via Secret
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nexus-secrets
+              key: GROQ_API_KEY
+        
+        # Configurações de Runtime do Python/Mac
+        - name: OBJC_DISABLE_INITIALIZE_FORK_SAFETY
+          value: "YES"
+        - name: PYTHONPATH
+          value: "/app"
+          
+        # Garante que o log apareça em tempo real no kubectl logs
+        - name: PYTHONUNBUFFERED
+          value: "1"
