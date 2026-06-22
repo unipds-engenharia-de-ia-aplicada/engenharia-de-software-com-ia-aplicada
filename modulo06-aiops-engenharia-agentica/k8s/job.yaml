@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nexus-bot-run
+spec:
+  template:
+    spec:
+      containers:
+      - name: nexus-bot
+        image: nexus-bot:v1
+        imagePullPolicy: Never
+        env:
+        - name: GROQ_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nexus-secrets
+              key: GROQ_API_KEY
+        - name: AWS_ENDPOINT_URL
+          value: "http://localstack:4566" # A PONTE AQUI!
+      restartPolicy: OnFailure # Só reinicia se der erro real, não se completar

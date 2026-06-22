@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-ui
+spec:
+  selector:
+    app: nexus-ui
+  ports:
+  - port: 8501
+    targetPort: 8501
+  type: LoadBalancer # Facilita o acesso via túnel no Minikube
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus-ui
+  template:
+    metadata:
+      labels:
+        app: nexus-ui
+    spec:
+      containers:
+      - name: streamlit
+        image: nexus-bot:v1
+        command: ["streamlit", "run", "ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+        ports:
+        - containerPort: 8501
+        env:
+        - name: AWS_ENDPOINT_URL
+          value: "http://localstack:4566"
+        - name: AWS_ACCESS_KEY_ID
+          value: "test"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "test"
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "200m"

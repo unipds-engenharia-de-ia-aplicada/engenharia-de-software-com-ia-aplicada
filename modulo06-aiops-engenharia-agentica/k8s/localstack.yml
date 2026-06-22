@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: localstack
+spec:
+  selector:
+    app: localstack
+  ports:
+  - port: 4566
+    targetPort: 4566
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: localstack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: localstack
+  template:
+    metadata:
+      labels:
+        app: localstack
+    spec:
+      containers:
+      - name: localstack
+        # Usar uma versão específica estável costuma evitar o check de licença Pro
+        image: localstack/localstack:3.0
+        ports:
+        - containerPort: 4566
+        env:
+        - name: SERVICES
+          value: "s3,sqs,iam"
+        - name: DEBUG
+          value: "1"
+        # Garante que ele não tente buscar funcionalidades Pro na inicialização
+        - name: ACTIVATE_PRO
+          value: "0" 
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

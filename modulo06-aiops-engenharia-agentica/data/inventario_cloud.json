@@ -1,0 +1,28 @@
+{
+  "account_id": "123456789012",
+  "region": "us-east-1",
+  "resources": [
+    {
+      "id": "vol-0a1b2c3d",
+      "type": "EBS Volume",
+      "status": "available",
+      "size_gb": 500,
+      "cost_per_month": 50.00,
+      "note": "Not attached to any instance"
+    },
+    {
+      "id": "i-99887766",
+      "type": "EC2 Instance",
+      "instance_type": "m5.4xlarge",
+      "avg_cpu_utilization": "2.5%",
+      "cost_per_month": 340.00,
+      "note": "Extremely overprovisioned"
+    },
+    {
+      "id": "eipalloc-001122",
+      "type": "Elastic IP",
+      "status": "unassociated",
+      "cost_per_month": 5.00
+    }
+  ]
+}
