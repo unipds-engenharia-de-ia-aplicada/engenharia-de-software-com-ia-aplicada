@@ -300,6 +300,45 @@ Projeto em [exemplo-13-embeddings-neo4j-rag/](./modulo01-fundamentos-de-ia-e-llm
 *   [Nx Dev Tools](https://nx.dev) — Sistema de compilação inteligente e monorepo focado na governança de projetos enterprise de grande escala.
 *   [OpenSpec](https://openspec.dev/) — Motor de contratos utilizado para a imposição do padrão BDD e orquestração de microsserviços e testes concorrentes em worktrees.
 
+## Modulo 06 - AI-Ops e Engenharia Agêntica (Nexus)
+
+Projeto completo em [modulo06-aiops-engenharia-agentica](./modulo06-aiops-engenharia-agentica/) — trilha **Nexus AI-Ops** com 12 laboratórios práticos que evoluem de IA consultiva até um ecossistema de agentes autônomos que operam infraestrutura real sob governança.
+
+### Laboratórios (Projetos)
+*   [Módulo 1 — Fundamentos de IA para DevOps](./modulo06-aiops-engenharia-agentica/labs/modulo1_foundation.py) — IA consultiva aplicada a operações.
+*   [Módulo 2 — IaC Copilot & Security Governance](./modulo06-aiops-engenharia-agentica/labs/modulo2_iac_copilot.py) — geração assistida de Terraform HCL com auditoria de conformidade.
+*   [Módulo 3 — Kubernetes AI-Ops](./modulo06-aiops-engenharia-agentica/labs/modulo3_k8s_ops.py) — manifestos blindados, reconciliação declarativa e análise de deploy Canary.
+*   [Módulo 4 — Troubleshooting com ReAct](./modulo06-aiops-engenharia-agentica/labs/modulo4_troubleshooting.py) — investigação de incidentes (CrashLoop/OOMKilled) com Prometheus e Jaeger.
+*   [Módulo 5 — AIOps Preditivo](./modulo06-aiops-engenharia-agentica/labs/modulo5_aiops.py) — linguagem natural para PromQL e previsão de saturação via regressão.
+*   [Módulo 6 — ChatOps e Governança](./modulo06-aiops-engenharia-agentica/labs/modulo6_chatops.py) — operação via chat com Human-in-the-loop.
+*   [Módulo 7 — DevSecOps + AI](./modulo06-aiops-engenharia-agentica/labs/modulo7_devsecops.py) — auditoria de scans Trivy e priorização de CVEs.
+*   [Módulo 8 — CI/CD Copilot](./modulo06-aiops-engenharia-agentica/labs/modulo8_cicd.py) — otimização de workflows do GitHub Actions com cache.
+*   [Módulo 9 — FinOps e Otimização](./modulo06-aiops-engenharia-agentica/labs/modulo9_finops.py) — caça a recursos "zumbis" na nuvem e cálculo de ROI.
+*   [Módulo 10 — RAG de Runbooks](./modulo06-aiops-engenharia-agentica/labs/modulo10_remediation.py) — auto-remediação baseada em documentos corporativos.
+*   [Módulo 11 — Guardrails e Governança](./modulo06-aiops-engenharia-agentica/labs/modulo11_guardrails.py) — pipeline autônomo com aprovação dry-run em linha.
+*   [Módulo 12 — Projeto Final (Orquestração Hierárquica)](./modulo06-aiops-engenharia-agentica/labs/modulo12_projeto_final.py) — incidente multidomínio coordenado pelo Nexus Manager.
+
+### Frameworks & Motores de IA
+*   [CrewAI](https://www.crewai.com/) — orquestração de agentes autônomos em formato hierárquico.
+*   [Groq](https://groq.com/) — inferência de baixa latência dos modelos Llama 3.x (motor central do projeto).
+*   [Ollama](https://ollama.com/) — execução local de modelos open-source.
+*   [Streamlit](https://streamlit.io/) — painéis visuais interativos (CLI e dashboard AI-Ops).
+
+### Observabilidade & AIOps
+*   [Prometheus](https://prometheus.io/) — coleta de métricas e linguagem de consulta PromQL.
+*   [Jaeger](https://www.jaegertracing.io/) — distributed tracing para análise de causa raiz.
+*   [Grafana](https://grafana.com/) — dashboards e visualização de alertas preditivos.
+
+### Segurança & Governança
+*   [Trivy](https://trivy.dev/) — scanner de vulnerabilidades de imagens (ex.: backdoor [CVE-2024-3094](https://avd.aquasec.com/nvd/cve-2024-3094) no pacote XZ).
+*   [Open Policy Agent (OPA)](https://www.openpolicyagent.org/) — validação de políticas de conformidade (HCL Sandbox).
+
+### Infraestrutura & Plataforma
+*   [Kubernetes](https://kubernetes.io/) — orquestração de contêineres e GitOps.
+*   [Terraform](https://www.terraform.io/) — Infraestrutura como Código (HCL) declarativa.
+*   [LocalStack](https://www.localstack.cloud/) — emulação local de serviços AWS (S3 Bucket Explorer).
+*   [GitHub Actions](https://docs.github.com/actions) — pipelines de CI/CD.
+
 ## Resolvendo Problemas Comuns
 
 - [Problemas comuns com **Docker**](./troubleshooting/docker.md)
