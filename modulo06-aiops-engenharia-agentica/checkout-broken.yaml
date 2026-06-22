@@ -1,0 +1,24 @@
+# Cenário inicial QUEBRADO do Módulo 4 (Troubleshooting & Self-Healing).
+# A imagem aponta para uma tag inexistente, levando o Pod a ImagePullBackOff /
+# ErrImagePull ("estado de erro constante"). O Agente SRE deve diagnosticar a
+# causa raiz e o checkout-k8s-fix.yaml aplica a correção (imagem válida + probes).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: checkout-api
+  template:
+    metadata:
+      labels:
+        app: checkout-api
+    spec:
+      containers:
+      - name: checkout-api
+        # ERRO PROPOSITAL: tag de imagem inexistente -> ImagePullBackOff
+        image: nginx:versao-que-nao-existe-999
+        ports:
+        - containerPort: 80

@@ -15,9 +15,9 @@ Este repositório contém os laboratórios práticos da Pós-Graduação em AI-O
 ### Instalação
 
 ```bash
-# Clone o repositório e acesse a pasta
-git clone https://github.com/camilla-m/unipds-youtube.git
-cd unipds-youtube/pos-grad
+# Clone o repositório do curso e acesse a pasta deste módulo
+git clone https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada.git
+cd engenharia-de-software-com-ia-aplicada/modulo06-aiops-engenharia-agentica
 
 # Crie e ative o ambiente virtual (Venv)
 python3 -m venv venv
