@@ -339,6 +339,37 @@ Projeto completo em [modulo06-aiops-engenharia-agentica](./modulo06-aiops-engenh
 *   [LocalStack](https://www.localstack.cloud/) — emulação local de serviços AWS (S3 Bucket Explorer).
 *   [GitHub Actions](https://docs.github.com/actions) — pipelines de CI/CD.
 
+## Modulo 07 - Ferramentas de IA para Gestão de Projetos
+
+Disciplina completa em [modulo07-ferramentas-de-ia-para-gestao-de-projetos](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/) — pipeline de gestão assistida por IA construído sobre um caso único, o **RouteWise** (gestão de frota com 140 veículos), da transcrição de uma reunião de discovery até um portfólio com OKRs validados. Cada módulo entrega um prompt reutilizável, dados de exemplo e atividade prática.
+
+### As 10 ferramentas da disciplina
+*   [Módulo 1 — Requirements Copilot](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-01-planejamento-e-escopo/) — transcrição de reunião → backlog estruturado com User Stories, Gherkin e nível de confiança.
+*   [Módulo 2 — Backlog Scorer](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-02-priorizacao-de-backlog/) — priorização defensável com RICE e WSJF.
+*   [Módulo 3 — Scheduling Prompt](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-03-cronograma-e-capacidade/) — cronograma com dependências e simulações what-if.
+*   [Módulo 4 — Probability Forecast](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-04-estimativas-e-previsoes/) — PERT + Monte Carlo (P50/P85/P95), com scripts JS e Python executáveis.
+*   [Módulo 5 — Risk Monitor](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-05-riscos-e-aiops/) — detecção de anomalias de fluxo antes da Sprint Review.
+*   [Módulo 6 — Meeting Digest](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-06-reunioes-turbinadas/) — reunião → ata, ações com responsável e cards prontos para o Jira.
+*   [Módulo 7 — Status Report](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-07-status-reports/) — o mesmo dado bruto em três relatórios para três audiências.
+*   [Módulo 8 — Compliance Checklist + Danger](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-08-governanca-e-compliance/) — governança como código no pipeline de CI/CD (Danger.js e Python).
+*   [Módulo 9 — NL to Workflow](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-09-automacao-de-ecossistema/) — Slack → Jira com parser de linguagem natural (Make.com sem código ou Node.js).
+*   [Módulo 10 — OKR Aligner](./modulo07-ferramentas-de-ia-para-gestao-de-projetos/modulo-10-portfolio-e-okrs/) — validação de OKRs, alinhamento de backlog e scorecard de portfólio.
+
+### Leituras Recomendadas
+*   [RICE Prioritization Framework](https://www.intercom.com/blog/rice-simple-prioritization-for-product-managers/) — Sean McBride, Intercom. Origem do framework usado no módulo 2.
+*   [WSJF — Weighted Shortest Job First](https://framework.scaledagile.com/wsjf) — Donald Reinertsen / Scaled Agile Framework (SAFe). Base do Custo do Atraso usado no módulo 2.
+*   [MoSCoW Prioritisation](https://www.agilebusiness.org/dsdm-project-framework/moscow-prioritisation.html) — Dai Clegg, DSDM / Agile Business Consortium (1994). Filtro pré-scoring usado no módulo 2.
+*   [PERT — Program Evaluation and Review Technique](https://en.wikipedia.org/wiki/Program_evaluation_and_review_technique) — desenvolvido pela Marinha americana no programa Polaris (1958). Base do módulo 4.
+*   [Planning Fallacy](https://en.wikipedia.org/wiki/Planning_fallacy) — Kahneman & Tversky (1979). Viés cognitivo que justifica a estimativa de três pontos no módulo 4.
+*   [IBM Cost of a Data Breach Report 2025](https://www.ibm.com/reports/data-breach) — dado citado no módulo 8 sobre o ROI de DevSecOps maduro.
+
+### Ferramentas & Plataformas
+*   [Google AI Studio](https://aistudio.google.com/) — engine de todas as demos (system prompts + temperatura calibrada por tarefa).
+*   [Jira Cloud](https://www.atlassian.com/software/jira) — board Scrum do caso RouteWise (import CSV incluído no módulo 1).
+*   [Make.com](https://www.make.com/) — automação sem código Slack → Jira (blueprint importável no módulo 9).
+*   [Danger.js](https://danger.systems/js/) — regras de conformidade automatizadas em Pull Requests.
+*   [Slack API](https://api.slack.com/) — bots, webhooks e notificações de projeto.
+
 ## Resolvendo Problemas Comuns
 
 - [Problemas comuns com **Docker**](./troubleshooting/docker.md)

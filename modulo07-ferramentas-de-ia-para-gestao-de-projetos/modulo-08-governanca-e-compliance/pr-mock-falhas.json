@@ -1,0 +1,22 @@
+{
+  "pr": {
+    "title": "fix: corrige bug de conexao GPS",
+    "body": "corrigido",
+    "additions": 620,
+    "deletions": 15
+  },
+  "changed_files": [
+    "src/integrations/gps/tracker-client.js",
+    "src/integrations/gps/guard-filter.js",
+    "src/api/routes/alerts.js"
+  ],
+  "reviews": [
+    { "author": "dev-junior", "state": "APPROVED" }
+  ],
+  "coverage": {
+    "total": { "lines": { "pct": 72.0 } }
+  },
+  "base_coverage": {
+    "total": { "lines": { "pct": 83.1 } }
+  }
+}

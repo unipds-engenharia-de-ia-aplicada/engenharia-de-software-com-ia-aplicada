@@ -1,0 +1,27 @@
+{
+  "pr": {
+    "title": "ROUTEWISE-42: módulo de alertas de velocidade - integração GPS em produção",
+    "body": "Implementa o módulo de Alertas de Velocidade em tempo real para a release inicial do RouteWise.\n\nModifica a integração com a API de GPS (src/integrations/gps) para ingestão contínua de dados dos 97 rastreadores ativos. O BUG-S4-10 (43 rastreadores v1 sem suporte ao guard de hardware) está isolado: a falha não afeta a API dos 97 funcionais.\n\nTestado em staging com carga de 97 conexões simultâneas.\n\nRelacionado: ROUTEWISE-40 (LGPD - consentimento motoristas), ROUTEWISE-41 (runbook de rollback).",
+    "additions": 312,
+    "deletions": 47
+  },
+  "changed_files": [
+    "src/integrations/gps/tracker-client.js",
+    "src/integrations/gps/guard-filter.js",
+    "src/services/notifications/push-service.js",
+    "src/api/routes/alerts.js",
+    "tests/integrations/gps.test.js",
+    "tests/services/push.test.js",
+    "CHANGELOG.md"
+  ],
+  "reviews": [
+    { "author": "priya-ti", "state": "APPROVED" },
+    { "author": "carlos-ops", "state": "APPROVED" }
+  ],
+  "coverage": {
+    "total": { "lines": { "pct": 81.4 } }
+  },
+  "base_coverage": {
+    "total": { "lines": { "pct": 83.1 } }
+  }
+}

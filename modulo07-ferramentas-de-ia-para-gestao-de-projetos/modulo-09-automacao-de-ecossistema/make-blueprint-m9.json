@@ -1,0 +1,110 @@
+{
+  "name": "NL to Workflow - RouteWise (Modulo 9)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "slack:WatchPublicChannelMessages",
+      "version": 3,
+      "parameters": {
+        "__IMTCONN__": null,
+        "channel": "",
+        "limit": 10
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        },
+        "notes": "Trigger: nova mensagem no canal do projeto. Conecte com o Bot User OAuth Token (xoxb-...) do seu Slack App. Selecione o canal onde o bot foi convidado."
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": {
+        "handleErrors": false
+      },
+      "mapper": {
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=SUA_API_KEY",
+        "method": "post",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "data": "{\"contents\":[{\"parts\":[{\"text\":\"Analise esta mensagem de projeto e retorne APENAS um JSON, sem texto antes ou depois, com: {\\\"type\\\": \\\"Bug|Feature|Decision|Impediment|Status\\\", \\\"title\\\": \\\"titulo curto\\\", \\\"assignee\\\": \\\"nome ou null\\\", \\\"priority\\\": \\\"Low|Medium|High|Critical\\\", \\\"summary\\\": \\\"resumo de 1 linha\\\"}. Mensagem: {{1.text}}\"}]}]}",
+        "parseResponse": true
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        },
+        "notes": "Substitua SUA_API_KEY pela chave de aistudio.google.com -> Get API Key."
+      }
+    },
+    {
+      "id": 3,
+      "module": "json:ParseJSON",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "json": "{{2.data.candidates[].content.parts[].text}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        },
+        "notes": "Faz o parse do JSON retornado pelo Gemini para mapear os campos no Jira."
+      }
+    },
+    {
+      "id": 4,
+      "module": "jira-cloud-platform:createAnIssue",
+      "version": 1,
+      "parameters": {
+        "__IMTCONN__": null
+      },
+      "mapper": {
+        "project": "SEU_PROJETO",
+        "issueType": "Task",
+        "summary": "{{3.title}}",
+        "description": "Criado automaticamente via Slack — canal: {{1.channel}}\n\nResumo: {{3.summary}}\nPrioridade sugerida: {{3.priority}}\nResponsável sugerido: {{3.assignee}}"
+      },
+      "metadata": {
+        "designer": {
+          "x": 900,
+          "y": 0
+        },
+        "notes": "Conecte com URL do seu Jira + email + API Token (id.atlassian.com). Selecione o projeto e ajuste o Issue Type."
+      }
+    }
+  ],
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "notes": [
+      "Blueprint do Modulo 9 - NL to Workflow (UNIPDS). Importe em: Create a new scenario -> menu ... -> Import Blueprint.",
+      "Apos importar: recrie as 2 conexoes (Slack e Jira) e substitua SUA_API_KEY no modulo HTTP.",
+      "Se a importacao falhar na sua versao do Make, siga o passo a passo manual da Opcao A no setup-guide-m9.md - o fluxo e identico."
+    ]
+  }
+}

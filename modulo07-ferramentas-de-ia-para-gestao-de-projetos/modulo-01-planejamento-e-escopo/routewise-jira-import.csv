@@ -1,0 +1,443 @@
+Summary,Issue Type,Priority,Description,Story Points,Epic Name,Epic Link,Sprint,Labels,Component/s
+[EPIC] Segurança e Redução de Sinistros,Epic,High,OKR 1 — Tornar a frota mais segura e reduzir custos com sinistros. KR 1.1: reduzir o índice de acidentes por excesso de velocidade em 20% até setembro de 2026.,,Segurança e Redução de Sinistros,,,,
+[EPIC] Manutenção Inteligente,Epic,High,OKR 2 — Reduzir custo operacional com manutenção. KR 2.1: reduzir o custo médio de manutenção corretiva por veículo em 15% até setembro de 2026.,,Manutenção Inteligente,,,,
+[INFRA] Setup de ambiente e pipeline CI/CD,Task,High,"Configuração dos três ambientes (dev / staging / prod) na AWS com isolamento completo de dados.
+
+Escopo:
+- Pipeline CI/CD no GitHub Actions com stages: lint → test → build → deploy
+- Branch strategy: main (prod), develop (staging), feature/* (dev)
+- Secrets management via AWS Secrets Manager
+- Notificação Slack no canal #routewise a cada deploy em staging e prod
+- Health checks automáticos pós-deploy com rollback em < 10 min se falha
+
+DoD: pipeline verde em todos os ambientes, rollback testado com sucesso em staging.",3,,,Sprint 1,infra entregue,infra
+[INFRA] Modelagem de dados e banco de telemetria,Task,High,"Modelagem e provisionamento do banco de dados de telemetria para suportar 140 rastreadores em escrita contínua.
+
+Requisitos:
+- TimescaleDB (PostgreSQL extension) para séries temporais de GPS
+- Schema principal: vehicle_id, timestamp, lat, lon, speed_kmh, event_type, payload_json
+- Particionamento por mês para purge automático após 24 meses
+- Índice composto (vehicle_id, timestamp) para queries de histórico
+- Capacidade alvo: 140 veículos × 1 evento/30s × 24h = ~403.200 eventos/dia
+
+DoD: insert de 1.000 eventos/s sem degradação, query de 30 dias < 500ms.
+
+Responsável técnico: Marcus (consultoria backend — modelagem de séries temporais e otimização de queries).",5,,,Sprint 1,infra entregue,infra
+[INFRA] Integração com rastreadores GPS via MQTT,Task,Highest,"Integração com os 140 rastreadores Teltonika FMB920 via protocolo MQTT (AWS IoT Core).
+
+Escopo:
+- Broker MQTT: AWS IoT Core com certificados por dispositivo
+- Tópico padrão: routewise/fleet/{vehicle_id}/telemetry
+- Consumer em Node.js (AWS Lambda) que parseia payload binário proprietário
+- Validação de integridade: checksum CRC16 em cada mensagem
+- Tratamento de reconexão: buffer local no dispositivo de até 24h offline
+
+DoD: 140 rastreadores conectados em homologação, taxa de perda < 0.1%.
+
+Responsável técnico: Marcus (consultoria backend — integração MQTT, parser do payload Teltonika, Lambda Node.js).",8,,,Sprint 1,infra entregue,integracao-gps
+[INFRA] Controle de acesso RBAC — perfis Carlos / Priya / Motorista,Task,High,"Implementar modelo de controle de acesso baseado em roles para os três perfis do sistema.
+
+Roles:
+- ADMIN (Carlos): acesso total, configuração de thresholds, exportação de dados
+- OPERATOR (Priya): visualização do mapa, alertas, histórico — sem configuração
+- DRIVER (Motoristas): acesso apenas ao próprio score e alertas recebidos
+
+Implementação: JWT com claims de role, middleware de autorização em todas as rotas de API.
+
+DoD: 3 perfis testados com Playwright, nenhum acesso cross-role possível.",5,,,Sprint 1,infra entregue,infra
+US-01 | Alertas de Velocidade em Tempo Real,Story,Highest,"Como Carlos (Diretor de Operações), quero receber alertas automáticos quando um motorista ultrapassar o limite de velocidade permitido, para poder agir preventivamente e reduzir o risco de sinistros.
+
+Critérios de aceite:
+- Alerta gerado em até 60s após detecção de excesso (P95)
+- Notificação push entregue para Carlos e Priya simultaneamente
+- Alerta inclui: motorista, veículo, velocidade detectada, limite da via, localização no mapa
+- Histórico de alertas retido por 12 meses
+- Taxa de falsos positivos < 2%
+
+Nota: desenvolvimento iniciado no Sprint 1 (infra GPS/MQTT). Entrega formal no Sprint 4.",8,,[EPIC] Segurança e Redução de Sinistros,Sprint 1,planejado,alertas-velocidade notificacoes
+US-02 | Manutenção Preditiva por km e tempo — planejamento inicial,Story,High,"Como Carlos, quero que o sistema avise automaticamente quando um veículo atingir o limite de km ou tempo desde a última revisão, para eliminar manutenções reativas e reduzir custos.
+
+Critérios de aceite (versão planejamento — refinados nos Sprints 2 e 4):
+- Alerta gerado com 15 dias de antecedência baseado em projeção de km rodados
+- Suporte a múltiplos tipos de revisão: óleo, filtros, pneus, freios
+- Histórico de manutenções por veículo acessível em até 3 cliques
+- Importação do histórico dos últimos 2 anos a partir de planilha Excel
+
+Nota: entrada de planejamento do Sprint 1. Contorno manual entregue no Sprint 2. Versão automática com telemetria entregue no Sprint 4.",5,,[EPIC] Manutenção Inteligente,Sprint 1,planejado,manutencao-preditiva
+[BUG-S1-01] Rastreadores não conectam via MQTT em rede 3G,Bug,High,12 dos 140 rastreadores Teltonika FMB920 falham na conexão MQTT quando a rede cai para 3G (vs LTE). Causa raiz: timeout de handshake TLS muito curto para latência de 3G (~800ms). Fix: aumentar timeout de 3s para 10s e implementar exponential backoff. Afeta: rotas rurais com cobertura LTE instável.,,,,Sprint 1,bug resolvido,integracao-gps
+[BUG-S1-02] Duplicação de registros no banco na reinserção após buffer offline,Bug,Medium,"Quando um rastreador reconecta após período offline, o buffer local é reenviado completo, gerando duplicatas no banco de telemetria. Causa: ausência de chave de idempotência no insert. Fix: usar ON CONFLICT DO NOTHING com chave composta (vehicle_id, timestamp_unix_ms, event_type). Detectado durante testes de carga com buffer de 4h simulado.",,,,Sprint 1,bug resolvido,integracao-gps infra
+[BUG-S1-03] Pipeline CI falha intermitentemente no stage de lint,Bug,Low,O ESLint falha com timeout intermitente (1 em 5 execuções) no GitHub Actions. Causa: `node_modules` cache corrompido quando dois jobs iniciam simultaneamente. Fix: adicionar `cache-dependency-path` e lock no cache restore. Sem impacto em produção — apenas atrasa o pipeline de deploy.,,,,Sprint 1,bug resolvido,infra
+[SPIKE] Latência GPS → notificação: diagnóstico e thresholds,Task,High,"Medir a latência ponta a ponta do pipeline de alertas com carga realista (140 veículos).
+
+Medições necessárias:
+- GPS timestamp → chegada no broker MQTT (P50, P95, P99)
+- Broker → processamento Lambda (tempo de enfileiramento)
+- Lambda → entrega de push notification (Firebase FCM)
+
+Output esperado:
+- Mapa de gargalos com percentis de cada etapa
+- Proposta de SLA (P95 < 60s) baseada em dados reais
+- Recomendações de configuração do Lambda (concorrência reservada, timeout)",3,,,Sprint 2,spike entregue,integracao-gps notificacoes
+[INFRA] Thresholds de velocidade configuráveis por tipo de via,Task,High,"Implementar tabela de thresholds de velocidade configurável por Carlos sem necessidade de deploy.
+
+Tipos de via:
+- Rodovia federal: 110 km/h
+- Rodovia estadual: 90 km/h
+- Via urbana: 60 km/h
+- Zona escolar: 30 km/h
+
+Requisitos:
+- UI de configuração acessível pelo perfil ADMIN
+- Alteração tem efeito em < 30s sem reinício do serviço
+- Auditoria: log de quem alterou qual threshold e quando
+
+DoD: Carlos consegue alterar threshold via UI, alerta dispara no novo limite em < 30s.",5,,[EPIC] Segurança e Redução de Sinistros,Sprint 2,entregue,alertas-velocidade
+[INFRA] Buffer offline e sincronização de dados GPS,Task,Highest,"Garantir que eventos gerados em zonas sem cobertura sejam sincronizados quando o rastreador reconectar.
+
+Especificações:
+- Buffer local: até 24h de dados em flash do rastreador
+- Sincronização automática na reconexão, com backpressure para não sobrecarregar o broker
+- Eventos históricos marcados com flag `is_buffered=true` para distinção em analytics
+- Zonas de sombra conhecidas documentadas no mapa: BR-050 km 140-200, BR-381 km 230-245
+
+DoD: 4h de buffer sincronizado sem duplicatas após teste de desconexão forçada.",8,,,Sprint 2,entregue,integracao-gps infra
+[UI] Painel de mapa ao vivo — versão base,Task,High,"Primeira versão do painel de visualização em tempo real da frota para o perfil OPERATOR.
+
+Funcionalidades:
+- Mapa com posição de todos os 140 veículos atualizado a cada 30s
+- Marcador diferenciado para veículos em alerta ativo (vermelho) vs normal (verde)
+- Sidebar com lista de alertas das últimas 2h
+- Filtro por placa ou motorista
+
+Stack: React + Leaflet.js + WebSocket para atualizações em tempo real.
+
+DoD: Priya consegue identificar qualquer veículo em alerta em < 10s sem busca manual.",3,,,Sprint 2,entregue,dashboard
+US-02 | Manutenção Preditiva por km e tempo (contorno manual),Story,High,"Como Carlos, quero um contorno operacional para manutenção preditiva enquanto o módulo automático não está pronto, para não perder o controle da frota durante o desenvolvimento.
+
+Critérios de aceite:
+- Planilha Excel com datas e km de revisão importável via upload
+- Alertas gerados manualmente para revisões nos próximos 15 dias
+- Visualização no painel com filtro por veículo ou tipo de revisão
+
+Nota: contorno operacional do Sprint 2. Versão automática com dados de telemetria no Sprint 3.",5,,[EPIC] Manutenção Inteligente,Sprint 2,entregue,manutencao-preditiva
+[BUG-S2-01] Mapa não renderiza em Firefox 121+,Bug,High,"O painel de mapa ao vivo não carrega no Firefox 121 e superiores. Causa: uso de `CSS container queries` não suportado pelo Firefox nessa versão. Fix: reescrever layout do mapa com CSS Grid puro, sem container queries. Afeta: 3 dos 5 computadores da equipe de operações que usam Firefox.",,,,Sprint 2,bug resolvido,dashboard
+[BUG-S2-02] WebSocket desconecta após 5 minutos de inatividade,Bug,High,O painel de mapa perde a conexão WebSocket após 5 minutos sem atividade do usuário. Causa: timeout de 300s no load balancer AWS (ALB) sem configuração de keepalive. Fix: ping/pong a cada 60s no WebSocket handler + configurar idle timeout no ALB para 600s. Impacto: Priya precisa recarregar a página manualmente para ver atualizações.,,,,Sprint 2,bug resolvido,dashboard integracao-gps
+[BUG-S2-03] Importação de histórico Excel com datas em formato DD/MM/AA,Bug,Medium,A importação de planilha Excel de histórico de manutenção falha quando as datas estão no formato DD/MM/AA (sem século). Sistema interpreta como 1925 em vez de 2025. Fix: adicionar detecção automática de formato de data com fallback para DD/MM/AAAA. Descoberto durante import do histórico real fornecido por Carlos.,,,,Sprint 2,bug resolvido,manutencao-preditiva
+[BUG-S2-04] Threshold de velocidade não propaga para Lambda em < 30s,Bug,High,"Após alteração de threshold via UI, o serviço Lambda de alertas continua usando o valor antigo por até 4 minutos. Causa: cache local de configurações com TTL de 240s. Fix: reduzir TTL para 25s e adicionar invalidação de cache via SNS event na alteração. Viola o requisito de propagação em < 30s definido no DoD.",,,,Sprint 2,bug resolvido,alertas-velocidade
+[BUG-S2-05] Sidebar de alertas não pagina corretamente após 50 registros,Bug,Medium,"Com mais de 50 alertas nas últimas 2h, a sidebar trava ao fazer scroll no final da lista. Causa: virtualização de lista desabilitada, todos os 50+ cards renderizados no DOM. Fix: implementar virtual scroll com janela de 20 itens. Arrastado do Sprint 2 para Sprint 3 por impacto baixo (ocorre apenas em dias de alto volume).",,,,Sprint 2,bug arrastado,dashboard
+[TECH-DEBT] Otimização de queries de histórico de telemetria,Task,Medium,"Queries de histórico de 30 dias rodando em 4-6s com 140 veículos. Meta: < 500ms.
+
+Ações planejadas:
+- Adicionar índice cobrindo (vehicle_id, timestamp) nos shards mais antigos
+- Habilitar compressão TimescaleDB para dados com > 7 dias
+- Reescrever query de relatório de violações com CTE materializado
+- Configurar autovacuum agressivo na tabela de telemetria
+
+DoD: P95 de query de 30 dias < 500ms com carga de 140 veículos simultâneos.",3,,,Sprint 3,tech-debt entregue,infra
+US-04a | Histórico de telemetria e replay de rota,Story,High,"Como Carlos, quero visualizar o trajeto completo de qualquer veículo nos últimos 30 dias para investigar incidentes e validar comportamento de motoristas.
+
+Critérios de aceite:
+- Replay de rota com velocidade ajustável (1x, 4x, 16x)
+- Marcadores visuais para eventos: alerta de velocidade, parada > 15min, zona de sombra
+- Exportação de trajeto como GPX para uso em ferramentas externas
+- Consulta de até 30 dias de histórico em < 500ms
+
+Entregue: demo para diretoria confirmada para fim do Sprint 3.",8,,[EPIC] Segurança e Redução de Sinistros,Sprint 3,entregue,dashboard integracao-gps
+US-04b | Exportação de relatório de alertas em PDF e CSV,Story,Medium,"Como Carlos, quero exportar o relatório de alertas de velocidade em PDF (para apresentações) e CSV (para análise em Excel), para compartilhar dados com RH e jurídico quando necessário.
+
+Critérios de aceite:
+- Exportação disponível para qualquer período de até 12 meses
+- PDF com logo RouteWise, assinatura digital e timestamp de geração
+- CSV com todas as colunas brutas (vehicle_id, driver, timestamp, speed, limit, lat, lon)
+- Geração de relatório de 30 dias em < 10s
+
+Relacionado a US-07 Relatório Executivo (Sprint 5).",3,,[EPIC] Segurança e Redução de Sinistros,Sprint 3,entregue,dashboard
+[SPIKE] POC de integração SAP para dados de manutenção,Task,Low,"Investigar viabilidade de integração com o SAP PM (Plant Maintenance) usado pelo parceiro de frotas para sincronização automática de ordens de manutenção.
+
+Questões a responder:
+- API disponível: REST ou BAPIs legado via RFC?
+- Modelo de dados: como mapear ordens SAP PM para entidades RouteWise?
+- Custo de licença: acesso programático exige licença adicional?
+- Alternativa: integração via export diário de arquivo IDoc?
+
+Output: relatório de viabilidade com recomendação go/no-go em 1 semana.",5,,,Sprint 3,spike entregue,manutencao-preditiva
+US-03 | Score de Comportamento — MVP (bloqueado por hardware),Story,Highest,"Como Carlos, quero uma pontuação de comportamento diário por motorista baseada em eventos de telemetria (velocidade, frenagem brusca, aceleração) para criar uma cultura de direção segura.
+
+Critérios de aceite:
+- Score de 0 a 100 calculado diariamente por motorista
+- Componentes: excesso de velocidade (40%), frenagem brusca (30%), aceleração excessiva (30%)
+- Ranking de motoristas visível para Carlos e Priya
+- Histórico de 90 dias de evolução do score por motorista
+
+BLOQUEADO: frenagem e aceleração requerem acelerômetro do rastreador v2 (hardware não entregue). MVP parcial: score apenas por velocidade aprovado para Sprint 3.",8,,[EPIC] Segurança e Redução de Sinistros,Sprint 3,bloqueado hardware,score-comportamento
+[BUG-S3-01] Sidebar de alertas trava com > 50 itens (arrastado S2),Bug,Medium,Arrastado do Sprint 2. Virtual scroll implementado mas com regressão: o scroll pula 2-3 itens ao rolar rapidamente. Fix: ajustar estimativa de altura de item de 80px fixo para dinâmico. Resolvido no Sprint 3.,,,,Sprint 3,bug resolvido,dashboard
+[BUG-S3-02] Replay de rota salta segmentos em zonas de sombra GPS,Bug,Medium,O replay de rota exibe linhas retas longas onde o veículo passou por zonas sem cobertura GPS. Causa: ausência de interpolação entre o último ponto antes e o primeiro após a zona de sombra. Fix: implementar interpolação linear com marcador visual 'zona de sombra' no trajeto. Resolvido.,,,,Sprint 3,bug resolvido,dashboard integracao-gps
+[BUG-S3-03] Exportação PDF falha com caracteres especiais no nome do motorista,Bug,Low,"PDF exportado com erro quando nome do motorista contém acentuação (ex: João, Ítalo). Causa: biblioteca PDFKit usando encoding Latin-1 por padrão. Fix: forçar UTF-8 em todo pipeline de geração de PDF. Resolvido.",,,,Sprint 3,bug resolvido,dashboard
+[BUG-S3-04] Score congela em 0 para motoristas sem eventos nas últimas 24h,Bug,Medium,Motoristas que não tiveram eventos de velocidade (ex: folga ou veículo parado) recebem score 0 em vez de 'N/A' ou o score do dia anterior. Causa: ausência de guard no cálculo quando o denominador é zero. Fix: retornar null quando não há eventos; UI exibe '—' (dado insuficiente). Resolvido.,,,,Sprint 3,bug resolvido,score-comportamento
+[BUG-S3-05] Score MVP conta excesso de velocidade em zona de sombra como violação,Bug,High,"O score penaliza motoristas por velocidade alta em períodos de sombra GPS, onde a velocidade interpolada pode não refletir a velocidade real. Fix: excluir pontos com flag `is_buffered=true` e sem confirmação de velocidade do cálculo do score. Arrastado para Sprint 4 — impacto alto na confiabilidade do score.",,,,Sprint 3,bug arrastado,score-comportamento integracao-gps
+[BUG-S3-06] Query de histórico excede timeout em relatórios de 90+ dias,Bug,High,Relatórios com janela superior a 90 dias atingem o timeout de 30s do API gateway. Causa: índice composto não cobre partições de meses anteriores depois da otimização. Fix: recriar índice incluindo colunas de partição. Arrastado para Sprint 4.,,,,Sprint 3,bug arrastado,infra
+[BUG-S3-07] Autenticação JWT expira sem renovação silenciosa no frontend,Bug,Medium,Sessão de Carlos expira após 1h sem aviso. Usuário perde dados de formulário ao ser redirecionado para login. Causa: ausência de token refresh silencioso (sliding session). Fix: implementar interceptor Axios com refresh automático quando token expira em < 5min. Resolvido.,,,,Sprint 3,bug resolvido,infra
+[BUG-S3-08] Integração SAP POC: BAPI RFC não disponível em sandbox,Bug,Low,"O sandbox do SAP fornecido pelo parceiro não expõe as BAPIs de PM por restrição de licença. Spike SAP não pode ser concluído como planejado. Decisão: documentar limitação no output do spike e recomendar integração via IDoc export. Impacto no roadmap: SAP descartado do MVP, movido para backlog futuro.",,,,Sprint 3,bug spike-cancelado,manutencao-preditiva
+US-01 | Alertas de Velocidade em Tempo Real,Story,Highest,"Como Carlos (Diretor de Operações), quero receber alertas automáticos quando um motorista ultrapassar o limite de velocidade permitido, para poder agir preventivamente e reduzir o risco de sinistros.
+
+Critérios de aceite:
+- Alerta gerado em até 60s após detecção de excesso (P95)
+- Notificação push entregue para Carlos e Priya simultaneamente
+- Alerta inclui: motorista, veículo, velocidade detectada, limite da via, localização
+- Histórico de alertas retido por 12 meses
+- Taxa de falsos positivos < 2%
+
+Entregue no Sprint 4. Desenvolvimento iniciado no Sprint 1 (infra GPS/MQTT).",8,,[EPIC] Segurança e Redução de Sinistros,Sprint 4,entregue,alertas-velocidade notificacoes
+US-05 | Dashboard Base — Visão Operacional da Frota,Story,Highest,"Como Priya (TI / Operações), quero um painel unificado com o status da frota em tempo real para poder monitorar os 140 veículos sem precisar consultar múltiplos sistemas.
+
+Critérios de aceite:
+- Mapa com posição de todos os veículos atualizado a cada 30s
+- KPIs no topo: veículos ativos, em alerta, em manutenção, offline
+- Alertas das últimas 2h com status (aberto / reconhecido / resolvido)
+- Filtros: por veículo, motorista, tipo de alerta, região
+- Tempo de carregamento inicial < 3s com 140 veículos
+
+[INVEST-FAIL: S] — Esta história excede 8 story points e deveria ser decomposta antes de entrar em sprint. Mantida como story única por decisão do time após planning — risco aceito pelo Product Owner.
+
+Entregue no Sprint 4.",14,,[EPIC] Segurança e Redução de Sinistros,Sprint 4,entregue,dashboard notificacoes
+US-02 | Manutenção Preditiva por km e tempo — versão automática,Story,High,"Como Carlos, quero que o sistema calcule automaticamente a próxima data de revisão de cada veículo com base nos km rodados (telemetria real), eliminando o controle manual em planilha.
+
+Critérios de aceite:
+- Projeção automática baseada na média de km dos últimos 30 dias
+- Alerta gerado com 15 dias e 7 dias de antecedência
+- Painel de manutenção com status: OK / Atenção / Vencida
+- Integração com histórico manual importado no Sprint 2
+
+Em progresso no Sprint 4, entrega prevista Sprint 5.",8,,[EPIC] Manutenção Inteligente,Sprint 4,em-progresso,manutencao-preditiva
+US-03 | Score de Comportamento — BLOQUEADO (hardware não entregue),Story,Highest,"BLOQUEADO — aguardando entrega dos rastreadores v2 com acelerômetro integrado.
+
+O MVP parcial (score apenas por velocidade) foi entregue no Sprint 3, mas o score completo com frenagem e aceleração está bloqueado pelo fornecedor de hardware.
+
+Critérios pendentes (requer hardware v2):
+- Frenagem brusca: desaceleração > 0.4g em < 1s
+- Aceleração excessiva: aceleração > 0.3g em < 1s
+- Curva perigosa: aceleração lateral > 0.35g
+
+Impacto: bloqueio impede conclusão do OKR 1 KR 1.2.",8,,[EPIC] Segurança e Redução de Sinistros,Sprint 4,bloqueado hardware,score-comportamento
+US-06 | Painel de Motoristas com Score e Ranking,Story,High,"Como Carlos, quero visualizar o ranking de motoristas por comportamento para identificar quem precisa de capacitação e reconhecer os melhores motoristas do mês.
+
+Critérios de aceite:
+- Ranking top 10 e bottom 10 por score
+- Drill-down por motorista: histórico de 90 dias
+- Badge de 'Motorista do Mês' para o melhor score
+- Exportação de ranking em PDF para RH
+
+Em progresso no Sprint 4, bloqueado pelo US-03 para dados completos.",5,,[EPIC] Segurança e Redução de Sinistros,Sprint 4,em-progresso,dashboard score-comportamento
+[BUG-S4-01] Alertas de velocidade duplicados após reconexão de sinal,Bug,High,"Motoristas em regiões com cobertura GSM instável recebem o mesmo alerta de velocidade 2 a 4 vezes após reconectar ao sinal.
+
+Impacto: motoristas reportando fadiga de notificação e ignorando alertas. Risco de segurança direto.
+
+Root cause: o algoritmo de deduplicação compara apenas event_id, mas o rastreador gera event_ids diferentes para o mesmo evento físico quando o retry ocorre após timeout de rede.
+
+Fix planejado: deduplicação por hash composto (vehicle_id + timestamp_rounded_10s + event_type). Janela de deduplicação de 30s.
+
+Steps to reproduce:
+1. Simular perda de sinal por 5 min com evento de excesso de velocidade dentro da janela
+2. Reconectar
+3. Observar canal Slack #routewise: mesmo alerta recebido múltiplas vezes
+
+Afeta: ~15 veículos na rota BR-050 km 140-200 (zona de sombra documentada pelo spike S2).",,,,Sprint 4,bug resolvido,alertas-velocidade notificacoes
+[BUG-S4-02] Latência push acima de SLA em horário de pico (07h-09h),Bug,High,"P95 de latência GPS→push subiu para 73s entre 07h-09h nos últimos 5 dias. SLA definido é P95 < 60s.
+
+Root cause: Lambda de processamento de alertas com concorrência limitada a 5 instâncias. Em pico, fila de processamento acumula até 200 eventos simultâneos.
+
+Fix: aumentar concorrência reservada para 20 instâncias + adicionar SQS como buffer com FIFO por vehicle_id.
+
+Monitoramento: CloudWatch alarm disparando quando P95 > 55s (warning antes de violar SLA).
+
+Responsável técnico: Marcus (consultoria backend — configuração Lambda e SQS).",,,,Sprint 4,bug resolvido,notificacoes infra
+[BUG-S4-03] Score congelado após reconexão do dispositivo,Bug,Medium,"Após reconexão, o score de comportamento exibe o valor calculado antes da queda de sinal. Não atualiza automaticamente — requer logout e login manual no app.
+
+Root cause: score em cache Redis com TTL de 24h, invalidação não acontece na reconexão do rastreador.
+
+Fix: publicar evento `vehicle.reconnected` e invalidar cache do score do veículo afetado.
+
+Inclui arrastado do BUG-S3-05 (score em zona de sombra). Resolvido juntos.",,,,Sprint 4,bug resolvido,score-comportamento
+[BUG-S4-04] Dashboard trava com seleção de todos os veículos + filtro de alerta,Bug,High,"Ao selecionar todos os 140 veículos e aplicar o filtro 'Alerta Ativo', o browser trava por 8-15s. Em máquinas mais antigas, tab fecha por falta de memória.
+
+Root cause: todos os 140 marcadores do Leaflet.js são re-renderizados synchronously a cada mudança de filtro. Sem debounce ou virtualização de marcadores.
+
+Fix: implementar cluster de marcadores (Leaflet.markercluster) e debounce de 300ms nos filtros. Resolvido.",,,,Sprint 4,bug resolvido,dashboard
+[BUG-S4-05] Push não entregue em Android 14 — taxa de entrega 84%,Bug,High,"Taxa de entrega de push notifications caiu para 84% em dispositivos Android 14 (meta: > 98%). Afeta 23 dos 140 motoristas que já fizeram upgrade do SO.
+
+Root cause: Android 14 mudou a API de notificações em background. FCM legacy API não entrega para apps não migrados para FCM HTTP v1.
+
+Fix: migrar para FCM HTTP v1 API com token de autorização OAuth2 em vez de Server Key. Resolvido após migração.",,,,Sprint 4,bug resolvido,notificacoes
+[BUG-S4-06] Query de histórico timeout em relatórios de 90+ dias (arrastado S3),Bug,High,"Arrastado do Sprint 3. Recriar índice cobrindo partições antigas resolveu para 90 dias, mas relatórios de 6+ meses ainda excedem timeout de 30s com 140 veículos.
+
+Fix final: adicionar paginação por cursor no endpoint de relatório. Cliente recebe primeiros 10.000 eventos em < 3s e pagina conforme necessário. Resolvido.",,,,Sprint 4,bug resolvido,infra
+[BUG-S4-07] Mapa não centraliza no veículo ao clicar no alerta da sidebar,Bug,Medium,"Ao clicar em um alerta na sidebar, o mapa deveria centralizar e dar zoom no veículo afetado. Atualmente não acontece nada — o mapa permanece na visão atual.
+
+Root cause: evento de click na sidebar não está propagando para o componente de mapa (problema de comunicação entre componentes React sem estado compartilhado).
+
+Fix: adicionar estado global via Zustand para seleção de veículo ativo. Em aberto.",,,,Sprint 4,bug aberto,dashboard
+[BUG-S4-08] Score de motorista exibe dado de outro veículo após troca de turno,Bug,High,"Quando dois motoristas usam o mesmo veículo em turnos diferentes, o score do turno da tarde mostra dados do motorista do turno da manhã.
+
+Root cause: associação vehicle→driver é feita no início do dia via GPS login, mas não há revalidação na troca de turno. Score persiste associado ao driver_id incorreto.
+
+Fix: implementar evento `driver.shift_change` com timestamp e motorista confirmado via PIN. Em aberto — requer mudança no app do motorista.",,,,Sprint 4,bug aberto,score-comportamento
+[BUG-S4-09] Exportação CSV com encoding errado no Windows (Excel abre com caracteres estranhos),Bug,Medium,CSV exportado em UTF-8 é aberto com caracteres corrompidos no Excel para Windows. Causa: Excel no Windows espera BOM (Byte Order Mark) no início do arquivo para detectar UTF-8. Fix: adicionar BOM (`\xEF\xBB\xBF`) na geração do CSV. Em aberto.,,,,Sprint 4,bug aberto,dashboard
+[BUG-S4-10] Alertas de compliance não disparam para veículos com hardware v1,Bug,High,"O módulo de score de comportamento valida hardware_version >= 2 antes de emitir alertas, mas 43 veículos ainda têm hardware v1. Esses veículos ficam silenciosos mesmo com excesso de velocidade.
+
+Root cause: guard de versão de hardware foi adicionado para preparar o score completo, mas acabou bloqueando também os alertas de velocidade (que não dependem de acelerômetro).
+
+Fix: separar guard de hardware — alertas de velocidade não devem depender de hardware_version. Em aberto.",,,,Sprint 4,bug aberto blocker-compliance,alertas-velocidade score-comportamento
+[BUG-S4-11] Dashboard não carrega em Safari 17 (Mobile iOS),Bug,Medium,"O dashboard fica em loading infinito no Safari 17 (iOS 17). Afeta Carlos quando acessa pelo iPhone fora do escritório.
+
+Root cause: uso de `structuredClone()` não suportado no Safari 17 Mobile para workers. Fix: substituir por `JSON.parse(JSON.stringify(...))` como fallback. Em aberto.",,,,Sprint 4,bug aberto,dashboard
+US-07 | Relatório Executivo Automatizado,Story,High,"Como Carlos, quero receber automaticamente toda segunda-feira um relatório executivo consolidado da semana anterior para apresentar na reunião de diretoria sem preparação manual.
+
+Critérios de aceite:
+- Gerado toda segunda-feira às 07h30 e enviado por e-mail e Slack
+- Conteúdo: resumo de alertas (volume, tipos, motoristas mais frequentes), velocity do sprint atual, KPIs de manutenção, comparativo com semana anterior
+- Formato: PDF com gráficos embutidos (Chart.js → PDF via Puppeteer)
+- Relatório de 7 dias gerado em < 30s
+
+Dupla convergência OKR 1 + OKR 2.",8,,[EPIC] Segurança e Redução de Sinistros,Sprint 5,em-progresso,dashboard notificacoes
+US-08 | Integração SAP PM — descartado do MVP,Story,Low,"Integração com o SAP PM (Plant Maintenance) para sincronização automática de ordens de manutenção entre o RouteWise e o ERP do parceiro de frotas.
+
+Descartado após POC no Sprint 3. Conclusões da investigação:
+- Integração via BAPI RFC inviável: sandbox do parceiro não expõe as BAPIs por restrição de licença
+- Alternativa via IDoc export diário avaliada mas incompatível com a meta de alertas preditivos em tempo real (latência de 24h)
+- Custo de licença para acesso programático ao SAP PM: não aprovado no orçamento do MVP
+
+Decisão: manter importação manual via planilha Excel. Integração SAP completa movida para roadmap de longo prazo (pós-escala para 500+ veículos).
+
+Referência técnica: ADR-003 — Confluence > RouteWise > Decisões Técnicas > Integração SAP.",,[EPIC] Manutenção Inteligente,,,backlog descartado spike,manutencao-preditiva
+[BUG] ROUTEWISE-219 — Falha de telemetria em Uberlândia (rota BR-050 km 140-200),Bug,Highest,"Reportado por motorista Zé Carlos em 13/01. Rastreadores perdem sinal por 12-18min ao passar pelo km 140-200 da BR-050 próximo a Uberlândia.
+
+Impacto: janela cega de 18 min. Qualquer excesso de velocidade nesse trecho não é detectado. Afeta 8 rotas de longa distância que passam por esse corredor.
+
+Investigação em andamento:
+- Confirmado: antena da torre Claro desabilitada desde 10/01 para manutenção
+- Buffer offline: funcionando, dados recuperados após saída da zona
+- Pendente: contato com Claro para previsão de restauração
+- Mitigação temporária: aviso no painel quando veículo entra na zona de sombra documentada",,,,Sprint 5,bug aberto infraestrutura-externa,integracao-gps
+[TASK] Bug Bash — Sprint 5 (dia 3 da sprint),Task,High,"Sessão estruturada de bug bash no dia 3 do Sprint 5 com toda a equipe técnica.
+
+Roteiro de testes exploratórios:
+- Fluxo de alerta ponta a ponta: GPS → notificação push
+- Dashboard: todos os filtros com 140 veículos simultâneos
+- Score: motoristas em troca de turno
+- Exportações: PDF e CSV em diferentes SOs e browsers
+- Mobile: iOS Safari e Android Chrome
+
+Output: lista priorizada de bugs encontrados para refinamento imediato.",3,,,Sprint 5,qualidade,infra
+[TASK] Definition of Ready — refinamento de backlog Sprint 6,Task,Medium,"Garantir que todos os itens candidatos ao Sprint 6 atendam o DoR antes do planning.
+
+Critérios do DoR:
+- Critérios de aceite escritos e revisados com Carlos
+- Story points estimados (Planning Poker com Priya e Marcus)
+- Dependências técnicas identificadas e desbloqueadas
+- Mockups aprovados (para histórias de UI)
+- Testes de aceite esboçados
+
+Itens candidatos: US-02 conclusão, US-06 conclusão, US-04 Sensor de Abertura de Baú (se hardware chegar).",2,,,Sprint 5,processo,
+[TASK] Teste de carga — 140 veículos simultâneos em produção,Task,High,"Executar teste de carga realista com 140 rastreadores simulados em paralelo para validar comportamento do sistema em produção antes do go-live.
+
+Cenários:
+- Baseline: 140 veículos enviando telemetria a cada 30s por 2h
+- Pico matinal: 140 veículos + 30% de eventos de velocidade entre 07h-09h
+- Reconexão em massa: simular queda e reconexão de 50 rastreadores simultâneos
+
+SLAs a validar:
+- Latência GPS→push: P95 < 60s
+- Dashboard load: < 3s com 140 veículos
+- Throughput: > 500 eventos/s sem degradação
+
+Ferramenta: k6 com script customizado para protocolo MQTT.",5,,,Sprint 5,qualidade performance,infra
+[TASK] Revisão de segurança — OWASP Top 10 pré-go-live,Task,High,"Revisão estruturada de segurança cobrindo os riscos do OWASP Top 10 antes do go-live.
+
+Escopo:
+- A01 Broken Access Control: testar todos os endpoints com tokens de perfis diferentes
+- A02 Cryptographic Failures: audit de dados em trânsito (TLS 1.2+) e em repouso (AES-256)
+- A03 Injection: inputs de busca e filtros testados com payloads SQL/NoSQL injection
+- A05 Security Misconfiguration: audit de permissões IAM, buckets S3, security groups
+- A07 Auth Failures: rate limiting, brute force, token expiration
+
+Output: relatório com findings e plano de remediação. Achados críticos bloqueiam o go-live.",5,,,Sprint 5,seguranca compliance,infra
+[TASK] Adequação LGPD — revisão de dados pessoais e DPO sign-off,Task,High,"Garantir conformidade com a LGPD antes de go-live com dados de 140 motoristas.
+
+Itens:
+- Mapeamento de dados pessoais: quais dados são coletados, por quanto tempo, onde ficam
+- Termo de consentimento claro apresentado ao motorista no primeiro login
+- Implementar direito de exclusão: motorista pode solicitar remoção dos próprios dados
+- Política de retenção: telemetria 24 meses, logs de audit 5 anos, dados pessoais 5 anos
+- DPO sign-off: aprovação formal do encarregado de dados
+
+Bloqueador: sign-off pendente. Aprovação necessária antes do go-live.",3,,,Sprint 5,compliance lgpd,infra
+[TASK] Runbook de operações e playbook de incidentes,Task,Medium,"Documentar procedimentos operacionais para a equipe de Priya após go-live.
+
+Conteúdo do runbook:
+- Checklist de monitoramento diário (CloudWatch alarms, métricas de entrega push)
+- Procedimento de rollback de deploy em < 10min
+- Playbook de incidente P1: sistema de alertas offline
+- Playbook de incidente P2: latência push > SLA
+- Procedimento de onboarding de novo rastreador GPS
+- Contatos de escalação: fornecedor Teltonika, suporte AWS, Marcus (consultoria)
+
+Entregável: documento no Confluence + cartão resumo para sala de operações.",3,,,Sprint 5,documentacao,
+[BUG-S5-01] Mapa não centraliza no veículo ao clicar em alerta (arrastado S4),Bug,Medium,Arrastado do Sprint 4 (BUG-S4-07). Implementação do estado global via Zustand. Fix: `useVehicleStore` com ação `selectVehicle(id)` — mapa reage via `useEffect`. Em progresso no Sprint 5.,,,,Sprint 5,bug em-progresso,dashboard
+[BUG-S5-02] Score errado na troca de turno (arrastado S4),Bug,High,Arrastado do Sprint 4 (BUG-S4-08). Evento `driver.shift_change` implementado. App do motorista atualizado para solicitar PIN na troca de turno. Fix aguardando release do app (v2.1.0) e QA de aceitação com motoristas piloto.,,,,Sprint 5,bug em-progresso,score-comportamento
+[BUG-S5-03] CSV com BOM para compatibilidade Excel Windows (arrastado S4),Bug,Low,Arrastado do Sprint 4 (BUG-S4-09). Fix de 3 linhas: adicionar BOM UTF-8 na geração do CSV. Aguardando merge do PR #142.,,,,Sprint 5,bug em-progresso,dashboard
+US-04 | Sensor de Abertura de Baú,Story,High,"Como Carlos, quero detectar automaticamente a abertura do baú de carga fora dos pontos de entrega autorizados para prevenir furtos e acionar alertas em tempo real.
+
+Critérios de aceite:
+- Alerta gerado em até 30s após abertura não autorizada
+- Notificação push para Carlos e Priya com localização no mapa
+- Log de todas as aberturas com motorista, localização e horário
+- Falsos positivos < 1% (sensor deve distinguir abertura de trepidação)
+
+BLOQUEADO: requer mesmo hardware acelerômetro do US-03 (rastreador v2) — lead time 60 dias.
+Desenvolvimento iniciado com mock no Sprint 5; integração real após chegada do hardware.",5,[EPIC] Segurança e Redução de Sinistros,[EPIC] Segurança e Redução de Sinistros,Sprint 5,bloqueado hardware,integracao-gps alertas-velocidade
+US-09 | Sensor de Baú — Controle de Temperatura da Carga,Story,Medium,"Como Carlos, quero monitorar a temperatura do baú refrigerado em tempo real para garantir a integridade de cargas sensíveis e cumprir requisitos de ANVISA.
+
+Critérios de aceite:
+- Leitura de temperatura a cada 5 minutos com sensor IoT no baú
+- Alerta imediato se temperatura sair da faixa configurada (ex: 2°C a 8°C para farmacêuticos)
+- Log de temperatura com cadeia de custódia para auditorias regulatórias
+
+Status: em avaliação. Hardware de sensor de baú não incluído no MVP. Potencial épico futuro se aprovado pela diretoria.
+
+OKR: não mapeado para OKR atual. Requer descope formal antes de entrar no Sprint.",13,[EPIC] Manutenção Inteligente,,,backlog futuro hardware-dependente,integracao-gps
+US-10 | Integração com Seguro por Telemetria (UBI),Story,Low,"Como Carlos, quero integrar os dados de comportamento do motorista com a seguradora para negociar desconto no prêmio do seguro baseado em telemetria (Usage-Based Insurance).
+
+Critérios de aceite:
+- Exportação mensal de relatório de comportamento no formato exigido pela seguradora
+- Motoristas com score > 85 por 3 meses consecutivos elegíveis para desconto
+- Consentimento explícito do motorista para compartilhamento com seguradora
+
+Status: aguardando avaliação jurídica para LGPD e negociação com seguradora parceira. Backlog futuro — pós go-live.",8,[EPIC] Segurança e Redução de Sinistros,,,backlog futuro parceiro-externo,dashboard
+[SPIKE DESCARTADO] Integração SAP PM para dados de manutenção,Task,Low,"DESCARTADO após POC no Sprint 3.
+
+A integração via BAPI RFC não é viável no sandbox do parceiro por restrição de licença. Alternativa (IDoc export diário) foi avaliada mas tem latência de 24h — incompatível com a meta de alertas preditivos em tempo quase real.
+
+Decisão: manter os dados de manutenção no RouteWise com importação manual mensal via Excel. Integração SAP completa movida para roadmap de longo prazo (pós-escala para 500+ veículos).
+
+Documentação do spike arquivada em: Confluence > RouteWise > Decisões Técnicas > ADR-003.",,,,,backlog descartado spike,manutencao-preditiva
+[TASK] Relatório de impacto semestral — OKR 1 e OKR 2,Task,Low,"Após 6 meses de go-live, consolidar relatório de impacto para diretoria.
+
+Conteúdo:
+- KR 1.1: índice de acidentes por excesso de velocidade (baseline pré-go-live, meta: -20%)
+- KR 2.1: custo médio de manutenção corretiva por veículo (baseline pré-go-live, meta: -15%)
+- ROI estimado vs custo do projeto
+
+Data alvo: 6 meses após go-live.",3,,,,backlog pos-golive,
+[SPIKE] Geofencing por tipo de carga e rota autorizada,Task,Low,"Investigar viabilidade de alertas de desvio de rota para cargas com restrições específicas.
+
+Casos de uso:
+- Carga perigosa: alerta se veículo entra em perímetro urbano não autorizado
+- Carga farmacêutica: alerta se saiu da rota aprovada pela ANVISA
+- Rastreamento de rota de trânsito aduaneiro
+
+Questões técnicas:
+- API de routing (Google Maps Platform vs OpenRouteService)
+- Geofencing em tempo real: PostGIS vs biblioteca client-side
+- Custo de processamento para 140 veículos com rota em tempo real
+
+Output esperado: avaliação de custo/benefício e PoC de 1 rota.",5,[EPIC] Segurança e Redução de Sinistros,,,backlog spike futuro,integracao-gps alertas-velocidade

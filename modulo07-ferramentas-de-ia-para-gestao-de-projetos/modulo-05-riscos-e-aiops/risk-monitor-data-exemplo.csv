@@ -1,0 +1,5 @@
+sprint,lead_time_medio_dias,cycle_time_medio_dias,bugs_abertos,bugs_resolvidos,saldo_bugs_acumulado,historias_planejadas,historias_entregues,itens_parados_mais_5_dias,velocidade_pontos,velocidade_planejada_pontos,observacoes
+Sprint 1,6.2,4.8,3,3,0,4,4,0,28,28,Sprint baseline - ritmo ideal
+Sprint 2,7.1,5.0,5,4,1,4,3,1,22,28,Historia de integracao GPS passou para proxima sprint
+Sprint 3,9.4,5.1,8,5,4,5,3,2,21,30,Score de Comportamento bloqueado por hardware
+Sprint 4,10.8,5.3,11,6,9,5,2,3,22,22,US-01 e US-05 entregues. US-03 ainda bloqueada. US-02 e US-06 em progresso. BUG-S4-10 bloqueia alertas para 43 veiculos com hardware v1.
