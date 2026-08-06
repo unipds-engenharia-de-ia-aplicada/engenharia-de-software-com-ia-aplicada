@@ -370,6 +370,22 @@ Disciplina completa em [modulo07-ferramentas-de-ia-para-gestao-de-projetos](./mo
 *   [Danger.js](https://danger.systems/js/) — regras de conformidade automatizadas em Pull Requests.
 *   [Slack API](https://api.slack.com/) — bots, webhooks e notificações de projeto.
 
+## Modulo 08 - Arquitetura de Sistemas com IA
+
+Disciplina completa em [modulo08-arquitetura-de-sistemas-com-ia](./modulo08-arquitetura-de-sistemas-com-ia/) — os padrões de arquitetura de referência para sistemas de IA agêntica, construídos sobre um caso único, o **TrialForge** (Vitalis Pharma, geração de documentos clínicos regulatórios), do diagrama de referência (Gateway → Orquestrador → Modelo+RAG → Approval Gate, com banda de Observabilidade) até um protótipo enterprise com model tiering e trilha de auditoria. Cada módulo entrega um canvas de decisão, protótipos executáveis (JS e Python com paridade funcional) e atividade prática.
+
+### Os 5 módulos da disciplina
+*   [Módulo 1 — Fundamentos AI-First](./modulo08-arquitetura-de-sistemas-com-ia/modulo-01-fundamentos-ai-first/) — diagrama de referência e framework de decisão agente-vs-regra, com `decision-framework-tool` executável.
+*   [Módulo 2 — Single-Agent](./modulo08-arquitetura-de-sistemas-com-ia/modulo-02-single-agent/) — anatomia do agente, loop ReAct, reflexão e ferramentas/MCP, com protótipo rodando contra Ollama local.
+*   [Módulo 3 — Multi-Agent](./modulo08-arquitetura-de-sistemas-com-ia/modulo-03-multi-agent/) — por que múltiplos agentes, 6 padrões de orquestração (Sequential, Parallel, Supervisor, Hierarchical, Group Chat, Handoff) e tratamento de falha distribuída (CAP + Saga).
+*   [Módulo 4 — Padrões AI-Específicos](./modulo08-arquitetura-de-sistemas-com-ia/modulo-04-padroes-ai-especificos/) — RAG avançado, roteamento de modelo, cache semântico e Approval Gate formalizado num gateway único.
+*   [Módulo 5 — Arquitetura Enterprise](./modulo08-arquitetura-de-sistemas-com-ia/modulo-05-arquitetura-enterprise/) — stack completo, observabilidade em escala, implantação híbrida e model tiering em cascata com trilha de auditoria.
+
+### Ferramentas & Plataformas
+*   [Ollama](https://ollama.com/) — engine local padrão de todos os protótipos (`gemma4:e2b`), gratuito e sem chave de API.
+*   [Claude (Anthropic)](https://www.anthropic.com/), [Gemini (Google)](https://gemini.google.com/), [GPT (OpenAI)](https://openai.com/) — alternativas pagas de referência nos protótipos (`provedores-pagos.js/.py`).
+*   [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) — protocolo de ferramentas usado no Módulo 2.
+
 ## Resolvendo Problemas Comuns
 
 - [Problemas comuns com **Docker**](./troubleshooting/docker.md)

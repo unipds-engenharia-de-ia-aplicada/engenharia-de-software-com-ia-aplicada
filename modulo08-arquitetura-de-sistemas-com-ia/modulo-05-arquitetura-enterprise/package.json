@@ -1,0 +1,10 @@
+{
+  "name": "demos",
+  "version": "1.0.0",
+  "main": "trialforge-model-tiering-prototype.js",
+  "scripts": { "test": "echo \"Error: no test specified\" && exit 1" },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": { "ollama": "^0.6.3" }
+}
