@@ -372,19 +372,26 @@ Disciplina completa em [modulo07-ferramentas-de-ia-para-gestao-de-projetos](./mo
 
 ## Modulo 08 - Arquitetura de Sistemas com IA
 
-Disciplina completa em [modulo08-arquitetura-de-sistemas-com-ia](./modulo08-arquitetura-de-sistemas-com-ia/) — os padrões de arquitetura de referência para sistemas de IA agêntica, construídos sobre um caso único, o **TrialForge** (Vitalis Pharma, geração de documentos clínicos regulatórios), do diagrama de referência (Gateway → Orquestrador → Modelo+RAG → Approval Gate, com banda de Observabilidade) até um protótipo enterprise com model tiering e trilha de auditoria. Cada módulo entrega um canvas de decisão, protótipos executáveis (JS e Python com paridade funcional) e atividade prática.
+Disciplina completa em [modulo08-arquitetura-de-sistemas-com-ia](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo08-arquitetura-de-sistemas-com-ia) — os padrões de arquitetura de referência para sistemas de IA agêntica, construídos sobre um caso único, o **TrialForge** (Vitalis Pharma, geração de documentos clínicos regulatórios), do diagrama de referência (Gateway → Orquestrador → Modelo+RAG → Approval Gate, com banda de Observabilidade) até um protótipo enterprise com model tiering e trilha de auditoria. Cada módulo entrega um canvas de decisão, protótipos executáveis (JS e Python com paridade funcional) e atividade prática.
 
 ### Os 5 módulos da disciplina
-*   [Módulo 1 — Fundamentos AI-First](./modulo08-arquitetura-de-sistemas-com-ia/modulo-01-fundamentos-ai-first/) — diagrama de referência e framework de decisão agente-vs-regra, com `decision-framework-tool` executável.
-*   [Módulo 2 — Single-Agent](./modulo08-arquitetura-de-sistemas-com-ia/modulo-02-single-agent/) — anatomia do agente, loop ReAct, reflexão e ferramentas/MCP, com protótipo rodando contra Ollama local.
-*   [Módulo 3 — Multi-Agent](./modulo08-arquitetura-de-sistemas-com-ia/modulo-03-multi-agent/) — por que múltiplos agentes, 6 padrões de orquestração (Sequential, Parallel, Supervisor, Hierarchical, Group Chat, Handoff) e tratamento de falha distribuída (CAP + Saga).
-*   [Módulo 4 — Padrões AI-Específicos](./modulo08-arquitetura-de-sistemas-com-ia/modulo-04-padroes-ai-especificos/) — RAG avançado, roteamento de modelo, cache semântico e Approval Gate formalizado num gateway único.
-*   [Módulo 5 — Arquitetura Enterprise](./modulo08-arquitetura-de-sistemas-com-ia/modulo-05-arquitetura-enterprise/) — stack completo, observabilidade em escala, implantação híbrida e model tiering em cascata com trilha de auditoria.
+*   [Módulo 1 — Fundamentos AI-First](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo08-arquitetura-de-sistemas-com-ia/modulo-01-fundamentos-ai-first) — diagrama de referência e framework de decisão agente-vs-regra, com `decision-framework-tool` executável.
+*   [Módulo 2 — Single-Agent](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo08-arquitetura-de-sistemas-com-ia/modulo-02-single-agent) — anatomia do agente, loop ReAct, reflexão e ferramentas/MCP, com protótipo rodando contra Ollama local.
+*   [Módulo 3 — Multi-Agent](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo08-arquitetura-de-sistemas-com-ia/modulo-03-multi-agent) — por que múltiplos agentes, 6 padrões de orquestração (Sequential, Parallel, Supervisor, Hierarchical, Group Chat, Handoff) e tratamento de falha distribuída (CAP + Saga).
+*   [Módulo 4 — Padrões AI-Específicos](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo08-arquitetura-de-sistemas-com-ia/modulo-04-padroes-ai-especificos) — RAG avançado, roteamento de modelo, cache semântico e Approval Gate formalizado num gateway único.
+*   [Módulo 5 — Arquitetura Enterprise](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo08-arquitetura-de-sistemas-com-ia/modulo-05-arquitetura-enterprise) — stack completo, observabilidade em escala, implantação híbrida e model tiering em cascata com trilha de auditoria.
+
+### Leituras Recomendadas
+*   [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) — Yao et al., ICLR 2023. Fundamenta o loop Pensamento-Ação-Observação usado no módulo 2.
+*   [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401) — Lewis et al. (Meta AI), NeurIPS 2020. Paper seminal do RAG, base do módulo 4.
+*   [CAP Theorem](https://en.wikipedia.org/wiki/CAP_theorem) — Eric Brewer (2000), demonstrado formalmente por Gilbert & Lynch (2002). Base dos trade-offs de consistência e disponibilidade discutidos no módulo 3.
+*   [Model Context Protocol](https://modelcontextprotocol.io/) — Anthropic, novembro de 2024. Padrão aberto de ferramentas apresentado no módulo 2.
+*   [Agent2Agent Protocol (A2A)](https://a2a-protocol.org/) — Google, abril de 2025, doado à Linux Foundation em junho de 2025. Protocolo de comunicação entre agentes citado no módulo 3.
+*   [Why AI Projects Fail and How They Can Succeed](https://www.rand.org/pubs/research_reports/RRA2680-1.html) — RAND Corporation, 2025. Dado usado para embasar a taxa real de fracasso de projetos de IA que abre a disciplina.
 
 ### Ferramentas & Plataformas
 *   [Ollama](https://ollama.com/) — engine local padrão de todos os protótipos (`gemma4:e2b`), gratuito e sem chave de API.
 *   [Claude (Anthropic)](https://www.anthropic.com/), [Gemini (Google)](https://gemini.google.com/), [GPT (OpenAI)](https://openai.com/) — alternativas pagas de referência nos protótipos (`provedores-pagos.js/.py`).
-*   [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) — protocolo de ferramentas usado no Módulo 2.
 
 ## Resolvendo Problemas Comuns
 
