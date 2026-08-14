@@ -17,13 +17,13 @@ sre = get_sre_agent(tools=[apply_k8s_manifest, analyze_canary_metrics])
 
 # 2. Definir Tarefas do Fluxo GitOps
 task_design = Task(
-    description="Desenhe o manifesto K8s para o app 'nexus-api-error' com 2 réplicas na porta 80. Imagem com erro e forçar erro em canary analyzer.",
+    description="Desenhe o manifesto K8s para o app 'nexus-api' com 2 réplicas na porta 80. Use a imagem 'nginx:latest' e inclua readinessProbe.",
     expected_output="Arquivo YAML criado no disco com sintaxe Kubernetes V1 estrita.",
     agent=architect
 )
 
 task_sync = Task(
-    description="Realize a reconciliação (Sync) do manifesto 'nexus-api-error-k8s.yaml' no cluster usando o apply_k8s_manifest.",
+    description="Realize a reconciliação (Sync) do manifesto 'nexus-api-k8s.yaml' no cluster usando o apply_k8s_manifest.",
     expected_output="Confirmação de que o estado desejado foi enviado ao cluster.",
     agent=sre
 )

@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 from crewai.tools import tool
 
@@ -79,6 +80,7 @@ def apply_k8s_manifest(filename: str) -> str:
 @tool("analyze_canary_metrics")
 def analyze_canary_metrics(metrics_data: str) -> str:
     """Analyzes application metrics to decide if a Canary Rollout should proceed or rollback."""
-    if "error_rate > 5%" in metrics_data or "error" in metrics_data.lower():
+    match = re.search(r"error_rate:\s*([\d.]+)\s*%", metrics_data, re.IGNORECASE)
+    if match and float(match.group(1)) > 5:
         return "❌ ROLLBACK: Elevated error rate detected in Canary pods. Reverting deployment."
     return "✅ PROCEED: Metrics are stable. Canary rollout approved for production."
