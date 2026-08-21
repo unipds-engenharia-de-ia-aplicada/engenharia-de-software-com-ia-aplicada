@@ -198,23 +198,28 @@ Abra um Pull Request. O Danger vai reportar FALHA na regra de aprovadores (zero 
 Copie os arquivos abaixo para o seu repositorio:
 
 ```
-dangerfile.js                      <- regras de governanca
-.github/workflows/ci.yml           <- pipeline com os dois jobs
+dangerfile.js                              <- regras de governanca
+.github/workflows/ci.yml                   <- avalia o PR (roda codigo do PR/fork)
+.github/workflows/post-danger-comment.yml  <- posta o comentario e o status
 ```
 
 Ajuste o `dangerfile.js` para as convencoes do seu time: prefixo do Jira, caminhos criticos, numero de aprovadores, limites de tamanho.
 
-O pipeline precisa de uma permissao explicita para que o Danger consiga postar comentarios e criar o commit status:
+**Por que dois workflows, e nao um so:** um PR de fork (exatamente o fluxo do Passo 1 acima) roda com um `GITHUB_TOKEN` que o proprio GitHub forca a ser somente-leitura, nao importa o que o `permissions:` do workflow declare. Se um unico job, disparado por `pull_request`, tentasse rodar o Danger e postar o comentario, a postagem falharia com `403` em qualquer PR vindo de um fork -- exatamente o cenario que este guia pede para o aluno reproduzir.
+
+A solucao (o mesmo padrao que a documentacao do GitHub recomenda para evitar "pwn requests"):
+
+- `ci.yml`, disparado por `pull_request`, roda `npx danger ci --text-only`. Essa flag faz o Danger avaliar as regras e imprimir o resultado, mas nunca postar nada. O resultado e publicado como artefato do workflow. Esse job so precisa de permissao de leitura.
+- `post-danger-comment.yml`, disparado por `workflow_run` (quando o `ci.yml` termina), baixa esse artefato e posta o comentario + define o commit status. Como `workflow_run` sempre executa a versao do arquivo que esta na branch padrao do repositorio -- nunca a versao trazida pelo fork -- e nunca faz checkout do codigo do PR, ele pode receber `pull-requests: write` com seguranca:
 
 ```yaml
-governance:
-  permissions:
-    pull-requests: write
-    contents: read
-    statuses: write
+# post-danger-comment.yml
+permissions:
+  pull-requests: write
+  statuses: write
 ```
 
-Sem `statuses: write`, o Danger posta o comentario mas nao consegue definir o icone verde ou vermelho no commit.
+Um cuidado ao implementar: leia o conteudo do artefato dentro do script (por exemplo, com `fs.readFileSync` no `actions/github-script`), nunca interpolando o texto do artefato diretamente numa expressao `${{ }}` do workflow. Interpolar conteudo que veio de um PR nao confiavel numa expressao de workflow reabre a mesma vulnerabilidade que esse desenho existe para fechar.
 
 ---
 
