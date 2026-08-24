@@ -1,0 +1,60 @@
+---
+description: Design UI/UX para web — hierarquia, espaçamento, empty/error, dark mode, a11y
+globs: web/**
+alwaysApply: false
+---
+
+# Design — `web/**`
+
+Regras de UI/UX para tudo sob `web/`. Preferir clareza operacional (OpsPilot) a ornamentação.
+
+## Hierarquia
+
+- Uma página = um propósito principal. Headline única; texto de apoio curto (1–2 frases).
+- Escala tipográfica fixa (ex.: `display` → `title` → `body` → `caption`). Não inventar tamanhos ad hoc.
+- Peso e cor reforçam hierarquia: título mais contrastante; meta/secundário mais suave — nunca o inverso.
+- Evitar competição visual: no máximo um CTA primário por seção; secundários em estilo quieter.
+- Listas e tabelas: coluna/linha principal legível primeiro; metadados (status, timestamp) subordinados.
+
+## Espaçamento (escala)
+
+- Usar escala de 4px: `4 | 8 | 12 | 16 | 24 | 32 | 48 | 64`. Sem valores fora da escala.
+- Agrupar por proximidade: itens relacionados com gap menor; seções com gap maior.
+- Padding interno consistente por densidade (`compact` 8–12, `default` 16–24, `comfortable` 24–32).
+- Margens verticais entre seções ≥ padding interno dos blocos.
+- Não “empurrar” layout com margens aleatórias; preferir `gap` em flex/grid.
+
+## Estados vazios
+
+- Empty state é conteúdo de primeira classe: título curto + uma frase do que falta + ação clara (ex.: “Abrir incidente”, “Atualizar”).
+- Distinguir “ainda sem dados” de “filtro sem resultados” (mensagem e CTA diferentes).
+- Evitar ilustrações decorativas pesadas; ícone discreto opcional.
+- Nunca deixar área em branco sem contexto (loading skeleton ≠ empty).
+
+## Estados de erro
+
+- Erro visível no contexto onde ocorreu (inline/banner da seção), não só toast fugaz.
+- Mensagem: o que falhou + o que o usuário pode fazer. Sem jargão de stack trace na UI.
+- Erros recuperáveis oferecem retry ou link de correção; irrecuperáveis explicam o próximo passo.
+- Validação de formulário: associada ao campo (`aria-describedby`); foco no primeiro inválido.
+- Não usar só cor para sinalizar erro — ícone/texto obrigatórios.
+
+## Dark mode
+
+- Tokens semânticos (`--bg`, `--surface`, `--text`, `--muted`, `--border`, `--danger`, `--success`), nunca hex soltos no JSX/CSS de componentes.
+- Contraste AA mínimo em ambos os temas; verificar texto muted e bordas sobre surface.
+- Preferir `color-scheme` + variáveis; imagens/ícones com variantes ou `currentColor` quando fizer sentido.
+- Sombras e glows reduzidos no dark; bordas/superfícies fazem o papel de separação.
+- Status (ok/warn/error) devem permanecer distinguíveis em dark (não só saturação baixa).
+
+## Acessibilidade
+
+- HTML semântico: `main`, `nav`, `button`/`a` corretos; headings em ordem sem pular níveis.
+- Foco visível em todos os interativos; não remover `outline` sem substituto equivalente.
+- Alvos de clique ≥ 44×44px (ou padding que alcance isso).
+- Imagens com `alt` útil; decorativas com `alt=""`.
+- Formulários: `label` explícito; erros e ajuda anunciáveis.
+- Respeitar `prefers-reduced-motion`: animações opcionais/desligáveis.
+- Teclado: tab order lógico; Escape fecha overlays; foco preso em modais enquanto abertos.
+- Não depender só de hover; estados também via focus/active.
+- Testar com contraste e leitores de tela nos fluxos críticos (lista de alertas, abrir/resolver incidente, chat).

@@ -1,0 +1,5 @@
+context_file: .github/copilot-instructions.md
+context_files: []
+context_markers:
+  start: <!-- SPECKIT START -->
+  end: <!-- SPECKIT END -->

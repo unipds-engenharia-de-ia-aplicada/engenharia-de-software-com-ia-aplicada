@@ -1,0 +1,35 @@
+curl -s localhost:3000/chat -X POST -d '{"message":"liste os incidentes abertos com a severidade de cada um","userId":"u-42"}' | jq -r '.answer'
+
+
+
+curl -s localhost:3000/chat -X POST -d '{"message":"organiza meu plantão gostaria de ver os incidentes abertos status firing em primeiro e os resolved por ultimo","userId":"u-42"}' | jq '{answer, r: .metrics.memoriesRecalled}'
+
+CID=03dc02ad-74dd-486e-a925-2b35e55d221f
+
+curl -s localhost:3000/chat -X POST \
+  -H 'content-type: application/json' \
+  -d '{"message":"o que decidimos sobre os deploys?","userId":"u-plantao","conversationId":"'"$CID"'"}' \
+  | jq '{answer, historyMessages: .metrics.historyMessages, summarize: [.trace[]? | select(.type=="summarize")], error}'
+
+CID=03dc02ad-74dd-486e-a925-2b35e55d221f
+curl -s localhost:3000/chat -X POST \
+  -d '{"message":"como está o plantão?","userId":"u-plantao","conversationId":"'$CID'"}' \
+  | jq '.metrics.contextBreakdown'
+
+
+    curl -s localhost:3000/chat -H 'content-type: application/json' \
+  -d '{"message":"quantos alertas críticos?","userId":"u-42"}' \
+  | jq '.metrics|{route,routeReason}'
+
+
+curl -s localhost:3000/chat -H 'content-type: application/json' \
+  -d '{"message":"monte o plano de resposta ao incidente do checkout, em ordem","userId":"u-42"}' \
+  | jq '.metrics|{route,routeReason}'
+
+
+  RID=$(curl -s localhost:3000/chat -X POST \
+  -H 'content-type: application/json' \
+  -d '{"message":"resolva o incidente mais antigo","userId":"U-42"}' \
+  | jq -r .requestId)
+
+curl -s "localhost:3000/requests/$RID" | jq .

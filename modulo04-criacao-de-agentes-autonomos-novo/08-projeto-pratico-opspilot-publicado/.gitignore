@@ -1,0 +1,20 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+build/
+data/
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+coverage/
+web/dist/
+web/coverage/
+# Hugging Face / Transformers.js model cache
+.cache/
+models/

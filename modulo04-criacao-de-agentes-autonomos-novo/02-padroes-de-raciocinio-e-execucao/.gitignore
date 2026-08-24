@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+.env.*
+build/
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/

@@ -281,6 +281,55 @@ Projeto em [exemplo-13-embeddings-neo4j-rag/](./modulo01-fundamentos-de-ia-e-llm
 
 ---
 
+## Modulo 04 - Criação de Agentes Autônomos
+
+> Material da **regravação** do módulo (pasta `-novo`). O material da versão anterior permanece em [modulo04-agentes-autonomos/](./modulo04-agentes-autonomos/).
+
+Dois projetos construídos do zero ao longo do módulo — a **Notas API** (Unidade 1, operando o GitHub Copilot com método: instructions, spec-driven development, guardrails) e o **OpsPilot** (Unidades 2–9, um copiloto de plantão/incident commander com LangChain/LangGraph sobre OpenRouter, que evolui unidade a unidade até virar produto publicado com modo multiagente).
+
+Cada pasta é um snapshot completo do projeto ao final da unidade, com um `UNIDADE.md` explicando o que é novo e os desvios em relação ao roteiro. Mapa completo em [modulo04-criacao-de-agentes-autonomos-novo/](./modulo04-criacao-de-agentes-autonomos-novo/).
+
+- https://openrouter.ai/
+- https://openrouter.ai/models?max_price=0
+
+### 4.1 - Arquitetura de Agentes de Código (GitHub Copilot)
+
+Projeto em [01-arquitetura-de-agentes-de-codigo/](./modulo04-criacao-de-agentes-autonomos-novo/01-arquitetura-de-agentes-de-codigo/)
+
+### 4.2 - Padrões de Raciocínio e Execução (ReAct, Plan-and-Execute, Reflection)
+
+Projeto em [02-padroes-de-raciocinio-e-execucao/](./modulo04-criacao-de-agentes-autonomos-novo/02-padroes-de-raciocinio-e-execucao/)
+
+### 4.3 - Function Calling e Tool Use (SQLite, tool externa, MCP)
+
+Projeto em [03-function-calling-e-tool-use/](./modulo04-criacao-de-agentes-autonomos-novo/03-function-calling-e-tool-use/)
+
+### 4.4 - Memória e Reflexão em Agentes Autônomos (histórico, embeddings, refletor)
+
+Projeto em [04-memoria-e-reflexao-em-agentes-autonomos/](./modulo04-criacao-de-agentes-autonomos-novo/04-memoria-e-reflexao-em-agentes-autonomos/)
+
+### 4.5 - Gerenciamento de Contextos (tokens, sumarização, ContextBuilder)
+
+Projeto em [05-gerenciamento-de-contextos/](./modulo04-criacao-de-agentes-autonomos-novo/05-gerenciamento-de-contextos/)
+
+### 4.6 - LangGraph e Workflows Complexos (grafo de produção, roteador, fallback)
+
+Projeto em [06-langgraph-e-workflows-complexos/](./modulo04-criacao-de-agentes-autonomos-novo/06-langgraph-e-workflows-complexos/)
+
+### 4.7 - Observabilidade e Limites de Autonomia (trace persistido, /stats, aprovação humana)
+
+Projeto em [07-observabilidade-e-limites-de-autonomia/](./modulo04-criacao-de-agentes-autonomos-novo/07-observabilidade-e-limites-de-autonomia/)
+
+### 4.8 - Projeto Prático: o OpsPilot de ponta a ponta, publicado (war room web, Actions, Pages)
+
+Projeto em [08-projeto-pratico-opspilot-publicado/](./modulo04-criacao-de-agentes-autonomos-novo/08-projeto-pratico-opspilot-publicado/)
+
+### 4.9 - Multi-Agent Systems (supervisor, papéis, blackboard)
+
+Projeto em [09-multi-agent-systems/](./modulo04-criacao-de-agentes-autonomos-novo/09-multi-agent-systems/)
+
+---
+
 ## Modulo 05 - Ferramentas de IA para UI e UX
 
 ### Engines de IA & Prototipação Conversacional

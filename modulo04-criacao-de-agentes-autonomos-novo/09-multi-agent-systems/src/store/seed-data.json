@@ -1,0 +1,67 @@
+{
+  "services": [
+    { "name": "checkout", "tier": "critical" },
+    { "name": "payments", "tier": "critical" },
+    { "name": "auth", "tier": "high" },
+    { "name": "catalog", "tier": "standard" },
+    { "name": "inventory", "tier": "standard" }
+  ],
+  "alerts": [
+    {
+      "id": "alert-001",
+      "service": "payments",
+      "description": "High error rate on /checkout",
+      "severity": "critical",
+      "status": "firing"
+    },
+    {
+      "id": "alert-002",
+      "service": "auth",
+      "description": "JWT validation failures spike",
+      "severity": "high",
+      "status": "firing"
+    },
+    {
+      "id": "alert-003",
+      "service": "checkout",
+      "description": "DB connection pool exhausted",
+      "severity": "critical",
+      "status": "firing"
+    },
+    {
+      "id": "alert-004",
+      "service": "inventory",
+      "description": "Cache hit rate below threshold",
+      "severity": "medium",
+      "status": "resolved"
+    },
+    {
+      "id": "alert-005",
+      "service": "catalog",
+      "description": "Email delivery queue stalled",
+      "severity": "high",
+      "status": "resolved"
+    },
+    {
+      "id": "alert-006",
+      "service": "payments",
+      "description": "Latency p99 > 2s",
+      "severity": "medium",
+      "status": "resolved"
+    }
+  ],
+  "runbooks": [
+    {
+      "service": "checkout",
+      "content": "1. Check checkout error rate dashboard\n2. Verify payment provider callbacks\n3. Drain stuck carts if queue > threshold\n4. Escalate to payments on-call if sev critical persists 10m"
+    },
+    {
+      "service": "payments",
+      "content": "1. Confirm PSP status page\n2. Check /charge and /refund error budgets\n3. Toggle circuit breaker if error rate > 5%\n4. Page payments owner; capture request ids"
+    },
+    {
+      "service": "auth",
+      "content": "1. Inspect JWT validation metrics\n2. Verify IdP JWKS endpoint health\n3. Rotate keys only via approved runbook\n4. Force session revoke if compromise suspected"
+    }
+  ]
+}

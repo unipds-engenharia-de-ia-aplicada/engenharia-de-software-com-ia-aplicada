@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+.env.*
+build/
+data/
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+# Hugging Face / Transformers.js model cache
+.cache/
+models/

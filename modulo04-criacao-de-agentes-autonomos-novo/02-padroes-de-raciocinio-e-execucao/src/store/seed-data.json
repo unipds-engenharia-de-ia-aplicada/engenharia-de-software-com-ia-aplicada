@@ -1,0 +1,53 @@
+{
+  "services": [
+    { "name": "payment-api" },
+    { "name": "auth-service" },
+    { "name": "order-service" },
+    { "name": "inventory-api" },
+    { "name": "notification-worker" }
+  ],
+  "alerts": [
+    {
+      "id": "alert-001",
+      "service": "payment-api",
+      "description": "High error rate on /checkout",
+      "severity": "critical",
+      "status": "firing"
+    },
+    {
+      "id": "alert-002",
+      "service": "auth-service",
+      "description": "JWT validation failures spike",
+      "severity": "high",
+      "status": "firing"
+    },
+    {
+      "id": "alert-003",
+      "service": "order-service",
+      "description": "DB connection pool exhausted",
+      "severity": "critical",
+      "status": "firing"
+    },
+    {
+      "id": "alert-004",
+      "service": "inventory-api",
+      "description": "Cache hit rate below threshold",
+      "severity": "medium",
+      "status": "resolved"
+    },
+    {
+      "id": "alert-005",
+      "service": "notification-worker",
+      "description": "Email delivery queue stalled",
+      "severity": "high",
+      "status": "resolved"
+    },
+    {
+      "id": "alert-006",
+      "service": "payment-api",
+      "description": "Latency p99 > 2s",
+      "severity": "medium",
+      "status": "resolved"
+    }
+  ]
+}
