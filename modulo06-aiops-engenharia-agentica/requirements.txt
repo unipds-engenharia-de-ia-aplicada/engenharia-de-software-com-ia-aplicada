@@ -1,6 +1,6 @@
 # Framework Base de Agentes
-crewai
-crewai[tools]
+crewai==1.14.4
+crewai[tools]==1.14.4
 
 # LLM e Orquestração
 langchain-groq
@@ -10,7 +10,7 @@ python-dotenv
 streamlit
 
 # Ferramentas de Infra e Segurança
-checkov
+checkov<3.0.0
 kubernetes
 
 # Utilitários de Dados
