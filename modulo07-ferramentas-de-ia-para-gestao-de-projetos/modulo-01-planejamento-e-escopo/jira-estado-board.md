@@ -27,7 +27,7 @@ Abra o Backlog do seu projeto. Você deve ver as histórias agrupadas em "Sprint
 
 ### Como importar o backlog
 
-Consulte o arquivo `Como Importar o Backlog no Jira - Módulo 1.pdf` nesta mesma pasta para o passo a passo completo de importação.
+Consulte o arquivo `Como Importar o Backlog no Jira - Módulo 1.md` nesta mesma pasta para o passo a passo completo de importação, atualizado com os erros reais de mapeamento relatados pela turma.
 
 ---
 
