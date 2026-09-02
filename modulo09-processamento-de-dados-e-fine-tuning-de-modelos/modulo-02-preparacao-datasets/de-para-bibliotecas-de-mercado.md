@@ -20,29 +20,6 @@ Este documento não é parte do material gravado nem da ementa submetida ao MEC.
 
 ---
 
-## Resumo executivo
-
-| Componente do M2 | Existe lib de mercado madura? | Por que construímos do zero |
-|---|---|---|
-| Deduplicação (MinHash+LSH) | Madura em Python; em JS só a metade (MinHash sem LSH banding) | **Forçado**: banding LSH não existe pronto em nenhuma lib JS |
-| Amostragem por temperatura | Não, nem em Python (é fórmula de paper, não lib) | **Forçado**: nem o próprio Google publica isso como lib genérica |
-| Validação de schema JSONL por API | Não existe nem em Python, oficial de nenhum provedor | **Forçado**: o mercado inteiro também não resolveu isso |
-| Normalização de texto básica | Sim, `natural`/`compromise`, maduras e ativas, em JS | **Escolha pedagógica**: dava pra usar uma lib |
-| Similaridade/fuzzy match | Sim, `fastest-levenshtein`/`fast-levenshtein`, maduras, em JS | **Escolha pedagógica**: dava pra usar uma lib |
-| Gate de relevância (4 perguntas) | Não existe (é lógica de negócio, não um problema genérico) | Não aplicável: não é o tipo de coisa que vira lib |
-| Extração de campo (OCR + regex) | Parcialmente (OCR sim, parsing de layout de seguradora não) | Domínio específico demais pra lib genérica cobrir a parte de parsing |
-| Higienização de PII | Sim, Microsoft Presidio é a referência - **já documentado** | Ver `privacy-preserving-finetuning-companion.md` (M2.1), não repetido aqui |
-
-A linha mais importante desta tabela: **três dos seis componentes construídos do zero não têm alternativa de mercado madura, nem em JavaScript nem em Python** (dedup, amostragem por temperatura, validação de schema por API). Não foi atalho didático evitar uma lib - pesquisamos de verdade em 2026-08-22 e a lib não existe.
-
----
-
-## 1. Deduplicação: `encontrarQuaseDuplicatasMinHashLSH` / `similaridadeJaccardExata`
-
-**O que nosso código faz** (`gravacao-m2.2/demos/dataset-cleaning-balancing-tool.js`, funções `hashString`, `assinaturaMinHash`, `bandingLSH`, `encontrarQuaseDuplicatasMinHashLSH`, `similaridadeJaccardExata`): implementa MinHash (k=32 hashes) + LSH banding (b=8 bandas, r=4 linhas) do zero em JavaScript vanilla, sem nenhuma dependência externa. Rodando de verdade contra o dataset simulado da Amplitude Seguros: 549 pares força-bruta reduzidos a 20 candidatos LSH (96,4% de redução), 3 quase-duplicatas reais confirmadas após refino por Jaccard exato, zero falso negativo nos testes.
-
-**Biblioteca de mercado equivalente:**
-- **Python**: `datasketch` (ekzhu/datasketch) é o núcleo de fato usado por quase todo pipeline de dedup de LLM - inclusive por `text-dedup`, `datatrove` (Hugging Face, usado pra construir o FineWeb) e indiretamente pelo NVIDIA NeMo Curator. Ativa, ~4,5 milhões de downloads/mês no PyPI, mas o próprio mantenedor pediu colaboradores em 2025/2026 por estar mudando de foco.
 - **JavaScript/Node**: **não existe equivalente vivo da técnica completa (MinHash + LSH banding).** Quatro opções reais, nenhuma completa:
   - `minhash` (npm): parado na versão 0.0.9 há cerca de 8 anos.
   - `minhash-node-rs` (Rust-pra-Node): 15 estrelas, sinal fraco de atividade.
