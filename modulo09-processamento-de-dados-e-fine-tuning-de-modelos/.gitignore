@@ -1,0 +1,4 @@
+.DS_Store
+*.docx
+*.safetensors
+__pycache__/

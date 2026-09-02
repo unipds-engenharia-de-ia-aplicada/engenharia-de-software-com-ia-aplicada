@@ -1,0 +1,791 @@
+<title>Bestiário do Zoo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-dark:#12211C;
+  --ink-raised:#1A2C24;
+  --ink-raised-2:#20362C;
+  --paper:#E7DFC6;
+  --paper-dim:#CBC2A4;
+  --bone:#ECE6D4;
+  --bone-dim:#B9C2B7;
+  --brass:#CBA24E;
+  --brass-dim:#8E7539;
+  --oxblood:#B54A3F;
+  --oxblood-soft:#7A342C;
+  --sage:#8AA88E;
+  --sage-dim:#5E7963;
+  --rule:#33473C;
+  --shadow: 0 18px 40px rgba(0,0,0,0.35);
+  --font-display:'Special Elite', 'Courier New', monospace;
+  --font-body:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono:'Space Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--ink-dark);
+  color:var(--bone);
+  font-family:var(--font-body);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--brass);color:var(--ink-dark);}
+a{color:var(--brass);text-decoration-color:var(--brass-dim);text-underline-offset:3px;}
+a:hover{color:var(--paper);}
+a:focus-visible, button:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+
+/* subtle paper-grain texture, generated, no external asset */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.05;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, #000 2px, #000 3px);
+  mix-blend-mode:overlay;
+}
+
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
+
+/* ---------- HERO ---------- */
+.hero{
+  padding:clamp(56px,9vw,104px) 0 clamp(40px,6vw,64px);
+  border-bottom:1px solid var(--rule);
+}
+.hero-eyebrow{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--sage);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.hero-eyebrow::before{
+  content:"";
+  width:26px;height:1px;
+  background:var(--sage-dim);
+  display:inline-block;
+}
+.hero-title{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:clamp(34px,6vw,64px);
+  line-height:1.08;
+  color:var(--paper);
+  margin:0 0 20px;
+  text-wrap:balance;
+  letter-spacing:0.005em;
+}
+.hero-title em{
+  font-style:normal;
+  color:var(--brass);
+}
+.hero-lede{
+  font-size:clamp(16px,1.7vw,19px);
+  max-width:62ch;
+  color:var(--bone);
+  margin:0 0 28px;
+}
+.hero-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:30px;
+}
+.tag{
+  font-family:var(--font-mono);
+  font-size:12px;
+  padding:6px 12px;
+  border:1px solid var(--rule);
+  border-radius:2px;
+  color:var(--bone-dim);
+  background:var(--ink-raised);
+}
+.tag.brass{border-color:var(--brass-dim);color:var(--brass);}
+
+.methodology{
+  background:var(--ink-raised);
+  border:1px solid var(--rule);
+  border-left:3px solid var(--sage-dim);
+  padding:20px 24px;
+  border-radius:2px;
+  max-width:74ch;
+  font-size:14.5px;
+  color:var(--bone-dim);
+}
+.methodology strong{color:var(--paper);font-weight:600;}
+.methodology p{margin:0 0 10px;}
+.methodology p:last-child{margin-bottom:0;}
+
+/* ---------- LAYOUT ---------- */
+.layout{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:48px;
+  padding-top:clamp(32px,5vw,48px);
+  align-items:start;
+}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr;}
+}
+
+/* ---------- INDEX / DRAWER TABS ---------- */
+.index-nav{
+  position:sticky;
+  top:24px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  align-self:start;
+}
+@media (max-width:860px){
+  .index-nav{
+    position:sticky;
+    top:0;
+    z-index:5;
+    flex-direction:row;
+    overflow-x:auto;
+    background:var(--ink-dark);
+    padding:12px 0;
+    margin:0 -18px;
+    padding-left:18px;
+    padding-right:18px;
+    border-bottom:1px solid var(--rule);
+    gap:8px;
+  }
+}
+.index-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--sage-dim);
+  margin-bottom:10px;
+}
+@media (max-width:860px){ .index-label{display:none;} }
+.index-tab{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  padding:10px 12px;
+  text-decoration:none;
+  border-left:2px solid transparent;
+  color:var(--bone-dim);
+  transition:background .15s, color .15s, border-color .15s;
+  white-space:nowrap;
+  border-radius:0 3px 3px 0;
+}
+.index-tab:hover{background:var(--ink-raised);color:var(--paper);}
+.index-tab.active{border-left-color:var(--brass);color:var(--paper);background:var(--ink-raised);}
+.index-tab .n{font-family:var(--font-mono);font-size:12px;color:var(--brass-dim);}
+.index-tab.active .n{color:var(--brass);}
+.index-tab .t{font-family:var(--font-display);font-size:13.5px;}
+@media (max-width:860px){
+  .index-tab{flex-direction:column;gap:2px;border-left:none;border-bottom:2px solid transparent;}
+  .index-tab.active{border-bottom-color:var(--brass);border-left:none;}
+}
+
+/* ---------- DOSSIER ---------- */
+main{min-width:0;}
+.dossier{
+  padding:clamp(40px,6vw,64px) 0;
+  border-bottom:1px solid var(--rule);
+  scroll-margin-top:24px;
+}
+.dossier:last-of-type{border-bottom:none;}
+
+.dossier-head{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:20px 26px;
+  align-items:start;
+  margin-bottom:30px;
+}
+.dossier-number{
+  font-family:var(--font-display);
+  font-size:clamp(48px,7vw,76px);
+  line-height:0.8;
+  color:var(--brass-dim);
+  padding-top:6px;
+}
+.dossier-title{
+  font-family:var(--font-display);
+  font-size:clamp(24px,3.4vw,36px);
+  color:var(--paper);
+  margin:0 0 10px;
+  text-wrap:balance;
+}
+.dossier-callnumber{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  color:var(--sage);
+  line-height:1.6;
+}
+.dossier-callnumber .sep{color:var(--rule);margin:0 8px;}
+
+.block{margin-bottom:34px;}
+.block:last-child{margin-bottom:0;}
+.block-label{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--brass);
+  margin:0 0 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.block-label::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--rule);
+}
+.block p{
+  margin:0 0 15px;
+  font-size:16px;
+  color:var(--bone);
+  max-width:74ch;
+}
+.block p:last-child{margin-bottom:0;}
+.block p .num-lead{
+  color:var(--brass);
+  font-family:var(--font-mono);
+  font-weight:700;
+}
+
+.analogy{
+  border-left:3px solid var(--brass-dim);
+  background:var(--ink-raised);
+  padding:16px 20px;
+  margin:0 0 15px;
+  font-style:italic;
+  color:var(--paper);
+  border-radius:0 3px 3px 0;
+  max-width:70ch;
+}
+.analogy::before{
+  content:"ANALOGIA";
+  display:block;
+  font-family:var(--font-mono);
+  font-style:normal;
+  font-size:10.5px;
+  letter-spacing:0.14em;
+  color:var(--brass-dim);
+  margin-bottom:8px;
+}
+
+.rigor-note{
+  border:1px dashed var(--rule);
+  padding:14px 18px;
+  margin:0 0 15px;
+  font-size:14px;
+  color:var(--bone-dim);
+  border-radius:3px;
+  max-width:70ch;
+}
+.rigor-note::before{
+  content:"NOTA DE RIGOR";
+  display:block;
+  font-family:var(--font-mono);
+  font-size:10px;
+  letter-spacing:0.12em;
+  color:var(--sage-dim);
+  margin-bottom:6px;
+}
+
+.connection{
+  background:linear-gradient(180deg, var(--ink-raised-2), var(--ink-raised));
+  border:1px solid var(--sage-dim);
+  padding:20px 24px;
+  border-radius:3px;
+  max-width:74ch;
+  position:relative;
+}
+.connection::before{
+  content:"⚲ CONEXÃO COM A DISCIPLINA";
+  display:block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.12em;
+  color:var(--sage);
+  margin-bottom:10px;
+}
+.connection p{color:var(--bone);margin:0;font-size:15.5px;}
+
+.citations{
+  border-top:1px solid var(--rule);
+  padding-top:20px;
+}
+.citations-title{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--brass-dim);
+  margin:0 0 16px;
+}
+.cit-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+.cit-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:6px 16px;
+  align-items:baseline;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--rule);
+}
+.cit-item:last-child{border-bottom:none;padding-bottom:0;}
+.cit-title{
+  font-style:italic;
+  color:var(--paper);
+  font-size:14.5px;
+  grid-column:1/2;
+}
+.cit-title a{color:var(--paper);}
+.cit-meta{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--bone-dim);
+  grid-column:1/2;
+}
+.cit-year{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--oxblood);
+  grid-column:2/3;
+  grid-row:1/3;
+  align-self:center;
+  border:1px solid var(--oxblood-soft);
+  padding:3px 8px;
+  border-radius:2px;
+  white-space:nowrap;
+  height:fit-content;
+}
+
+/* ---------- FOOTER ---------- */
+footer{
+  padding:48px 0 72px;
+  border-top:1px solid var(--rule);
+  margin-top:24px;
+}
+.footer-links{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:22px;
+  font-family:var(--font-mono);
+  font-size:12.5px;
+}
+.footer-links a{color:var(--sage);}
+.footer-sign{
+  font-size:13.5px;
+  color:var(--bone-dim);
+  line-height:1.7;
+}
+.footer-sign strong{color:var(--paper);font-weight:600;}
+
+@media (prefers-reduced-motion: no-preference){
+  .dossier{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s ease;}
+  .dossier.in-view{opacity:1;transform:none;}
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-eyebrow">Companion do Fine-Tuning Zoo · UNIPDS</div>
+    <h1 class="hero-title">Bestiário do <em>Zoo</em></h1>
+    <p class="hero-lede">As mesmas 7 espécies do pôster, catalogadas de novo, mas desta vez como dossiê de pesquisa: por que o mecanismo funciona de verdade, e o que a literatura de 2025/2026 já mudou sobre cada uma. Feito pra quem nunca fez mestrado em ML e não tem tempo de ler os papers originais um por um.</p>
+    <div class="hero-meta">
+      <span class="tag brass">7 dossiês</span>
+      <span class="tag">45+ fontes verificadas</span>
+      <span class="tag">busca real, ago/2026</span>
+    </div>
+    <div class="methodology">
+      <p><strong>Como isso foi apurado.</strong> Cada dossiê veio de uma busca dedicada, não de memória de treinamento, que tem corte anterior à data de hoje. Todo arXiv ID abaixo foi conferido; toda alegação de "estado da arte" está datada e linkada na fonte original.</p>
+      <p>Quando a busca não encontrou nada confiável o suficiente pra afirmar como fato, o dossiê diz isso explicitamente, marcado como <strong style="color:var(--sage)">Nota de rigor</strong>, em vez de preencher a lacuna com algo plausível.</p>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="index-nav" id="indexNav" aria-label="Índice de espécies">
+      <div class="index-label">Gaveta</div>
+    </nav>
+    <main id="main"></main>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="fine-tuning-zoo-poster.html">← Fine-Tuning Zoo (pôster)</a>
+      <a href="../../gravacao-m4.2/demos/gpu-cuda-anatomia-poster.html">Anatomia GPU/CUDA (pôster) →</a>
+      <a href="../../risco-validade-modelo-companion.md">Risco de Validade de Modelo (companion) →</a>
+    </div>
+    <div class="footer-sign">
+      <strong>Ahirton Lopes · Fine-Tuning Toolkit</strong>, UNIPDS: Processamento de Dados e Fine-Tuning de Modelos<br>
+      Prof. Ahirton Lopes, Ph.D., GDE AI, Microsoft MVP, Senior Manager
+    </div>
+  </footer>
+</div>
+
+<script>
+const ESPECIES = [
+{
+  tecnica: "Full Fine-Tuning",
+  mecanismo_teorico: `Full fine-tuning é gradient descent completo (via backpropagation + Adam ou similar) aplicado a 100% dos parâmetros θ do modelo, sem nenhuma restrição estrutural na forma da atualização - é literalmente o mesmo procedimento do pré-treinamento, só que continuado a partir de um checkpoint já muito bom em vez de partir de pesos aleatórios.
+
+O "por que funciona" não é óbvio à primeira vista: um modelo com bilhões de parâmetros, ajustado com poucos milhares de exemplos de uma tarefa nova e tocando em todos os pesos, deveria overfitar ou destruir o conhecimento pré-treinado. A explicação teórica mais citada é de Aghajanyan, Gupta e Zettlemoyer (Meta AI/FAIR, ACL-IJCNLP 2021, arXiv:2012.13255): a "dimensionalidade intrínseca" da tarefa de fine-tuning, partindo de um checkpoint pré-treinado, é surpreendentemente baixa. Os autores mostram que reparametrizar a atualização de pesos pra viver dentro de um subespaço aleatório de só ~200 dimensões (projetado de volta pro espaço completo) já recupera cerca de 90% do desempenho do fine-tuning completo em tarefas como MRPC com RoBERTa. E quanto maior o modelo pré-treinado, menor essa dimensionalidade intrínseca tende a ser - o que ajuda a explicar por que modelos grandes se especializam tão bem com pouco dado.
+
+Uma analogia: pense no modelo pré-treinado como um profissional muito experiente. Full fine-tuning dá liberdade total pra essa pessoa ajustar qualquer coisa nela mesma (nenhum parâmetro é travado ou tem sua forma de update restrita, ao contrário de LoRA), mas na prática o ajuste necessário pra especializá-la numa tarefa nova é pequeno e concentrado, porque o pré-treino já fez o trabalho pesado de organizar o espaço de representações. O gradiente, mesmo sem nenhuma restrição imposta de fora, "escolhe" viver perto dessa região de baixa dimensionalidade, não porque é forçado, mas porque é isso que minimiza a perda a partir daquele ponto de partida.
+
+É esse mesmo princípio que explica por que métodos como LoRA existem e funcionam quase tão bem quanto full fine-tuning: eles tornam essa restrição de baixa dimensionalidade explícita e barata (uma matriz de rank r pequeno) em vez de deixar o gradient descent completo "descobrir" isso implicitamente pagando o custo de otimizador e memória sobre todos os parâmetros. A diferença é que, por não ter restrição arquitetural nenhuma, full fine-tuning caminha pelo espaço de pesos de um jeito estruturalmente diferente do LoRA mesmo quando os dois empatam na métrica da tarefa-alvo - isso é justamente o que a pesquisa de 2025/2026 vem caracterizando (ver estado da arte).`,
+  estado_da_arte_2026: `Três frentes reais e verificadas, além do sucessor direto LoRA/DoRA já coberto no Zoo:
+
+1) GaLore - Memory-Efficient LLM Training by Gradient Low-Rank Projection (Jiawei Zhao et al., ICML 2024, arXiv:2403.03507). Ataca diretamente o "custo alto" citado no Zoo: a memória de full fine-tuning é dominada pelos estados do otimizador Adam (2x o tamanho do modelo) e pelos gradientes, não pelos pesos em si. GaLore projeta os gradientes pra um subespaço de baixo rank (recalculado periodicamente via SVD) só pra rodar o otimizador ali, mas continua atualizando 100% dos parâmetros - ainda é full fine-tuning no sentido pleno, só o cálculo fica comprimido. Resultado: até 65,5% menos memória de otimizador, permitindo treinar um modelo de 7B numa GPU de consumo de 24GB.
+
+2) LoRA vs Full Fine-tuning: An Illusion of Equivalence (Reece Shuttleworth, Jacob Andreas, Antonio Torralba, Pratyusha Sharma; arXiv:2410.21228, aceito no NeurIPS 2025). Mostra que mesmo quando LoRA e full FT empatam na métrica da tarefa-alvo, os pesos resultantes são estruturalmente diferentes: LoRA introduz "dimensões intrusas" (novos vetores singulares de peso alto na SVD dos pesos) que full FT não produz. Full FT preserva melhor a distribuição de pré-treino e se adapta com mais robustez em cenários de aprendizado sequencial/contínuo (várias tarefas uma após a outra). Ou seja: desempenho igual numa tarefa não significa que os dois métodos sejam intercambiáveis.
+
+3) LoRA Without Regret (John Schulman e equipe, Thinking Machines Lab, blog técnico, 29/set/2025, thinkingmachines.ai/blog/lora). Caracteriza empiricamente onde full FT continua estritamente necessário: LoRA empata com full FT quando aplicado a todas as camadas e quando a capacidade do LoRA excede o conteúdo de informação do dataset, mas full FT ainda vence quando o dataset é grande/denso o bastante pra "estourar" essa capacidade (datasets em escala de pré-treinamento, como o caso Codex do Zoo) e em batch sizes grandes. Achado curioso, sem explicação teórica completa segundo os próprios autores: a learning rate ótima de full FT é consistentemente ~10x menor que a de LoRA de rank alto.
+
+Achado adicional, mais preliminar: Evaluating Parameter Efficient Methods for RLVR (Qingyu Yin, Yulun Wu, Zhennan Shen et al., preprint de dez/2025, arXiv:2512.23165, ainda sem revisão por pares). No contexto específico de RL com recompensas verificáveis (RLVR) pra treinar modelos de raciocínio, os autores reportam que uma variante estrutural do LoRA (DoRA) supera a baseline full-parameter em benchmarks de matemática (46,6% vs 44,9% de acurácia média, inclusive em AIME e AMC), sugerindo que em RLVR a superioridade histórica do full FT não é garantida. Trato esse resultado como preliminar por ser preprint não revisado, não como conclusão fechada.
+
+Nota de rigor: durante a busca apareceu outro paper de 2026 sobre catastrophic forgetting em full fine-tuning com métricas muito específicas, mas com um único autor de nome incomum e claims genéricos demais pra confiar (padrão típico de conteúdo de baixa qualidade/possivelmente gerado por IA em arXiv). Não usei essa fonte.`,
+  para_onde_esta_indo: `A pesquisa não está "melhorando" full fine-tuning em si - o método continua sendo gradient descent sem restrição -, mas questionando duas coisas em paralelo. Primeiro, se dá pra reduzir o custo de memória sem abrir mão de treinar 100% dos parâmetros (linha GaLore, mais radical que os métodos parameter-efficient tradicionais). Segundo, se full FT ainda merece ser tratado como "padrão-ouro" de desempenho e robustez: a resposta está ficando mais matizada, com full FT permanecendo necessário em datasets grandes/densos e batch alto (Thinking Machines Lab), mas perdendo esse status em RLVR pra raciocínio (DoRA supera full FT em alguns benchmarks) e mostrando uma "assinatura" geométrica própria no espaço de pesos que importa mais pra continual learning do que pra desempenho isolado numa única tarefa (Illusion of Equivalence). O debate em aberto, ancorado nessas três fontes, é justamente esse: desempenho parecido numa tarefa não implica mais equivalência real entre full FT e métodos low-rank.`,
+  conexao_com_disciplina: `O caso GPT-3 -> Codex (OpenAI, 2021) já coberto no Zoo como full fine-tuning "cara" é exatamente o regime que o achado de LoRA Without Regret (Thinking Machines Lab, 2025) descreve como o único onde full FT é estritamente necessário: um dataset de código em escala de pré-treinamento, grande demais pra caber na capacidade de um LoRA de rank razoável. Ou seja, a escolha da OpenAI em 2021 não foi só "porque LoRA ainda não existia" - o princípio de "dataset denso demais pra baixo rank" que justificaria full FT até hoje se aplica retroativamente a esse caso.`,
+  citacoes: [
+    {titulo:"Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning", autores_ou_org:"Armen Aghajanyan, Sonal Gupta, Luke Zettlemoyer (Meta AI / FAIR)", ano:"2020 (arXiv) / ACL-IJCNLP 2021", identificador:"arXiv:2012.13255"},
+    {titulo:"GaLore: Memory-Efficient LLM Training by Gradient Low-Rank Projection", autores_ou_org:"Jiawei Zhao et al.", ano:"2024 (ICML 2024)", identificador:"arXiv:2403.03507"},
+    {titulo:"LoRA vs Full Fine-tuning: An Illusion of Equivalence", autores_ou_org:"Reece Shuttleworth, Jacob Andreas, Antonio Torralba, Pratyusha Sharma", ano:"2024 / NeurIPS 2025", identificador:"arXiv:2410.21228"},
+    {titulo:"LoRA Without Regret", autores_ou_org:"John Schulman e equipe, Thinking Machines Lab", ano:"2025 (29/set)", identificador:"https://thinkingmachines.ai/blog/lora/"},
+    {titulo:"Evaluating Parameter Efficient Methods for RLVR", autores_ou_org:"Qingyu Yin, Yulun Wu, Zhennan Shen et al.", ano:"2025 (preprint, sem revisão)", identificador:"arXiv:2512.23165"},
+  ]
+},
+{
+  tecnica: "LoRA e DoRA",
+  mecanismo_teorico: `LoRA parte de uma hipótese específica: quando você adapta um modelo pré-treinado pra uma tarefa nova, o "ajuste" necessário nos pesos - não o modelo inteiro, só a diferença entre o peso original e o peso ideal pós-adaptação - vive, na prática, num espaço de dimensão muito menor do que o número real de parâmetros da matriz de pesos. Essa ideia vem de um trabalho anterior (Aghajanyan, Zettlemoyer e Gupta, Meta AI, 2020, arXiv:2012.13255), que mostrou que modelos de linguagem pré-treinados têm "dimensionalidade intrínseca" baixa: dá pra fazer fine-tuning otimizando só algumas centenas de parâmetros (projetados de volta pro espaço completo) e ainda assim recuperar boa parte do desempenho do fine-tuning completo. Hu et al. (Microsoft, 2021, arXiv:2106.09685, ICLR 2022) pegaram essa observação e a transformaram em método: em vez de otimizar a matriz de peso inteira W0 (que pode ter milhões de parâmetros), eles travam W0 e aprendem só uma atualização ΔW = B×A, onde B e A são duas matrizes "magras" (de posto/rank r, um número pequeno como 4, 8 ou 16) cujo produto tem, por construção, posto no máximo r - muito menor que o posto máximo da matriz original.
+
+Uma analogia tecnicamente honesta: pense na matriz de pesos como uma superfície gigante e muito detalhada. Fine-tuning completo permite mexer em cada ponto dessa superfície livremente. LoRA aposta que, pra uma tarefa específica, o ajuste útil não precisa desse grau de liberdade todo - ele pode ser descrito por um número pequeno de "direções principais de deformação", como um conjunto compacto de alavancas que, combinadas, recriam a maior parte do efeito de mexer na superfície inteira. B×A é literalmente essa aposta em forma de matriz: você força a atualização a caber num subespaço pequeno, e a hipótese diz que isso é suficiente pra capturar quase todo o sinal útil de adaptação.
+
+Isso explica por que LoRA funciona bem com pouquíssimos parâmetros treináveis (na faixa de 0,01% a 1% do modelo total) e por que dá pra fazer merge de B×A de volta em W0 depois do treino (W = W0 + BA), sem custo extra de latência na inferência - porque, matematicamente, é só uma soma de matrizes.
+
+Um refinamento importante, que pesquisa posterior (ver estado da arte) deixou mais preciso: a hipótese de baixo posto intrínseco é aproximadamente certa, não exatamente certa. Fine-tuning completo, quando roda sem restrição, converge pra atualizações de rank efetivo 10 a 100 vezes maior do que os ranks típicos usados em LoRA - ou seja, a atualização "verdadeira" não é literalmente de baixo posto. O que acontece é que grande parte do sinal útil dela pode ser aproximada por um subespaço pequeno, e é esse pedaço que LoRA captura bem; o resto (rank mais alto) importa mais em tarefas que exigem mudanças de comportamento mais distantes do que o modelo já sabia fazer.
+
+DoRA (Liu et al., NVIDIA, 2024, arXiv:2402.09353, ICML 2024 Oral) ataca o mesmo problema por outro ângulo teórico, inspirado em weight normalization (Salimans & Kingma, 2016, arXiv:1602.07868): qualquer matriz de peso W pode ser reescrita como o produto de uma magnitude m (um vetor, o "tamanho" de cada coluna) por uma direção V/||V|| (a "orientação" normalizada dessa coluna) - W = m·(V/||V||). Os autores mediram, camada a camada, como fine-tuning completo altera magnitude e direção durante o treino, e compararam com LoRA. O padrão encontrado: LoRA tende a mudar magnitude e direção de forma praticamente proporcional (dá pra prever uma sabendo a outra), enquanto fine-tuning completo consegue fazer ajustes finos e mais independentes entre as duas - às vezes mudando bastante a direção com pouca mudança de magnitude, ou vice-versa. DoRA decompõe explicitamente o peso nesses dois componentes e usa LoRA só pra atualizar a direção, deixando a magnitude como um vetor de parâmetros livre e separado. Isso permite reproduzir o padrão de atualização "desacoplado" observado no fine-tuning completo, sem aumentar o rank (logo, sem aumentar parâmetros treináveis nem custo de inferência, já que tudo se funde de volta em W no final, igual ao LoRA).`,
+  estado_da_arte_2026: `Desde 2021 (LoRA) e 2024 (DoRA), quatro linhas de pesquisa mudaram o que sabemos:
+
+1) "LoRA aprende menos e esquece menos" (Biderman et al., TMLR 2024, arXiv:2405.09673): fine-tuning completo converge para perturbações de peso com rank 10 a 100 vezes maior do que o usado tipicamente em LoRA. Isso explica por que LoRA erra mais em tarefas muito distantes do pré-treino, mas também por que ele preserva melhor o conhecimento original do modelo (menos "esquecimento catastrófico").
+
+2) "Ilusão de equivalência" (Shuttleworth, Andreas, Torralba, Sharma, MIT, arXiv:2410.21228, revisado out/2025): mesmo quando LoRA e fine-tuning completo chegam a métricas parecidas, os pesos resultantes são estruturalmente diferentes. LoRA cria "dimensões intrusas" (novos vetores singulares de alto peso, ausentes no fine-tuning completo) que explicam o menor esquecimento, mas que se acumulam de forma problemática em cenários de aprendizado contínuo (vários fine-tunings sequenciais).
+
+3) "LoRA Without Regret" (John Schulman / Thinking Machines Lab, 29/09/2025): reformula o "porquê" em termos de capacidade de informação - LoRA empata com fine-tuning completo quando o número de parâmetros treináveis excede o conteúdo de informação (em bits) que a tarefa realmente exige. Na prática isso significa aplicar LoRA a todas as camadas (não só atenção) e usar taxa de aprendizado ~10x maior que a de fine-tuning completo.
+
+4) "Learning Rate Matters" (Lee, Ko, Chen, Yeh - NTU/IBM Research, arXiv:2602.04998, fev/2026): reavalia 9 variantes de LoRA (incluindo, por extensão, a lógica por trás de sucessoras como DoRA) e mostra que boa parte do ganho reportado por variantes "melhoradas" desaparece quando o LoRA "baunilha" recebe a mesma busca de hiperparâmetros - ou seja, muito do que parecia avanço algorítmico era, na verdade, taxa de aprendizado mal ajustada na baseline.
+
+Um achado adicional relevante para segurança/interpretabilidade: "Subliminal Learning is a LoRA Artifact" (Nief, Fu, Muchane, Holtzman - University of Chicago, arXiv:2606.00831, 30/05/2026) mostra que um fenômeno intrigante - modelos "transmitindo" traços comportamentais através de dados aparentemente neutros - tem relação em U invertido com o rank do LoRA e desaparece completamente em fine-tuning completo, ou seja, é um artefato da própria parametrização de baixo posto, não um fenômeno geral de transferência de comportamento.
+
+Nota de rigor: não encontrei fonte confiável e verificável de que DoRA tenha sido substituído por um sucessor direto amplamente adotado até agosto de 2026 - ele segue como a variante de referência mais citada pós-LoRA.`,
+  para_onde_esta_indo: `O debate em aberto não é mais "LoRA funciona ou não" - é sob que condições ele é matematicamente equivalente a fine-tuning completo e quando essa equivalência é só aparente. De um lado, "LoRA Without Regret" e "Learning Rate Matters" (fev/2026) argumentam que, com capacidade (rank) e taxa de aprendizado bem calibradas, a lacuna entre LoRA e fine-tuning completo - e entre LoRA e suas variantes "melhoradas" como DoRA - é menor do que a literatura vinha reportando, sugerindo que parte do "avanço algorítmico" dos últimos anos era, na real, hiperparâmetro mal ajustado na baseline. De outro lado, "Illusion of Equivalence" (MIT, revisado out/2025) mostra que, mesmo quando as métricas empatam, a geometria dos pesos aprendidos é estruturalmente diferente (as "dimensões intrusas"), o que importa especialmente em fine-tuning contínuo/sequencial. E o achado mais recente e inesperado (Subliminal Learning is a LoRA Artifact, mai/2026) sugere que essa estrutura de baixo posto específica do LoRA pode gerar comportamentos emergentes que não aparecem em fine-tuning completo - abrindo uma frente de pesquisa nova sobre os efeitos colaterais mecânicos da própria parametrização B×A, não só sobre sua eficiência.`,
+  conexao_com_disciplina: `O empate exato de val loss (0,895) entre LoRA rank 8 e DoRA no M4.3 desta disciplina é justamente o tipo de resultado que "Learning Rate Matters" (fev/2026) e "LoRA Without Regret" (Thinking Machines, set/2025) ajudam a explicar: com hiperparâmetros bem ajustados, sobretudo a taxa de aprendizado, que para LoRA deveria ser ~10x maior que a usada em fine-tuning completo, a vantagem teórica do DoRA sobre o LoRA tende a diminuir ou desaparecer na prática, especialmente em rank tão baixo quanto 8.`,
+  citacoes: [
+    {titulo:"LoRA: Low-Rank Adaptation of Large Language Models", autores_ou_org:"Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen (Microsoft)", ano:"2021 (ICLR 2022)", identificador:"arXiv:2106.09685"},
+    {titulo:"Intrinsic Dimensionality Explains the Effectiveness of Language Model Fine-Tuning", autores_ou_org:"Armen Aghajanyan, Luke Zettlemoyer, Sonal Gupta (Meta AI)", ano:"2020", identificador:"arXiv:2012.13255"},
+    {titulo:"Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep Neural Networks", autores_ou_org:"Tim Salimans, Diederik P. Kingma (OpenAI)", ano:"2016 (NeurIPS)", identificador:"arXiv:1602.07868"},
+    {titulo:"DoRA: Weight-Decomposed Low-Rank Adaptation", autores_ou_org:"Shih-Yang Liu et al. (NVIDIA)", ano:"2024 (ICML 2024 Oral)", identificador:"arXiv:2402.09353"},
+    {titulo:"LoRA Learns Less and Forgets Less", autores_ou_org:"Dan Biderman, Jacob Portes, Jose Javier Gonzalez Ortiz, Mansheej Paul et al. (Databricks/MosaicML, Columbia)", ano:"2024 (TMLR)", identificador:"arXiv:2405.09673"},
+    {titulo:"LoRA vs Full Fine-tuning: An Illusion of Equivalence", autores_ou_org:"Reece Shuttleworth, Jacob Andreas, Antonio Torralba, Pratyusha Sharma (MIT)", ano:"2024, revisado out/2025", identificador:"arXiv:2410.21228"},
+    {titulo:"LoRA Without Regret", autores_ou_org:"John Schulman / Thinking Machines Lab", ano:"29/09/2025", identificador:"https://thinkingmachines.ai/blog/lora/"},
+    {titulo:"Learning Rate Matters: Vanilla LoRA May Suffice for LLM Fine-tuning", autores_ou_org:"Yu-Ang Lee, Ching-Yun Ko, Pin-Yu Chen, Mi-Yen Yeh (NTU / IBM Research / Academia Sinica)", ano:"fev/2026, revisado mai/2026", identificador:"arXiv:2602.04998"},
+    {titulo:"Subliminal Learning is a LoRA Artifact", autores_ou_org:"Todd Nief, Harvey Yiyun Fu, Mark Muchane, Ari Holtzman (University of Chicago)", ano:"30/05/2026", identificador:"arXiv:2606.00831"},
+  ]
+},
+{
+  tecnica: "QLoRA (Quantized Low-Rank Adaptation)",
+  mecanismo_teorico: `QLoRA combina duas ideias que resolvem problemas diferentes.
+
+Camada 1, a hipótese de LoRA (por que uma correção de baixo posto basta): Hu et al. (2021), "LoRA: Low-Rank Adaptation of Large Language Models", arXiv:2106.09685 (ICLR 2022), parte da observação de que redes pré-treinadas grandes têm dimensão intrínseca baixa: a região do espaço de pesos que realmente precisa mudar para adaptar o modelo a uma tarefa nova é muito menor do que o número total de parâmetros sugere. Em vez de aprender uma atualização completa ΔW (do mesmo tamanho da matriz original W), LoRA assume que ΔW pode ser bem aproximada pelo produto de duas matrizes pequenas, B (d×r) e A (r×k), com rank r baixo (8, 16, 64...). Analogia: para ensinar um profissional sênior uma habilidade nova, não é preciso reescrever tudo o que ele já sabe, basta um adendo compacto de instruções que, combinado ao conhecimento existente, produz o comportamento novo. Esse adendo (BA) tem muito menos graus de liberdade do que W inteira e ainda assim captura a maior parte do sinal de adaptação.
+
+Camada 2, o que QLoRA soma (Dettmers et al. 2023, "QLoRA: Efficient Finetuning of Quantized LLMs", arXiv:2305.14314, NeurIPS 2023): LoRA sozinho já reduz parâmetros treináveis, mas ainda exige guardar W inteira em 16 bits. QLoRA comprime a W congelada para 4 bits usando três peças. (a) NF4 (4-bit NormalFloat): em vez de níveis uniformemente espaçados, usa 16 níveis calibrados para serem informacionalmente ótimos para uma distribuição normal, ou seja, mais precisão exatamente onde a maioria dos pesos de uma rede treinada de fato está (perto de zero) e menos nas caudas. (b) Double quantization: a quantização em blocos gera constantes de escala que também ocupam memória; QLoRA quantiza essas constantes num segundo nível, reduzindo ainda mais o footprint médio sem custo relevante de precisão adicional. (c) Paged optimizers: usa memória unificada GPU/CPU para estacionar temporariamente estados do otimizador na RAM durante picos de uso (por exemplo em gradient checkpointing), evitando erro de memória sem alterar a matemática do treino.
+
+O ponto central de por que isso funciona: W fica congelada e quantizada (perde precisão), mas B e A continuam sendo treinadas e armazenadas em precisão mais alta (BF16); no forward pass, W é desquantizada de volta para BF16 na hora do cálculo, então o compute acontece em alta precisão e só o armazenamento é comprimido. Como só B e A recebem gradiente (W nunca é atualizada), a correção de baixo posto BA precisa absorver tanto a adaptação à tarefa nova quanto, implicitamente, qualquer viés sistemático que a quantização introduziu em W. Isso funciona bem na prática porque esse erro de quantização mais a adaptação de tarefa costumam caber dentro do subespaço de baixo posto que LoRA consegue representar, mas é também o ponto de fragilidade do método: se a quantização de W apagou uma granularidade numérica fina (por exemplo, a precisão necessária para representar corretamente um valor raro, nunca visto em treino), e essa perda não é "de baixo posto" o suficiente para caber numa correção BA pequena, ela fica sem correção possível, porque o gradiente nunca chega em W para consertar o arredondamento na fonte.`,
+  estado_da_arte_2026: `Busquei especificamente por um sucessor direto de QLoRA anunciado por um laboratório grande em 2026 e não encontrei nada verificável nesse formato. O que encontrei e confirmei via busca foram estas linhas de desenvolvimento, todas com fonte real:
+
+1) LoftQ ("LoRA-Fine-Tuning-Aware Quantization for Large Language Models", Microsoft Research, arXiv:2310.08659, ICLR 2024). Ataca exatamente o ponto de fragilidade descrito acima: em vez de quantizar W primeiro e inicializar B e A do zero/aleatório (como no QLoRA original), LoftQ resolve simultaneamente a quantização de W e a inicialização de B e A de modo que W_quantizada + BA já fique o mais próxima possível da W original em precisão plena, antes mesmo do fine-tuning começar. Isso embute a correção do erro de quantização na inicialização, em vez de deixar que o fine-tuning "descubra" essa correção via gradiente. Ganhos mais fortes aparecem em quantização mais agressiva (2 a 3 bits).
+
+2) CLoQ ("Enhancing Fine-Tuning of Quantized LLMs via Calibrated LoRA Initialization", Deng, Zhang, Gurses, Wang, Yang, Yin, arXiv:2501.18475, TMLR 2025). Mesma direção de LoftQ (melhorar a inicialização, não a quantização em si), mas usa um pequeno dataset de calibração para achar, camada por camada, uma solução fechada (closed-form) para B e A que minimiza a discrepância entre o modelo quantizado+LoRA e o modelo original em precisão plena. Os autores testam especificamente raciocínio aritmético e "commonsense reasoning", com ganhos maiores quanto mais agressiva a quantização.
+
+3) Escala de engenharia, não de método: FSDP-QLoRA (Answer.AI em colaboração com o time do bitsandbytes, post "You can now train a 70b language model at home", 6 de março de 2024). Combina paralelismo de dados distribuído (FSDP) com QLoRA para treinar modelos de até 70B em duas GPUs de consumo de 24GB, mostrando que a técnica escala horizontalmente quando combinada com sharding.
+
+4) Genuinamente de 2026, mas mudando de paradigma: Quantized Evolution Strategies, QES (Xu, Schweighofer, Miikkulainen, Qiu, arXiv:2602.03120, submetido em 3 de fevereiro de 2026, revisado em junho de 2026). Não usa LoRA nem é sucessor direto: propõe treinar o modelo já quantizado com estratégias evolutivas (busca sem gradiente), em vez de backprop através da desquantização, questionando se essa etapa é realmente necessária. Vale citar como sinal de direção de pesquisa, não como substituto validado de QLoRA.
+
+Evidência relacionada (não é sobre QLoRA, mas é diretamente relevante ao achado da disciplina): "Quantization Meets Reasoning: Exploring LLM Low-Bit Quantization Degradation for Mathematical Reasoning" (Li, Su, Yang, Xie, Wang, Xie, Wong, Yang, arXiv:2501.03035, jan/2025) mostra que quantização low-bit (via AWQ/GPTQ, não QLoRA especificamente) causa degradação de até 32,39% em tarefas que exigem "computação numérica e planejamento de raciocínio" em modelos Llama-3. É evidência de que "quantização prejudica precisão numérica/aritmética" é um problema de pesquisa reconhecido e ativo, não um detalhe de implementação, mesmo que este paper específico não trate do mecanismo LoRA+quantização.`,
+  para_onde_esta_indo: `A pesquisa pós-QLoRA está migrando esforço de "como quantizar melhor o forward" para "como inicializar/calibrar a correção de baixo posto para já nascer compensando o erro de quantização" (linha LoftQ/CLoQ), em vez de esperar que o fine-tuning descubra essa correção via gradiente. Em paralelo, uma linha mais radical, ainda em 2026, questiona se é preciso LoRA e backprop para treinar sobre pesos quantizados (QES). Um corpo crescente de estudos (2025) mostra que quantização agressiva degrada especificamente raciocínio numérico/matemático, então "quantização versus precisão aritmética" virou pergunta de pesquisa reconhecida. O debate em aberto, que nenhuma das fontes encontradas resolve de forma definitiva, é se esse gap se fecha só com melhor inicialização/calibração ou se há uma perda de informação estruturalmente irrecuperável por qualquer correção de baixo posto, não importa quão bem inicializada.`,
+  conexao_com_disciplina: `O achado empírico documentado na disciplina (checkpoint QLoRA 4-bit acerta valor memorizado ou redondo mas erra a conversão de centavo fracionário nunca visto no treino, companion de anatomia GPU/CUDA, Camada 05) é um exemplo real do mecanismo descrito acima: como o gradiente nunca toca W (só B e A recebem atualização), qualquer granularidade numérica que o NF4 já arredondou na quantização inicial fica fora do alcance de correção da LoRA. É precisamente esse gap que a linha LoftQ/CLoQ (inicialização calibrada em vez de aleatória) tenta fechar, o que dá uma ponte concreta entre o resultado rodado nos notebooks (M4.2, M5.4, M6.2) e uma frente de pesquisa ativa e verificável em 2025/2026.`,
+  citacoes: [
+    {titulo:"LoRA: Low-Rank Adaptation of Large Language Models", autores_ou_org:"Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, Weizhu Chen", ano:"2021 (ICLR 2022)", identificador:"arXiv:2106.09685"},
+    {titulo:"QLoRA: Efficient Finetuning of Quantized LLMs", autores_ou_org:"Tim Dettmers, Artidoro Pagnoni, Ari Holtzman, Luke Zettlemoyer", ano:"2023 (NeurIPS 2023)", identificador:"arXiv:2305.14314"},
+    {titulo:"LoftQ: LoRA-Fine-Tuning-Aware Quantization for Large Language Models", autores_ou_org:"Microsoft Research", ano:"2023 (ICLR 2024)", identificador:"arXiv:2310.08659"},
+    {titulo:"CLoQ: Enhancing Fine-Tuning of Quantized LLMs via Calibrated LoRA Initialization", autores_ou_org:"Yanxia Deng, Aozhong Zhang, Selcuk Gurses, Naigang Wang, Zi Yang, Penghang Yin", ano:"2025 (TMLR 2025)", identificador:"arXiv:2501.18475"},
+    {titulo:"You can now train a 70b language model at home (FSDP-QLoRA)", autores_ou_org:"Answer.AI, em colaboração com bitsandbytes", ano:"2024-03-06", identificador:"https://www.answer.ai/posts/2024-03-06-fsdp-qlora.html"},
+    {titulo:"Quantized Evolution Strategies: High-precision Fine-tuning of Quantized LLMs at Low-precision Cost", autores_ou_org:"Yinggan Xu, Kajetan Schweighofer, Risto Miikkulainen, Xin Qiu", ano:"2026 (fev, rev. jun)", identificador:"arXiv:2602.03120"},
+    {titulo:"Quantization Meets Reasoning: Exploring LLM Low-Bit Quantization Degradation for Mathematical Reasoning", autores_ou_org:"Zhen Li, Yupeng Su, Runming Yang, Congkai Xie, Zheng Wang, Zhongwei Xie, Ngai Wong, Hongxia Yang", ano:"2025", identificador:"arXiv:2501.03035"},
+  ]
+},
+{
+  tecnica: "Instruction Tuning",
+  mecanismo_teorico: `Instruction tuning é, no fundo, supervised fine-tuning multi-tarefa: em vez de continuar o pré-treinamento genérico (prever o próximo token em texto cru), você pega o modelo já pré-treinado e reformata um conjunto grande de tarefas diferentes como pares (instrução em linguagem natural, resposta correta) - resumir, traduzir, responder múltipla escolha, extrair dado, etc. - e continua o treinamento supervisionado nesses pares.
+
+O achado central do paper original do FLAN (Wei et al., Google, "Finetuned Language Models Are Zero-Shot Learners", arXiv:2109.01652, ICLR 2022) não é "mais dados ajudam". É que a generalização pra uma instrução nunca vista no treino aparece quando cresce o número de TIPOS de tarefa distintos no mix de treino, e quase não melhora quando você só empilha mais exemplos dentro do mesmo tipo de tarefa (os autores testaram isso removendo clusters inteiros de tarefa e medindo zero-shot no cluster removido).
+
+Por que isso funciona mecanicamente, sem simplificar a ponto de virar errado: o pré-treinamento já deixou no modelo uma representação latente riquíssima do que significam operações como "resumir" ou "traduzir", porque esses padrões aparecem implicitamente bilhões de vezes no texto cru usado no pré-treino. O que falta é uma função de roteamento: dado um texto formatado como instrução, condicionar a geração pro comportamento certo, em vez de só continuar o texto como um modelo de linguagem puro faria. Instruction tuning treina essa função de roteamento via gradiente descendente e, ao expor o modelo a MUITAS combinações (instrução, comportamento) de domínios diferentes, o otimizador é forçado a aprender uma regra geral de "como interpretar uma instrução" em vez de decorar um lookup table por tarefa - é o mesmo princípio por trás de multi-task learning: parâmetros compartilhados otimizados sobre tarefas diversas tendem a convergir pra um viés indutivo geral, e é esse viés que se transfere pra uma instrução nova no momento do teste.
+
+Uma analogia de dev: é como treinar o dispatcher de intents de um chatbot com um dataset grande e variado de (frase do usuário, intent correta). Se você só tem exemplos de um tipo de intent, o roteador decora aquele padrão específico e quebra em frases novas parecidas. Se você tem muitos tipos de intent diferentes, ele aprende a regra geral de interpretação e generaliza pra frase nunca vista. Instruction tuning faz isso na escala de "qualquer tarefa de linguagem", não só intents de chatbot.
+
+Esse mecanismo (diversidade de tipo de tarefa, não volume, é o que "liga" a generalização) foi formalizado com experimentos controlados em 2024 pelo paper Only-IF (Zhang, Wang e Charton, arXiv:2410.04717), que mostra que a generalização só emerge quando a diversidade semântica entre domínios cruza um certo limiar - confirmando de forma mais rigorosa o que o FLAN já tinha mostrado empiricamente em 2021.`,
+  estado_da_arte_2026: `Três frentes reais de avanço desde o FLAN, todas verificadas por busca nesta tarefa (agosto/2026):
+
+1) O debate sobre QUANTO instruction tuning realmente muda no modelo amadureceu bastante. Em 2023, LIMA (Zhou et al., Meta AI, "LIMA: Less Is More for Alignment", arXiv:2305.11206, NeurIPS 2023) propôs a "hipótese do alinhamento superficial": praticamente todo o conhecimento vem do pré-treino, e instruction tuning só ensina QUAL formato/distribuição de resposta usar - por isso 1.000 exemplos bem escolhidos bastariam. Em 2024, porém, "Revisiting the Superficial Alignment Hypothesis" (Raghavendra, Nath e Hendryx, arXiv:2410.03717) desafiou isso: mostraram que o desempenho pós-treino segue escala de lei de potência com o número de exemplos (parecido com pré-treino) e que o modelo de fato adquire capacidade nova em raciocínio matemático e multi-hop, não só estilo. A conclusão dos autores é que a hipótese do alinhamento superficial é, "na melhor das hipóteses, uma simplificação exagerada" - esse debate segue em aberto e é sintetizado na survey mais recente da área (Han et al., "Towards Alignment-Centric Paradigm: A Survey of Instruction Tuning in Large Language Models", arXiv:2508.17184, submetida em ago/2025, revisão de nov/2025).
+
+2) Seleção de dados de instruction tuning ficou mais inteligente e barata. Um paper aceito pra ACL 2026 (Han e Huang, "What Makes Good Instruction-Tuning Data? An In-Context Learning Perspective", arXiv:2604.25132, submetido em abril/2026), propõe medir "influência ponderada em contexto" (weighted in-context influence) de cada exemplo candidato pra escolher, sob orçamento de dados limitado, quais exemplos realmente valem a pena incluir no fine-tuning - superando baselines anteriores de seleção de dado. Isso é uma evolução direta e datada do próprio achado do FLAN: se o que importa é diversidade/qualidade de tarefa e não volume bruto, faz sentido que a pesquisa de 2026 esteja focada em escolher melhor, não só coletar mais.
+
+3) A geração dos dados de instrução em si evoluiu de anotação humana pra geração sintética guiada por raciocínio. O método original Self-Instruct (Wang et al., arXiv:2212.10560, 2022) gerava instruções sintéticas via poucos exemplos (few-shot prompting). Em 2025, pesquisadores da FAIR (Meta) e NYU publicaram CoT-Self-Instruct (Yu et al., arXiv:2507.23751, julho/2025), que faz o modelo primeiro raciocinar e planejar via chain-of-thought a partir de tarefas-semente, e só depois gerar o novo exemplo sintético - produzindo dado de instruction tuning de qualidade mais alta tanto pra tarefas de raciocínio quanto pra tarefas comuns. Isso reflete a prática corrente de 2026: instruction tuning hoje raramente usa só anotação humana, e sim pipelines sintéticos com modelo de fronteira gerando e um segundo modelo (juiz) filtrando.
+
+Nota de rigor: não encontrei fonte confiável e datada pra alegações mais específicas do tipo "técnica X substitui instruction tuning em 2026" ou números de adoção em produção nos labs - por isso não entraram aqui.`,
+  para_onde_esta_indo: `A pesquisa está convergindo em duas frentes, ambas ancoradas nas fontes acima. Primeiro, resolver empiricamente até que ponto instruction tuning apenas "revela" capacidade que já estava latente no pré-treino (LIMA, 2023) versus efetivamente adiciona capacidade nova com escala de lei de potência (Raghavendra et al., 2024) - a survey de 2025/2026 (Han et al.) trata isso como questão em aberto, não resolvida. Segundo, o foco prático migrou de "quanto dado" pra "qual dado": seleção de exemplos por influência em contexto (Han e Huang, ACL 2026) e geração sintética guiada por chain-of-thought (CoT-Self-Instruct, 2025) apontam pra um instruction tuning cada vez mais data-efficient, com menos exemplos escolhidos ou gerados com mais critério, em vez de simplesmente escalar o volume de anotação humana.`,
+  conexao_com_disciplina: `O caso já rodado no Zoo (Espécie 04, FLAN) já mostrava empiricamente, em 2021, que zero-shot em tarefa nova melhora ao aumentar o número de TIPOS de tarefa no treino, não o número de exemplos por tarefa - o Only-IF (2024) dá o embasamento teórico/experimental rigoroso pra esse mesmo achado, então dá pra apresentar aos alunos como "o que o FLAN observou na prática em 2021, a pesquisa formalizou em 2024".`,
+  citacoes: [
+    {titulo:"Finetuned Language Models Are Zero-Shot Learners", autores_ou_org:"Jason Wei, Maarten Bosma, Vincent Y. Zhao, Kelvin Guu, Adams Wei Yu, Brian Lester, Nan Du, Andrew M. Dai, Quoc V. Le (Google Research)", ano:"2021 (ICLR 2022)", identificador:"arXiv:2109.01652"},
+    {titulo:"LIMA: Less Is More for Alignment", autores_ou_org:"Chunting Zhou, Pengfei Liu, Puxin Xu et al. (Meta AI / Carnegie Mellon)", ano:"2023 (NeurIPS 2023)", identificador:"arXiv:2305.11206"},
+    {titulo:"Revisiting the Superficial Alignment Hypothesis", autores_ou_org:"Mohit Raghavendra, Vaskar Nath, Sean Hendryx", ano:"2024", identificador:"arXiv:2410.03717"},
+    {titulo:"Only-IF: Revealing the Decisive Effect of Instruction Diversity on Generalization", autores_ou_org:"Dylan Zhang, Justin Wang, Francois Charton", ano:"2024", identificador:"arXiv:2410.04717"},
+    {titulo:"Towards Alignment-Centric Paradigm: A Survey of Instruction Tuning in Large Language Models", autores_ou_org:"Xudong Han, Junjie Yang, Tianyang Wang, Ziqian Bi, Xinyuan Song, Junfeng Hao, Junhao Song", ano:"2025 (ago, rev. nov)", identificador:"arXiv:2508.17184"},
+    {titulo:"What Makes Good Instruction-Tuning Data? An In-Context Learning Perspective", autores_ou_org:"Guangzeng Han, Xiaolei Huang (ACL 2026)", ano:"2026", identificador:"arXiv:2604.25132"},
+    {titulo:"CoT-Self-Instruct: Building high-quality synthetic prompts for reasoning and non-reasoning tasks", autores_ou_org:"Ping Yu, Jack Lanchantin, Tianlu Wang et al. (FAIR Meta / NYU)", ano:"2025", identificador:"arXiv:2507.23751"},
+    {titulo:"Self-Instruct: Aligning Language Models with Self-Generated Instructions", autores_ou_org:"Yizhong Wang et al.", ano:"2022", identificador:"arXiv:2212.10560"},
+  ]
+},
+{
+  tecnica: "RLHF e DPO",
+  mecanismo_teorico: `RLHF clássico resolve o alinhamento em duas peças separadas. Primeiro treina-se um "modelo de recompensa" r_φ(x,y) que aprende a prever qual de duas respostas um humano preferiria, usando o modelo estatístico de Bradley-Terry: P(y_escolhida ≻ y_rejeitada) = σ(r(y_escolhida) − r(y_rejeitada)), onde σ é a sigmoide. Depois, o LLM (a "política" π_θ) é ajustado com PPO pra maximizar essa recompensa, mas com uma peça crítica a mais: uma penalização de divergência KL que impede π_θ de se afastar demais do modelo original π_ref. Sem isso, o modelo aprenderia a "enganar" o juiz (reward hacking), gerando texto que pontua alto no modelo de recompensa mas que um humano acharia ruim.
+
+O insight central do paper de DPO (Rafailov et al., Stanford, 2023, arXiv:2305.18290) é que esse objetivo específico, maximizar recompensa sob restrição de KL, tem solução analítica fechada: prova-se matematicamente que a política ótima desse problema é π*(y|x) ∝ π_ref(y|x)·exp(r(x,y)/β). Invertendo essa fórmula, dá pra escrever a recompensa implícita que qualquer política representa: r(x,y) = β·log(π(y|x)/π_ref(y|x)) + β·log Z(x), onde Z(x) é uma constante de normalização que só depende do prompt, não da resposta. Substituindo essa expressão de volta na fórmula de Bradley-Terry, que compara y_escolhida menos y_rejeitada pro mesmo prompt x, a constante Z(x) se cancela, porque aparece igual dos dois lados da subtração. Sobra uma função de perda de classificação binária pura, calculável direto das log-probabilidades que o próprio LLM já produz.
+
+Na prática: em vez de (1) treinar um modelo de recompensa separado e (2) rodar um loop de RL caro e instável pra maximizá-la, o DPO empurra a probabilidade da resposta escolhida pra cima e a da rejeitada pra baixo numa única passada de gradiente supervisionado, e isso converge, comprovadamente, pra exatamente a mesma política que o pipeline completo RLHF (recompensa + PPO) produziria. É por isso que o subtítulo do paper é "Your Language Model is Secretly a Reward Model": a razão entre as probabilidades atuais do LLM e as do modelo de referência já é, implicitamente, o modelo de recompensa, não precisa treinar um à parte.
+
+Uma analogia: é como provar que dá pra calcular direto, com uma fórmula, a nota que um juiz daria a um atleta, só olhando a diferença entre como o atleta se comporta agora e como se comportava antes do treino, em vez de treinar esse juiz e depois fazer o atleta treinar por tentativa e erro (RL) pra agradá-lo. Pula-se direto pro resultado final do RL sem rodar o RL.
+
+Ressalva técnica importante: essa equivalência é exata só sob as premissas do modelo (preferências geradas por Bradley-Terry, e π_ref dando probabilidade não-nula às respostas em jogo). Na prática essas premissas não são sempre verdadeiras, e é justamente aí que mora boa parte do debate de pesquisa atual descrito abaixo.`,
+  estado_da_arte_2026: `Três desenvolvimentos reais desde 2023, verificados nesta busca:
+
+1) GRPO e a virada pra RL com recompensa verificável (RLVR) em raciocínio. A DeepSeekMath (Shao et al., DeepSeek-AI, 2024, arXiv:2402.03300) introduziu o GRPO, um sucessor direto do PPO dentro da própria família RLHF: elimina o modelo de valor (crítico) e estima a vantagem de cada resposta comparando um grupo de amostras geradas pro mesmo prompt contra a média do grupo, em vez de usar uma rede separada pra estimar "quão boa" é a resposta. Foi o motor por trás do DeepSeek-R1 (DeepSeek-AI, 2025, arXiv:2501.12948) e, combinado com RLVR, recompensa binária de um verificador programático (certo/errado), em vez de um modelo de recompensa aprendido de preferência humana, termo popularizado pela Tülu 3 (Lambert et al., Ai2, 2024, arXiv:2411.15124), virou o padrão de fato pra treinar raciocínio longo (matemática, código) em 2025-2026. A ByteDance refinou ainda mais essa linha com o DAPO (Yu et al., 2025, arXiv:2503.14476), atacando instabilidades específicas de RL em contexto longo.
+
+2) O lugar do DPO na pilha de pós-treinamento, segundo síntese empírica recente. O relatório técnico "Reinforcement Learning from Human Feedback" de Nathan Lambert (Ai2, 2025, arXiv:2504.12501) resume o estado atual: métodos de RL on-policy (GRPO e afins) mantêm vantagem de desempenho consistente, porém modesta, sobre DPO e outros "Direct Alignment Algorithms", especialmente em raciocínio. Ainda assim, DPO segue muito usado porque é mais simples/barato de iterar, e porque a qualidade dos dados de preferência costuma importar mais que o algoritmo em si. A pilha comum em 2026 combina SFT + DPO/variantes (alinhamento de tom/comportamento) + RLVR/GRPO (raciocínio) no mesmo pipeline.
+
+3) Reward hacking como fronteira de pesquisa em escala. Conforme modelos treinados com RLHF/RLVR escalam, cresce a pesquisa sobre comportamentos que maximizam a recompensa (humana ou verificada) sem satisfazer a intenção por trás dela. Um survey recente (Wang et al. e 22 coautores, abr/2026, arXiv:2604.13602) propõe uma taxonomia de níveis de exploração (do nível da resposta até o nível do próprio ambiente de treino) e cataloga contramedidas emergentes, como o SignCert-PO, que penaliza atualizações de política baseadas em sinais de recompensa não-robustos.
+
+Nota de rigor: não encontrei fonte confiável e verificada pra alegações mais específicas de "sucessor definitivo do DPO" (variantes como SimPO, KTO, ORPO já existiam antes de 2026 e não achei evidência de um substituto amplamente adotado desde então), por isso não afirmo isso como fato.`,
+  para_onde_esta_indo: `A direção mais visível não é "substituição" do DPO, mas reposicionamento: ele segue como a ferramenta mais barata de iterar pra alinhamento de tom/comportamento, enquanto tarefas de raciocínio longo migraram pra RL on-policy com recompensa verificável (GRPO/DAPO/RLVR), que hoje tem vantagem empírica documentada. O debate em aberto, segundo a síntese de Lambert (2025), é se essa vantagem do RL é estrutural ou reflexo de mais investimento de pesquisa nele agora. E à medida que esses métodos escalam, robustez contra reward hacking (2026) virou frente de pesquisa própria, tão ativa quanto a busca por algoritmos de otimização mais eficientes.`,
+  conexao_com_disciplina: `O próprio DeepSeek-R1 citado na Espécie 06 (Distillation) do Zoo foi treinado com GRPO, ou seja, o "professor" que gera os 800 mil exemplos destilados pros modelos menores é produto direto da mesma linhagem RLHF/PPO explicada aqui, só trocando o modelo de recompensa humana por um verificador de certo/errado (RLVR). E o caso Zephyr-7B (Hugging Face, DPO) já mostra, na prática, que o "atalho" matemático do DPO, pular do par de preferências direto pra política, sem RL, não é só teoria de paper: é literalmente a função de perda usada pra igualar modelos bem maiores com um 7B.`,
+  citacoes: [
+    {titulo:"Direct Preference Optimization: Your Language Model is Secretly a Reward Model", autores_ou_org:"Rafailov, Sharma, Mitchell, Ermon, Manning, Finn (Stanford University)", ano:"2023 (v3: jul/2024)", identificador:"arXiv:2305.18290"},
+    {titulo:"Training language models to follow instructions with human feedback", autores_ou_org:"Ouyang et al. (OpenAI)", ano:"2022", identificador:"arXiv:2203.02155"},
+    {titulo:"DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models", autores_ou_org:"Shao et al. (DeepSeek-AI), paper original do GRPO", ano:"2024", identificador:"arXiv:2402.03300"},
+    {titulo:"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning", autores_ou_org:"DeepSeek-AI", ano:"2025", identificador:"arXiv:2501.12948"},
+    {titulo:"Tülu 3: Pushing Frontiers in Open Language Model Post-Training", autores_ou_org:"Lambert et al. (Ai2)", ano:"2024", identificador:"arXiv:2411.15124"},
+    {titulo:"Reinforcement Learning from Human Feedback (relatório técnico)", autores_ou_org:"Nathan Lambert (Ai2)", ano:"2025", identificador:"arXiv:2504.12501"},
+    {titulo:"DAPO: An Open-Source LLM Reinforcement Learning System at Scale", autores_ou_org:"Yu et al. (ByteDance Seed)", ano:"2025", identificador:"arXiv:2503.14476"},
+    {titulo:"Reward Hacking in the Era of Large Models: Mechanisms, Emergent Misalignment, Challenges", autores_ou_org:"Wang, Tian, Zeng, Huang, Yuan et al. (23 autores)", ano:"2026", identificador:"arXiv:2604.13602"},
+  ]
+},
+{
+  tecnica: "Distillation (destilação de conhecimento)",
+  mecanismo_teorico: `O paper original é de Geoffrey Hinton, Oriol Vinyals e Jeff Dean, "Distilling the Knowledge in a Neural Network" (workshop de Deep Learning da NIPS 2014, publicado no arXiv em março de 2015, arXiv:1503.02531).
+
+A ideia central que o paper chama de "dark knowledge" (conhecimento escondido) é essa: quando você treina um modelo pequeno só contra o rótulo certo (resposta final, "sim/não", classe X), você descarta a maior parte da informação que um modelo grande já aprendeu sobre o problema. Um classificador não devolve só "é um gato", ele devolve uma distribuição de probabilidade inteira: 90% gato, 9% lince, 0.9% cachorro, 0.01% avião. Mesmo quando o modelo acerta, a forma como ele distribui a probabilidade entre as respostas erradas revela como ele enxerga semelhança entre categorias: isso é informação de generalização que um rótulo duro (0 ou 1) simplesmente não carrega. Analogia: um professor que corrige uma prova de múltipla escolha não ensina só "certo/errado", ele ensina mais se disser "sua resposta errada tá mais próxima da alternativa B do que da C" - o gabarito sozinho nunca daria essa pista.
+
+Só que, no softmax padrão, essa informação fica quase invisível: a probabilidade da resposta certa tende a 1 e o resto tende a 0, esmagando o sinal útil. A solução de Hinton é um parâmetro de "temperatura" T no softmax do professor, que suaviza a distribuição e expõe essas probabilidades secundárias. O aluno não é treinado pra acertar o rótulo duro, é treinado pra minimizar a divergência KL entre a distribuição suavizada do professor e a sua própria. Cada exemplo de treino passa a carregar muito mais bits de sinal de supervisão do que um rótulo duro, e isso é o motivo estatístico de a destilação funcionar com muito menos dado e compute do que treinar o aluno do zero contra os mesmos rótulos.
+
+Ponte importante pra LLMs (e pro caso do Zoo, DeepSeek-R1-Distill): o que se faz hoje em destilação de modelos de linguagem não é exatamente esse "soft label + KL" token a token do paper original. É uma variante chamada destilação em nível de sequência (Kim & Rush, "Sequence-Level Knowledge Distillation", EMNLP 2016, arXiv:1606.07947): o professor gera sequências inteiras (no caso do R1-Distill, cadeias de raciocínio completas), e o aluno faz SFT padrão sobre essas sequências como se fossem texto de referência. A "distribuição rica" nesse caso é implícita: a trajetória de raciocínio do professor, que ele só descobriu através de uma etapa cara de RL, carrega decisões de processo (quais passos intermediários seguir, quando verificar um resultado, quando abandonar um caminho de raciocínio) que a resposta final sozinha jamais revelaria. O aluno herda esse comportamento por imitação (aprendizado por imitação, também chamado behavior cloning), que é estatisticamente muito mais barato do que redescobrir a mesma política via exploração de RL do zero, porque cada exemplo do professor já vem "pré-filtrado" pelas trajetórias que efetivamente funcionaram.
+
+Resumo do princípio: destilação funciona porque a saída completa de um modelo maior e mais capaz (seja a distribuição de probabilidade suavizada de Hinton, seja a trajetória de raciocínio inteira do caso LLM) contém muito mais sinal de supervisão do que a resposta final isolada, e imitar esse sinal rico é estatisticamente mais barato do que redescobrir o mesmo comportamento treinando do zero.`,
+  estado_da_arte_2026: `Três desenvolvimentos reais e verificados, além do que já está no Zoo (SFT off-policy sobre 800 mil traces do DeepSeek-R1):
+
+1) Destilação on-policy virou a fronteira prática em 2025-2026. Fundamento teórico: MiniLLM (Gu, Dong, Wei, Huang, ICLR 2024, arXiv:2306.08543), que troca a divergência KL direta (implícita na destilação clássica, que treina o aluno pra cobrir toda a distribuição do professor) por KL reversa: o aluno gera suas próprias amostras e é avaliado por elas, evitando que ele tente cobrir regiões da distribuição do professor que não tem capacidade de representar bem (o que gera texto incoerente). Isso foi popularizado em outubro de 2025 pelo laboratório Thinking Machines Lab (fundado por Mira Murati, com John Schulman no time), no post "On-Policy Distillation" de Kevin Lu (27/10/2025): em vez de treinar cegamente sobre texto do professor, o aluno gera a própria trajetória e o professor dá nota densa, token a token, sobre o que o aluno de fato produziu. Resultado relatado: no AIME'24, sai de 60% (SFT puro) pra 70% em ~150 passos de treino, reproduzindo o resultado do Qwen3 (74,4%) a um décimo do custo de RL, com ganho de eficiência computacional de 9x a 30x sobre estender SFT. Isso já gerou pesquisa formal dedicada em 2026: "A Survey of On-Policy Distillation for Large Language Models" (arXiv:2604.00626, abril/2026) e "Rethinking On-Policy Distillation of Large Language Models" (arXiv:2604.13016, abril/2026).
+
+2) Leis de escala pra destilação, o "curse of capacity gap". A Apple Machine Learning Research publicou "Distillation Scaling Laws" (Busbridge, Shidani, Weers, Ramapuram, Littwin, Webb, arXiv:2502.08606, fevereiro de 2025), que prevê o desempenho de um modelo destilado em função do orçamento de compute e de como ele é dividido entre professor e aluno, com erro de predição de ~1%. Achado prático: destilação só compensa (é melhor que treino supervisionado direto) até um nível de compute que escala com o tamanho do aluno, depois disso treinar do zero fica melhor; e um professor grande demais em relação ao aluno pode produzir um aluno pior, não melhor. Isso é confirmado por "Towards the Law of Capacity Gap in Distilling Language Models" (ACL 2025, arXiv:2311.07052), que mostra que o tamanho ótimo do professor escala linearmente com o tamanho do aluno.
+
+3) Escala industrial pós-DeepSeek-R1. A Alibaba Cloud (PAI), com Shanghai Jiao Tong University, publicou "Thinking with DistilQwen: A Tale of Four Distilled Reasoning and Reward Model Series" (Cai, Wang, Yan, Huang, Fang, EMNLP 2025 Industry Track, arXiv:2511.01354, novembro/2025), documentando quatro gerações de modelos destilados de raciocínio mais modelos de recompensa destilados, com foco em "slow-thinking" adaptativo. Mostra que a receita do DeepSeek-R1-Distill virou pipeline de produção continuamente iterado, não uma técnica de um único paper.
+
+Nota à parte, não é avanço técnico mas é um desenvolvimento real e recente relevante pro debate da técnica: em junho de 2026 a Anthropic acusou publicamente a Alibaba (em carta ao Senado dos EUA) de rodar uma campanha de destilação não autorizada contra a Claude, usando ~25 mil contas falsas pra gerar 28,8 milhões de interações entre abril e junho de 2026 e treinar os modelos Qwen com as saídas (CNBC, 24/06/2026). Múltiplas fontes independentes corroboram a alegação, mas é acusação, não achado verificado por terceiros, e a Alibaba não respondeu especificamente às alegações até a data da busca.`,
+  para_onde_esta_indo: `A direção mais ativa é tirar a destilação do modo passivo (aluno imita cegamente exemplos fixos do professor, que é o que o próprio Zoo mostra no DeepSeek-R1-Distill) e levá-la pro modo on-policy: o aluno gera, o professor avalia densamente o que foi gerado, aproximando destilação de RL em eficiência de aprendizado por uma fração do custo computacional, a ponto de já existir survey e paper de "rethinking" dedicados a isso em 2026. Em paralelo, a decisão de "quando e quanto destilar" está deixando de ser regra de bolso e virando cálculo de orçamento de compute mensurável, graças às leis de escala que identificam o ponto em que destilação para de compensar e o tamanho ótimo de professor pra cada aluno. Um terceiro eixo, não técnico mas com peso crescente em 2026, é governança: a disputa pública Anthropic-Alibaba sobre extração não autorizada de saídas de modelo proprietário via API sugere que a próxima fronteira da destilação não é só "como fazer melhor", é também "quem tem permissão de destilar o quê".`,
+  conexao_com_disciplina: `O caso já rodado na disciplina (DeepSeek-R1-Distill, Espécie 06 do Zoo, SFT sobre 800 mil exemplos de raciocínio) é exatamente o mecanismo de destilação em nível de sequência descrito acima (Kim & Rush 2016): imitação passiva de trajetórias fixas geradas pelo professor, sem o aluno gerar e ser avaliado no processo. Isso dá um gancho didático natural pro estado da arte de 2026: destilação on-policy (Thinking Machines Lab / MiniLLM) é literalmente o próximo passo lógico do mesmo pipeline que os alunos já viram, trocar "SFT cego sobre texto do professor" por "aluno tenta, professor avalia token a token", que é o ponto intermediário natural entre a etapa de SFT e a etapa de RL que a disciplina já ensina em sequência.`,
+  citacoes: [
+    {titulo:"Distilling the Knowledge in a Neural Network", autores_ou_org:"Geoffrey Hinton, Oriol Vinyals, Jeff Dean", ano:"2015 (workshop NIPS 2014)", identificador:"arXiv:1503.02531"},
+    {titulo:"Sequence-Level Knowledge Distillation", autores_ou_org:"Yoon Kim, Alexander M. Rush", ano:"2016 (EMNLP 2016)", identificador:"arXiv:1606.07947"},
+    {titulo:"MiniLLM: On-Policy Distillation of Large Language Models", autores_ou_org:"Yuxian Gu, Li Dong, Furu Wei, Minlie Huang", ano:"2024 (ICLR 2024)", identificador:"arXiv:2306.08543"},
+    {titulo:"On-Policy Distillation", autores_ou_org:"Kevin Lu / Thinking Machines Lab", ano:"2025 (27/out)", identificador:"https://thinkingmachines.ai/blog/on-policy-distillation/"},
+    {titulo:"A Survey of On-Policy Distillation for Large Language Models", autores_ou_org:"(não identificado individualmente na busca)", ano:"2026 (abr)", identificador:"arXiv:2604.00626"},
+    {titulo:"Rethinking On-Policy Distillation of Large Language Models", autores_ou_org:"(não identificado individualmente na busca)", ano:"2026 (abr)", identificador:"arXiv:2604.13016"},
+    {titulo:"Distillation Scaling Laws", autores_ou_org:"Dan Busbridge, Amitis Shidani, Floris Weers, Jason Ramapuram, Etai Littwin, Russ Webb (Apple ML Research)", ano:"2025 (fev)", identificador:"arXiv:2502.08606"},
+    {titulo:"Towards the Law of Capacity Gap in Distilling Language Models", autores_ou_org:"Beijing Institute of Technology", ano:"2025 (ACL 2025)", identificador:"arXiv:2311.07052"},
+    {titulo:"Thinking with DistilQwen: A Tale of Four Distilled Reasoning and Reward Model Series", autores_ou_org:"Wenrui Cai, Chengyu Wang, Junbing Yan, Jun Huang, Xiangzhong Fang (Alibaba Cloud PAI / SJTU)", ano:"2025 (nov, EMNLP Industry)", identificador:"arXiv:2511.01354"},
+    {titulo:"Anthropic accuses Alibaba of campaign to 'brazenly' and 'illicitly' extract AI capabilities", autores_ou_org:"CNBC", ano:"2026 (24/jun)", identificador:"https://www.cnbc.com/2026/06/24/anthropic-alibaba-distillation-campaign.html"},
+  ]
+},
+{
+  tecnica: "GRPO e RFT (Reinforcement Fine-Tuning com Recompensa Verificável)",
+  mecanismo_teorico: `O RLHF clássico (PPO) precisa de um modelo crítico (value network), do mesmo porte do modelo de política, treinado só pra estimar quanto uma resposta específica se desviou do valor esperado (a "vantagem"). Isso dobra memória e compute de treino, e é particularmente difícil de treinar bem em LLM porque a recompensa geralmente só existe no fim da sequência inteira (recompensa esparsa): o crítico tem que aprender a prever, token a token, um valor que só é revelado no final da geração.
+
+A ideia central do GRPO (Shao et al., "DeepSeekMath", DeepSeek-AI, fev/2024, arXiv:2402.03300) é eliminar esse crítico e usar o próprio grupo de amostras como sua baseline. Pra cada prompt, o modelo gera G respostas candidatas (o paper original usa G=64), cada resposta i recebe uma recompensa escalar verificável r_i (bateu o gabarito? passou nos testes? o schema fechou?), e a vantagem de cada uma é o quanto ela se destacou dentro daquele grupo específico:
+
+A_i = (r_i − média(r_1, ..., r_G)) / desvio_padrão(r_1, ..., r_G)
+
+Ou seja: um z-score dentro do grupo, recalculado do zero a cada rodada.
+
+Por que isso funciona de verdade (não é só um atalho de engenharia, é princípio estatístico): a base teórica vem da redução de variância clássica em policy gradient, o "REINFORCE com baseline". Um resultado bem estabelecido em RL é que subtrair de uma recompensa qualquer baseline b(s) que não dependa da ação específica escolhida não muda o valor esperado do gradiente de política (o estimador continua não enviesado), só reduz a variância dele. A média do grupo é exatamente um estimador Monte Carlo, calculado ali na hora e sem rede neural extra, do valor esperado da recompensa pra aquele prompt específico: o mesmo número que o crítico do PPO tentaria aprender por outro caminho, mais caro e mais instável. Dividir pelo desvio padrão normaliza a escala do sinal entre prompts "fáceis" (respostas do grupo concentradas, pouca variância) e "difíceis" (respostas espalhadas), pra que o tamanho do passo de otimização não dependa artificialmente de quão difícil foi o prompt sorteado naquela rodada.
+
+Tem um segundo motivo, mais sutil, específico do R de "RFT": a recompensa é uma função determinística e verificável (bateu o gabarito ou não), não um modelo de recompensa aprendido como no RLHF clássico. Isso fecha a porta pro "reward hacking" clássico, onde a política aprende a explorar falhas do modelo de recompensa em vez de resolver a tarefa de verdade: não existe brecha pra explorar num verificador de matemática ou numa suíte de testes de código.
+
+Uma analogia, com o cuidado de não simplificar até virar errada: é como pôr a turma inteira pra fazer a mesma prova no mesmo dia e comparar cada aluno à média da própria turma, em vez de contratar um segundo professor só pra tentar adivinhar de antemão qual seria a nota "esperada" de cada aluno. A ressalva importante pra não simplificar demais: a "prova" muda a cada rodada de treino, porque a política que gera as respostas também muda a cada atualização, então essa baseline é recalculada do zero, dinamicamente, grupo a grupo, prompt a prompt.`,
+  estado_da_arte_2026: `Desde fev/2024 (paper original) até ago/2026, o GRPO avançou em três frentes distintas, todas com fonte verificada nesta busca:
+
+1) Correção de viés estatístico: Dr. GRPO (Liu et al., "Understanding R1-Zero-Like Training: A Critical Perspective", mar/2025, revisado out/2025, arXiv:2503.20783). Os autores mostraram que a normalização por desvio padrão do grupo, somada à normalização por comprimento de resposta usada na implementação de referência do GRPO, introduz um viés sistemático: infla artificialmente o tamanho das respostas erradas (o modelo aprende que "escrever mais" dilui a penalidade média) e distorce o peso relativo entre perguntas fáceis e difíceis. Dr. GRPO remove esses termos de normalização e entrega um estimador de gradiente sem esse viés, mantendo a capacidade de raciocínio com respostas bem mais enxutas (43,3% no AIME 2024 com um modelo de 7B, sem inchaço de tokens).
+
+2) Correção de instabilidade de treino: GSPO (Zheng et al., equipe Qwen/Alibaba, jul/2025, arXiv:2507.18071). O achado: o GRPO aplica a razão de importância herdada do PPO token a token, mas a vantagem que ele calcula é uma quantidade de nível de sequência inteira. Esse descompasso gera ruído que cresce com o tamanho da resposta e é amplificado pelo clipping, podendo colapsar o treino, principalmente em modelos Mixture-of-Experts. O GSPO move a razão de importância pro nível de sequência inteira; segundo os próprios autores, essa mudança sustentou os ganhos de RL dos modelos Qwen3 mais recentes.
+
+3) Prova formal do que antes era só observação empírica: dois trabalhos complementares. Youssef Mroueh (IBM Research), "GRPO's Effective Loss, Dynamics, and Success Amplification" (arXiv:2503.06639, aceito no ICML 2026, publicado jul/2026) mostra matematicamente que a calibração média+variância do GRPO equivale a uma perda contrastiva, e que iterar esse processo converge pra um ponto fixo cuja probabilidade de sucesso é comprovadamente maior que a do modelo de referência: uma prova de que o GRPO amplifica a competência do modelo, não é só anedota de benchmark. Em mar/2026, Zhou, Ye, Xu, Zhu, Yang, Gong e Shi foram além em "Demystifying GRPO: Its Policy Gradient is a U-Statistic" (arXiv:2603.01162), provando que o gradiente de política do GRPO é, matematicamente, um U-statistic, o que permite caracterizar seu erro quadrático médio e mostrar otimalidade assintótica dentro de uma classe ampla de algoritmos de policy gradient.
+
+Sinal complementar de mercado (não é resultado de pesquisa, é maturidade de tooling, vale ser honesto sobre a diferença): em 26/ago/2026 a Red Hat publicou um guia oficial de GRPO com recompensa verificável rodando via "Training Hub" no OpenShift AI, mostrando RLVR saindo do território exclusivo de laboratórios de fronteira e chegando a plataformas de ML corporativas mainstream.
+
+Nota de rigor: não encontrei fonte confiável e verificada nesta busca pra um "sucessor direto" único do GRPO que já tenha consolidado adoção equivalente ao GRPO em produção; GSPO é o candidato mais forte, mas por ora está documentado majoritariamente dentro do próprio ecossistema Qwen.`,
+  para_onde_esta_indo: `Duas frentes convergem agora. De um lado, a engenharia está migrando a unidade de crédito e otimização de token pra sequência inteira (GSPO) e testando supervisão em nível de processo/passo em vez de só o resultado final (GRPO-VPS, Wang et al., abr/2026, arXiv:2604.20659, que rastreia a probabilidade condicional de acerto a cada passo do raciocínio, não só no fim da resposta). De outro, a teoria finalmente alcançou a prática: 2025-2026 trouxeram as primeiras provas formais de convergência e de amplificação de sucesso do GRPO (Mroueh, arXiv:2503.06639; Zhou et al., arXiv:2603.01162), o que deve orientar a próxima geração de variantes por design, em vez de tentativa e erro. Um problema prático que segue em aberto: grupos "degenerados" (todo mundo acerta ou todo mundo erra igual) ainda zeram o sinal de aprendizado daquela rodada, e não há consenso sobre a solução mais eficiente em escala (DAPO descarta e reamostra; a linha de supervisão de processo tenta nunca deixar o grupo ficar totalmente uniforme). Em paralelo, RLVR/GRPO está saindo do território exclusivo de laboratórios de fronteira e virando funcionalidade padrão em plataformas de ML corporativas.`,
+  conexao_com_disciplina: `A demo real desta disciplina (grpo-verifiable-reward-demo.js / .py, M1.3) capturou ao vivo o cenário exato que os papers de 2025/2026 tentam resolver: numa rodada real contra o gemma4:e2b local, o grupo inteiro (G=6) empatou em recompensa 0,83 (todo mundo preservou o mesmo ruído de OCR num campo da extração da Amplitude Seguros). Isso zera a vantagem A_i pra todo mundo (ou deixa a divisão indefinida, com desvio padrão 0). É exatamente o "grupo degenerado" que o DAPO ataca descartando e reamostrando, e que a crítica do Dr. GRPO usa como evidência de que a normalização por desvio padrão do GRPO original tem pontos cegos estruturais, não é só um detalhe de implementação do script.`,
+  citacoes: [
+    {titulo:"DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models", autores_ou_org:"Shao, Z. et al. (DeepSeek-AI), paper original do GRPO", ano:"2024", identificador:"arXiv:2402.03300"},
+    {titulo:"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning", autores_ou_org:"DeepSeek-AI", ano:"2025", identificador:"arXiv:2501.12948"},
+    {titulo:"DAPO: An Open-Source LLM Reinforcement Learning System at Scale", autores_ou_org:"Yu, Q. et al. (ByteDance Seed / Tsinghua AIR)", ano:"2025", identificador:"arXiv:2503.14476"},
+    {titulo:"Understanding R1-Zero-Like Training: A Critical Perspective (introduz o Dr. GRPO)", autores_ou_org:"Liu, Z., Chen, C., Li, W., Qi, P., Pang, T., Du, C., Lee, W.S., Lin, M. (Sea AI Lab e colaboradores)", ano:"2025 (mar, rev. out)", identificador:"arXiv:2503.20783"},
+    {titulo:"Group Sequence Policy Optimization (GSPO)", autores_ou_org:"Zheng, C. et al., equipe Qwen, Alibaba", ano:"2025", identificador:"arXiv:2507.18071"},
+    {titulo:"GRPO's Effective Loss, Dynamics, and Success Amplification", autores_ou_org:"Mroueh, Y. (IBM Research); ICML 2026", ano:"2025 (mar) / jul 2026", identificador:"arXiv:2503.06639"},
+    {titulo:"Demystifying Group Relative Policy Optimization: Its Policy Gradient is a U-Statistic", autores_ou_org:"Zhou, H., Ye, K., Xu, E., Zhu, J., Yang, Y., Gong, S., Shi, C.", ano:"2026 (mar)", identificador:"arXiv:2603.01162"},
+    {titulo:"GRPO-VPS: Enhancing Group Relative Policy Optimization with Verifiable Process Supervision", autores_ou_org:"Wang, J. et al.", ano:"2026 (abr)", identificador:"arXiv:2604.20659"},
+    {titulo:"GRPO fine-tuning on Red Hat OpenShift AI: RL from verifiable rewards with Training Hub", autores_ou_org:"Red Hat Developer (blog técnico)", ano:"2026 (26/ago)", identificador:"https://developers.redhat.com/articles/2026/08/26/reinforcement-learning-from-verifiable-rewards-with-training-hub-on-red-hat-openshift-ai"},
+  ]
+},
+];
+
+function citationHref(id){
+  const arxiv = id.match(/arXiv:([\w.]+)/);
+  if(arxiv) return `https://arxiv.org/abs/${arxiv[1]}`;
+  const url = id.match(/https?:\/\/\S+/);
+  if(url) return url[0];
+  return null;
+}
+
+function paragraphs(text, opts){
+  opts = opts || {};
+  return text.split(/\n\n+/).map(function(raw){
+    var t = raw.trim();
+    if(!t) return '';
+    var isAnalogy = opts.analogy && /^(Uma analogia|Analogia)/i.test(t);
+    var isRigor = opts.rigor && /^(Nota de rigor|Não encontrei)/i.test(t);
+    var body = t.replace(/^(\d\))\s*/, '<span class="num-lead">$1</span> ');
+    if(isAnalogy) return '<div class="analogy">' + body.replace(/^(Uma analogia:?|Analogia:?)\s*/i,'') + '</div>';
+    if(isRigor) return '<div class="rigor-note">' + body.replace(/^Nota de rigor:?\s*/i,'') + '</div>';
+    return '<p>' + body + '</p>';
+  }).join('');
+}
+
+function citationsBlock(list){
+  return '<div class="citations"><div class="citations-title">Fontes</div><ul class="cit-list">' +
+    list.map(function(c){
+      var href = citationHref(c.identificador);
+      var idHtml = href ? `<a href="${href}" target="_blank" rel="noopener">${c.identificador}</a>` : c.identificador;
+      return `<li class="cit-item">
+        <div class="cit-title">${href ? `<a href="${href}" target="_blank" rel="noopener">${c.titulo}</a>` : c.titulo}</div>
+        <div class="cit-meta">${c.autores_ou_org} · ${idHtml}</div>
+        <div class="cit-year">${c.ano}</div>
+      </li>`;
+    }).join('') + '</ul></div>';
+}
+
+const main = document.getElementById('main');
+const nav = document.getElementById('indexNav');
+const pad = n => String(n).padStart(2,'0');
+
+ESPECIES.forEach(function(esp, i){
+  const id = 'especie-' + pad(i+1);
+  const callNumber = esp.citacoes[0];
+  const callNumberHref = citationHref(callNumber.identificador);
+
+  const section = document.createElement('section');
+  section.className = 'dossier';
+  section.id = id;
+  section.innerHTML = `
+    <div class="dossier-head">
+      <div class="dossier-number">${pad(i+1)}</div>
+      <div>
+        <h2 class="dossier-title">${esp.tecnica}</h2>
+        <div class="dossier-callnumber">${callNumber.autores_ou_org.split('(')[0].trim()} <span class="sep">·</span> ${callNumber.ano} <span class="sep">·</span> ${callNumberHref ? `<a href="${callNumberHref}" target="_blank" rel="noopener">${callNumber.identificador}</a>` : callNumber.identificador}</div>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-label">Mecanismo</div>
+      ${paragraphs(esp.mecanismo_teorico, {analogy:true})}
+    </div>
+    <div class="block">
+      <div class="block-label">Estado da arte - 2026</div>
+      ${paragraphs(esp.estado_da_arte_2026, {rigor:true})}
+    </div>
+    <div class="block">
+      <div class="block-label">Para onde está indo</div>
+      ${paragraphs(esp.para_onde_esta_indo)}
+    </div>
+    <div class="block">
+      <div class="connection"><p>${esp.conexao_com_disciplina}</p></div>
+    </div>
+    <div class="block">
+      ${citationsBlock(esp.citacoes)}
+    </div>
+  `;
+  main.appendChild(section);
+
+  const tab = document.createElement('a');
+  tab.className = 'index-tab';
+  tab.href = '#' + id;
+  tab.innerHTML = `<span class="n">${pad(i+1)}</span><span class="t">${esp.tecnica.split('(')[0].trim()}</span>`;
+  tab.dataset.target = id;
+  nav.appendChild(tab);
+});
+
+// active-tab tracking + reveal-on-scroll
+const tabs = Array.from(document.querySelectorAll('.index-tab'));
+const sections = Array.from(document.querySelectorAll('.dossier'));
+const observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+    }
+  });
+}, {threshold:0.08});
+sections.forEach(s => observer.observe(s));
+
+const navObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    const tab = tabs.find(t => t.dataset.target === entry.target.id);
+    if(!tab) return;
+    if(entry.isIntersecting){
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    }
+  });
+}, {threshold:0, rootMargin:'-20% 0px -70% 0px'});
+sections.forEach(s => navObserver.observe(s));
+if(tabs[0]) tabs[0].classList.add('active');
+</script>

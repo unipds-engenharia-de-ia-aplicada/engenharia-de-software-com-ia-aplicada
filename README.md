@@ -442,6 +442,30 @@ Disciplina completa em [modulo08-arquitetura-de-sistemas-com-ia](https://github.
 *   [Ollama](https://ollama.com/) — engine local padrão de todos os protótipos (`gemma4:e2b`), gratuito e sem chave de API.
 *   [Claude (Anthropic)](https://www.anthropic.com/), [Gemini (Google)](https://gemini.google.com/), [GPT (OpenAI)](https://openai.com/) — alternativas pagas de referência nos protótipos (`provedores-pagos.js/.py`).
 
+## Modulo 09 - Processamento de Dados e Fine-Tuning de Modelos
+
+Disciplina completa em [modulo09-processamento-de-dados-e-fine-tuning-de-modelos](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos) — o ciclo completo de fine-tuning construído sobre um caso único, a **Amplitude Seguros** (seguradora fictícia, linhas Auto e Saúde Empresarial), da decisão de "vale a pena fazer fine-tuning?" (framework de 4 perguntas + AHP + NPV) até um modelo customizado real, treinado, avaliado e documentado. Cada módulo entrega ferramentas executáveis (JS e Python com paridade funcional), dados de referência e atividade prática.
+
+### Os módulos da disciplina
+*   [Módulo 1 — Decision Framework](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-01-decision-framework) — framework de 4 perguntas, AHP, NPV, cheatsheet dos tipos de fine-tuning, Bestiário do Zoo das técnicas.
+*   [Módulo 2 — Preparação de Datasets](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-02-preparacao-datasets) — extração OCR, schema JSONL, deduplicação (MinHash+LSH), balanceamento, comparativo OCR vs. LLM multimodal.
+*   [Módulo 3 — Fine-Tuning via API](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-03-fine-tuning-via-api) — upload, hiperparâmetros, automação, versionamento (Vertex AI).
+*   Módulo 4 — LoRA e PEFT
+*   Módulo 5 — Avaliação de Modelos
+*   Módulo 6 — Projeto Final
+
+### Leituras Recomendadas
+*   [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685) — Hu et al. (Microsoft), 2021. Fundamenta a técnica central do Módulo 4.
+*   [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314) — Dettmers et al., NeurIPS 2023. Um dos seis tipos de fine-tuning do cheatsheet do Módulo 1.
+*   [Deduplicating Training Data Makes Language Models Better](https://arxiv.org/abs/2107.06499) — Lee et al. (Google Research). Fundamenta a deduplicação MinHash+LSH do Módulo 2.
+*   [The Analytic Hierarchy Process](https://www.mcgraw-hill.co.uk/) — Saaty, T.L., McGraw-Hill. Base do framework de decisão ponderada do Módulo 1.
+*   Lista completa com mais de 50 referências (papers, casos de mercado, documentação oficial) na "Indicações de leitura" da disciplina.
+
+### Ferramentas & Plataformas
+*   [Vertex AI / Gemini Enterprise Agent Platform](https://cloud.google.com/vertex-ai) — provedor gerenciado de fine-tuning usado do Módulo 3 em diante.
+*   [Microsoft Presidio](https://microsoft.github.io/presidio/) — referência de detecção/anonimização de PII usada no gate de higienização do Módulo 2.
+*   [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) — motor de OCR usado no pipeline de extração de documento do Módulo 2.
+
 ## Resolvendo Problemas Comuns
 
 - [Problemas comuns com **Docker**](./troubleshooting/docker.md)

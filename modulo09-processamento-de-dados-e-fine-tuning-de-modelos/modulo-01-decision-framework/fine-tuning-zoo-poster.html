@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fine-Tuning Zoo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-hero: #EAEFDE;
+    --bg-content: #F1F4EA;
+    --ink: #1A2016;
+    --muted: #88917D;
+    --rust: #9C6318;
+    --olive: #55731D;
+    --red: #A83A2C;
+    --red-bg: #F4DFD8;
+    --green-bg: #E4EFCF;
+    --teal: #276B62;
+    --teal-bg: #DBEBE6;
+    --amber-bg: #F3E4CB;
+    --purple: #6B5B95;
+    --purple-bg: #E7E2F1;
+    --distill-dark: #59634E;
+    --card-bg: #FFFFFF;
+    --card-border: #C7D0B8;
+    --diagram-bg: #E7EDDA;
+    --divider: #C7D0B8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-hero);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    width: 3200px;
+  }
+  .serif { font-family: 'Playfair Display', serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--rust);
+    text-transform: uppercase;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 90px 140px 70px;
+  }
+  .hero .eyebrow { margin-bottom: 28px; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 128px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 34px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--olive);
+  }
+  .hero .subtitle {
+    font-size: 34px;
+    line-height: 1.5;
+    color: #4B5240;
+    max-width: 1500px;
+    margin-bottom: 60px;
+  }
+  .stats-row {
+    display: flex;
+    gap: 130px;
+  }
+  .stat-num {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 52px;
+    margin-bottom: 8px;
+  }
+  .stat-num.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 44px;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    color: var(--muted);
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px solid var(--divider);
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .parte { background: var(--bg-content); padding: 80px 140px; }
+  .parte-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 80px;
+    margin-bottom: 70px;
+  }
+  .parte-header .eyebrow { margin-bottom: 18px; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 68px;
+    line-height: 1.1;
+  }
+  .section-desc {
+    font-size: 26px;
+    line-height: 1.5;
+    color: #5C6350;
+    max-width: 640px;
+    padding-bottom: 8px;
+  }
+
+  /* ===== GATE FLOW (Parte 1) ===== */
+  .gate-flow { position: relative; }
+  .gate-row {
+    display: flex;
+    gap: 50px;
+    position: relative;
+  }
+  .gate-row:not(:last-child) { padding-bottom: 64px; }
+  .step-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 96px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .step-badge {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--bg-content);
+    border: 2.5px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 24px;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+  .step-badge.gate { border-color: var(--red); color: var(--red); }
+  .step-line {
+    width: 2px;
+    flex: 1;
+    background: var(--card-border);
+    margin-top: 4px;
+  }
+  .gate-content { flex: 1; padding-top: 14px; }
+  .question {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.4;
+    max-width: 1550px;
+    margin-bottom: 34px;
+  }
+  .answer-pair {
+    display: flex;
+    gap: 30px;
+  }
+  .answer-card {
+    flex: 1;
+    border-radius: 20px;
+    padding: 30px 36px;
+    border: 2px solid;
+  }
+  .answer-card.no { background: var(--red-bg); border-color: var(--red); }
+  .answer-card.yes { background: var(--green-bg); border-color: var(--olive); }
+  .answer-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+  }
+  .answer-card.no .answer-label { color: var(--red); }
+  .answer-card.yes .answer-label { color: var(--olive); }
+  .answer-text { font-size: 26px; line-height: 1.5; }
+
+  .zoo-callout {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 42px;
+    color: var(--olive);
+    text-align: center;
+    margin: 56px 0 44px;
+  }
+  .footnote-box {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 20px;
+    padding: 32px 40px;
+    font-size: 22px;
+    line-height: 1.6;
+    color: #5C6350;
+  }
+  .footnote-box code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg-content);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 20px;
+  }
+
+  /* ===== SPECIES CARDS (Parte 2) ===== */
+  .species-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .species-card {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 28px;
+    padding: 50px 48px;
+    display: flex;
+    flex-direction: column;
+  }
+  .species-card + .species-row { margin-top: 40px; }
+  .species-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 40px;
+  }
+  .species-row:first-child { margin-top: 0; }
+  .species-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .species-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 46px;
+    margin-bottom: 24px;
+  }
+  .tag-pill {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 19px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 999px;
+    margin-bottom: 34px;
+    width: fit-content;
+  }
+  .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .field-text {
+    font-size: 25px;
+    line-height: 1.45;
+    margin-bottom: 26px;
+  }
+  .diagram-box {
+    background: var(--diagram-bg);
+    border-radius: 18px;
+    padding: 32px 30px;
+    margin-bottom: 32px;
+    flex: 1;
+  }
+  .diagram-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px;
+    text-align: center;
+    margin-top: 18px;
+    line-height: 1.5;
+  }
+  .species-footer {
+    border-top: 2px dashed var(--card-border);
+    padding-top: 26px;
+    margin-top: auto;
+  }
+  .species-footer p { font-size: 22px; line-height: 1.45; margin-bottom: 12px; }
+  .species-footer .fonte {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: var(--muted);
+  }
+
+  /* --- species 01 diagram: full fine-tuning bars --- */
+  .fft-label { font-family:'JetBrains Mono', monospace; font-size: 17px; color:#5C6350; margin-bottom: 16px; }
+  .fft-bar { height: 34px; background: var(--red); border-radius: 6px; margin-bottom: 12px; }
+  .fft-pct { font-family:'JetBrains Mono', monospace; font-size: 18px; font-weight:700; color: var(--red); text-align:center; margin-top: 6px; }
+
+  /* --- lora / qlora diagram --- */
+  .lora-diagram { display:flex; align-items:center; justify-content:center; gap: 18px; flex-wrap: wrap; }
+  .w0-box {
+    width: 150px; height: 130px; border: 2.5px solid var(--olive); border-radius: 10px;
+    background-image: repeating-linear-gradient(45deg, rgba(85,115,29,0.18) 0, rgba(85,115,29,0.18) 2px, transparent 2px, transparent 10px);
+    display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-weight:700; color: var(--olive); font-size:20px;
+  }
+  .w0-box.qlora {
+    border-color: var(--teal);
+    background-image: radial-gradient(circle, rgba(39,107,98,0.35) 1.5px, transparent 1.5px);
+    background-size: 10px 10px;
+    color: var(--teal);
+    flex-direction: column; font-size: 16px; gap:6px;
+  }
+  .op-symbol { font-size: 40px; font-weight: 700; }
+  .ba-group { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .ba-b { width: 22px; height: 60px; background: var(--olive); border-radius: 4px; }
+  .qlora .ba-b { background: var(--teal); }
+  .ba-row { display:flex; align-items:flex-end; gap:0; }
+  .ba-a { width: 60px; height: 22px; background: var(--olive); border-radius: 4px; margin-left: -2px; }
+  .qlora .ba-a { background: var(--teal); }
+  .ba-letter { font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; }
+  .result-box {
+    border: 2.5px solid var(--olive); border-radius: 12px; padding: 22px 20px;
+    font-family:'JetBrains Mono',monospace; font-weight:700; color: var(--olive); font-size:19px;
+  }
+  .result-box.qlora { border-color: var(--teal); color: var(--teal); font-size: 16px; }
+  .lora-sublabels { display:flex; justify-content:space-around; margin-top:18px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600; color: var(--olive); text-align:center; }
+  .lora-sublabels.qlora { color: var(--teal); }
+
+  /* --- instruction tuning diagram --- */
+  .it-diagram { display:flex; align-items:center; justify-content:center; gap: 30px; }
+  .it-tasks { display:flex; flex-direction:column; gap: 14px; }
+  .it-task-circle {
+    width: 90px; height: 90px; border-radius: 50%; border: 2px solid var(--rust);
+    background: var(--amber-bg); display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:15px; color: var(--rust); font-weight:600;
+    position: relative;
+  }
+  .it-model-box {
+    background: var(--rust); color: #fff; border-radius: 10px; padding: 24px 30px;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:19px; text-align:center;
+  }
+  .it-target-circle {
+    width: 100px; height: 100px; border-radius: 50%; border: 2.5px dashed var(--rust);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:15px; color: var(--rust); font-weight:600;
+  }
+  .it-arrow { font-size: 30px; color: var(--rust); }
+  .it-lines { position:relative; width: 60px; height: 180px; }
+
+  /* --- rlhf/dpo diagram --- */
+  .rlhf-title { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:18px; color: var(--purple); margin-bottom:14px; }
+  .rlhf-row { display:flex; align-items:center; gap: 14px; margin-bottom: 24px; }
+  .rlhf-box {
+    border: 2px solid var(--purple); background: var(--purple-bg); border-radius: 10px;
+    padding: 18px 16px; font-family:'JetBrains Mono',monospace; font-size:16px; color: var(--purple); font-weight:600; text-align:center; flex:1;
+  }
+  .rlhf-box.filled { background: var(--purple); color: #fff; }
+  .rlhf-arrow { color: var(--purple); font-size: 24px; flex-shrink:0; }
+  .rlhf-note { font-family:'JetBrains Mono',monospace; font-size:15px; color: var(--purple); margin-left: 8px; white-space:nowrap; }
+
+  /* --- distillation diagram --- */
+  .dist-diagram { display:flex; align-items:center; gap: 40px; justify-content:center; }
+  .dist-teacher {
+    width: 160px; height: 160px; border-radius:50%; border: 2.5px solid var(--distill-dark);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:15px; color: var(--distill-dark); font-weight:700; padding: 10px;
+  }
+  .dist-student {
+    width: 110px; height: 110px; border-radius:50%; background: var(--distill-dark);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:14px; color:#fff; font-weight:700;
+  }
+  .dist-arrow-col { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .dist-arrow-label { font-family:'JetBrains Mono',monospace; font-size:15px; color: var(--distill-dark); font-weight:600; white-space:nowrap; }
+
+  /* ===== HOSTS (Parte 3) ===== */
+  .hosts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 34px;
+  }
+  .host-card {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 22px;
+    padding: 38px 36px;
+  }
+  .host-vendor { font-family:'JetBrains Mono',monospace; font-size:19px; color: var(--muted); margin-bottom: 12px; }
+  .host-name { font-family:'Playfair Display', serif; font-weight:700; font-size: 34px; margin-bottom: 18px; }
+  .host-license {
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600;
+    background: var(--teal-bg); color: var(--teal); padding: 8px 18px; border-radius: 999px; margin-bottom: 24px;
+  }
+  .host-desc { font-size: 21px; line-height:1.5; margin-bottom: 20px; }
+  .host-divider { border-top: 2px dashed var(--card-border); margin-bottom: 20px; }
+  .host-note { font-size: 19px; font-style: italic; color: #5C6350; line-height:1.45; margin-bottom: 18px; }
+  .host-fonte { font-family:'JetBrains Mono',monospace; font-size: 17px; color: var(--muted); }
+
+  .field-note {
+    background: var(--amber-bg);
+    border: 2px solid var(--rust);
+    border-radius: 20px;
+    padding: 34px 40px;
+    margin-top: 50px;
+  }
+  .field-note .eyebrow { color: var(--rust); margin-bottom: 14px; }
+  .field-note p { font-size: 24px; line-height: 1.55; }
+
+  /* ===== FOOTER ===== */
+  .poster-footer {
+    background: var(--bg-hero);
+    padding: 50px 140px 90px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    color: var(--muted);
+  }
+  .poster-footer strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <p class="eyebrow">Guia de campo &middot; Processamento de Dados e Fine-Tuning de Modelos</p>
+    <h1 class="serif">Fine-Tuning <em>Zoo</em></h1>
+    <p class="subtitle">Identifique se a sua tarefa é candidata, reconheça as seis espécies de técnica, e escolha o hospedeiro certo entre os modelos abertos de 2026. Companion do Módulo 1, pra consultar antes de decidir treinar.</p>
+    <div class="stats-row">
+      <div class="stat"><span class="stat-num serif">1</span><span class="stat-label">chave de identificação</span></div>
+      <div class="stat"><span class="stat-num serif">6</span><span class="stat-label">espécies catalogadas</span></div>
+      <div class="stat"><span class="stat-num serif">4</span><span class="stat-label">hospedeiros recomendados</span></div>
+      <div class="stat"><span class="stat-num mono">ago/2026</span><span class="stat-label">última observação de campo</span></div>
+    </div>
+  </header>
+
+  <hr class="divider">
+
+  <!-- ===================== PARTE 1 ===================== -->
+  <section class="parte parte-1">
+    <div class="parte-header">
+      <div>
+        <p class="eyebrow">Parte 1</p>
+        <h2 class="section-title">A chave de identificação</h2>
+      </div>
+      <p class="section-desc">Antes de procurar a espécie certa, confirme que sua tarefa pertence ao Zoo. Siga cada pergunta na ordem: uma resposta errada encerra a busca ali.</p>
+    </div>
+
+    <div class="gate-flow">
+
+      <div class="gate-row">
+        <div class="step-col"><div class="step-badge gate mono">GATE</div><div class="step-line"></div></div>
+        <div class="gate-content">
+          <p class="question">Existe base legal definida pro tratamento do dado? Se o dado for de categoria sensível (LGPD Art. 5&ordm; II), há DPA assinado com o provedor de fine-tuning?</p>
+          <div class="answer-pair">
+            <div class="answer-card no"><p class="answer-label mono">NÃO</p><p class="answer-text">Bloqueado. Resolva a governança antes de qualquer outra pergunta, nenhuma pontuação técnica reverte isso.</p></div>
+            <div class="answer-card yes"><p class="answer-label mono">SIM</p><p class="answer-text">Vá para a pergunta 1.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-row">
+        <div class="step-col"><div class="step-badge mono">P1</div><div class="step-line"></div></div>
+        <div class="gate-content">
+          <p class="question">A tarefa é estreita e repetida, ou aberta e variável?</p>
+          <div class="answer-pair">
+            <div class="answer-card no"><p class="answer-label mono">ABERTA E VARIÁVEL</p><p class="answer-text">Continue com prompt + RAG. Fine-tuning não é candidato pra esse formato de tarefa.</p></div>
+            <div class="answer-card yes"><p class="answer-label mono">ESTREITA E REPETIDA</p><p class="answer-text">Vá para a pergunta 2.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-row">
+        <div class="step-col"><div class="step-badge mono">P2</div><div class="step-line"></div></div>
+        <div class="gate-content">
+          <p class="question">Já esgotou prompt engineering + RAG + roteamento, sem chegar na qualidade, custo ou latência necessários?</p>
+          <div class="answer-pair">
+            <div class="answer-card no"><p class="answer-label mono">AINDA NÃO ESGOTOU</p><p class="answer-text">Continue com prompt + RAG. Fine-tuning é o último recurso, não o primeiro.</p></div>
+            <div class="answer-card yes"><p class="answer-label mono">JÁ ESGOTOU</p><p class="answer-text">Vá para a pergunta 3.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-row">
+        <div class="step-col"><div class="step-badge mono">P3</div><div class="step-line"></div></div>
+        <div class="gate-content">
+          <p class="question">Tem dado de exemplo suficiente, diverso e de qualidade pra treinar?</p>
+          <div class="answer-pair">
+            <div class="answer-card no"><p class="answer-label mono">NÃO</p><p class="answer-text">Espere. Acumule dado primeiro, o valor de esperar pode superar o de decidir agora sob risco.</p></div>
+            <div class="answer-card yes"><p class="answer-label mono">SIM</p><p class="answer-text">Vá para a pergunta 4.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gate-row">
+        <div class="step-col"><div class="step-badge mono">P4</div></div>
+        <div class="gate-content">
+          <p class="question">A tarefa é estável o bastante pra não virar esteira de retreino constante?</p>
+          <div class="answer-pair">
+            <div class="answer-card no"><p class="answer-label mono">NÃO</p><p class="answer-text">Continue com prompt + RAG. Instabilidade alta é risco primo, mas diferente, da obsolescência do caso Harvey (Módulo 1.3).</p></div>
+            <div class="answer-card yes"><p class="answer-label mono">SIM</p><p class="answer-text">Fine-tuning vale a pena.</p></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="zoo-callout serif">Escolha a espécie certa no zoo abaixo &darr;</p>
+
+    <div class="footnote-box">
+      Versão simplificada do framework completo (gate de governança + AHP + NPV + Monte Carlo + Real Options), ensinado nos Módulos 1.1 a 1.3 desta disciplina. Perguntas reproduzidas de <code>decision-framework-tool.js</code>, Módulo 1.2.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================== PARTE 2 ===================== -->
+  <section class="parte parte-2">
+    <div class="parte-header">
+      <div>
+        <p class="eyebrow">Parte 2</p>
+        <h2 class="section-title">O zoo: seis espécies de técnica</h2>
+      </div>
+      <p class="section-desc">Cada espécime abaixo já foi observado em produção, com fonte verificável. Nenhum caso é hipotético.</p>
+    </div>
+
+    <div class="species-row">
+      <!-- Espécie 01: Full Fine-Tuning -->
+      <div class="species-card">
+        <p class="species-eyebrow">ESPÉCIE 01</p>
+        <h3 class="species-name">Full Fine-Tuning</h3>
+        <span class="tag-pill mono" style="background:var(--red-bg); color:var(--red);">rara hoje &middot; custo alto</span>
+        <p class="field-label">MUDA</p>
+        <p class="field-text">Todos os parâmetros do modelo.</p>
+        <p class="field-label">HABITAT IDEAL</p>
+        <p class="field-text">Domínio muito distante do pré-treino, orçamento alto.</p>
+        <div class="diagram-box">
+          <p class="fft-label">MODELO PRÉ-TREINADO (W&#8320;)</p>
+          <div class="fft-bar"></div>
+          <div class="fft-bar"></div>
+          <div class="fft-bar"></div>
+          <p class="fft-pct">100% DOS PARÂMETROS ATUALIZADOS</p>
+          <p class="diagram-caption">Todas as camadas recebem gradiente, sem congelamento</p>
+        </div>
+        <div class="species-footer">
+          <p><strong>Espécime registrado:</strong> GPT-3 &rarr; Codex (OpenAI, 2021). Fine-tune completo em 159GB de código do GitHub; virou a base do GitHub Copilot.</p>
+          <p class="fonte">Fonte: OpenAI, arXiv 2107.03374</p>
+        </div>
+      </div>
+
+      <!-- Espécie 02: LoRA -->
+      <div class="species-card">
+        <p class="species-eyebrow">ESPÉCIE 02</p>
+        <h3 class="species-name">LoRA</h3>
+        <span class="tag-pill mono" style="background:var(--green-bg); color:var(--olive);">a mais comum &middot; default de produção</span>
+        <p class="field-label">MUDA</p>
+        <p class="field-text">Só adaptadores de baixo posto, uma fração dos parâmetros.</p>
+        <p class="field-label">HABITAT IDEAL</p>
+        <p class="field-text">A maioria das tarefas de fine-tuning em produção hoje.</p>
+        <div class="diagram-box">
+          <div class="lora-diagram">
+            <div class="w0-box">W&#8320;</div>
+            <span class="op-symbol" style="color:var(--olive);">+</span>
+            <div class="ba-group">
+              <span class="ba-letter" style="color:var(--olive);">B</span>
+              <div class="ba-b"></div>
+              <div class="ba-row"><div class="ba-a"></div><span class="ba-letter" style="color:var(--olive); margin-left:2px;">A</span></div>
+            </div>
+            <span class="op-symbol" style="color:var(--olive);">=</span>
+            <div class="result-box">W&#8320;+BA</div>
+          </div>
+          <div class="lora-sublabels"><span>congelado</span><span>B&middot;A, posto r</span></div>
+          <p class="diagram-caption">Só B e A recebem gradiente, ~0,1&ndash;1% dos parâmetros</p>
+        </div>
+        <div class="species-footer">
+          <p><strong>Espécime registrado:</strong> Checkr + Predibase. Llama-3-8B com LoRA pra classificar background checks: 90% de acurácia nos 2% de casos mais difíceis (acurácia geral ~97%), 5x mais barato e 30x mais rápido que GPT-4.</p>
+          <p class="fonte">Fonte: Predibase, case study oficial</p>
+        </div>
+      </div>
+
+      <!-- Espécie 03: QLoRA -->
+      <div class="species-card">
+        <p class="species-eyebrow">ESPÉCIE 03</p>
+        <h3 class="species-name">QLoRA</h3>
+        <span class="tag-pill mono" style="background:var(--teal-bg); color:var(--teal);">muito acessível &middot; GPU de consumidor</span>
+        <p class="field-label">MUDA</p>
+        <p class="field-text">Adaptadores LoRA sobre o modelo base quantizado em 4-bit.</p>
+        <p class="field-label">HABITAT IDEAL</p>
+        <p class="field-text">Orçamento apertado, hardware de consumidor.</p>
+        <div class="diagram-box">
+          <div class="lora-diagram">
+            <div class="w0-box qlora"><span>W&#8320;</span><span style="font-size:13px;">NF4 &middot; 4-bit</span></div>
+            <span class="op-symbol" style="color:var(--teal);">+</span>
+            <div class="ba-group qlora">
+              <span class="ba-letter" style="color:var(--teal);">B</span>
+              <div class="ba-b"></div>
+              <div class="ba-row"><div class="ba-a"></div><span class="ba-letter" style="color:var(--teal); margin-left:2px;">A</span></div>
+            </div>
+            <span class="op-symbol" style="color:var(--teal);">=</span>
+            <div class="result-box qlora">65B em 48GB</div>
+          </div>
+          <div class="lora-sublabels qlora"><span>quantizado &amp; congelado</span><span>LoRA em 16-bit</span></div>
+          <p class="diagram-caption">Base em 4-bit (NF4 + double quant.) + adaptadores em 16-bit</p>
+        </div>
+        <div class="species-footer">
+          <p><strong>Espécime registrado:</strong> Guanaco (Univ. de Washington, 2023). Modelo de 65B treinado numa única GPU de 48GB em 24h, 99,3% da performance do ChatGPT no benchmark Vicuna.</p>
+          <p class="fonte">Fonte: Dettmers et al., arXiv 2305.14314 (NeurIPS 2023)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="species-row">
+      <!-- Espécie 04: Instruction Tuning -->
+      <div class="species-card">
+        <p class="species-eyebrow">ESPÉCIE 04</p>
+        <h3 class="species-name">Instruction Tuning</h3>
+        <span class="tag-pill mono" style="background:var(--amber-bg); color:var(--rust);">geralmente combinada</span>
+        <p class="field-label">MUDA</p>
+        <p class="field-text">Ajuste supervisionado pra seguir instruções em linguagem natural.</p>
+        <p class="field-label">HABITAT IDEAL</p>
+        <p class="field-text">Generalizar pra instruções nunca vistas.</p>
+        <div class="diagram-box">
+          <div class="it-diagram">
+            <div class="it-tasks">
+              <div class="it-task-circle">resumir</div>
+              <div class="it-task-circle">traduzir</div>
+              <div class="it-task-circle">classificar</div>
+            </div>
+            <span class="it-arrow">&rarr;</span>
+            <div class="it-model-box">MODELO<br>60+ tarefas</div>
+            <span class="it-arrow">&rarr;</span>
+            <div class="it-target-circle">tarefa<br>nova</div>
+          </div>
+          <p class="diagram-caption">Treina em muitas tarefas via instrução &rarr; generaliza pra uma nunca vista</p>
+        </div>
+        <div class="species-footer">
+          <p><strong>Espécime registrado:</strong> FLAN (Google, 2021). Modelo de 137B ajustado em 60+ tarefas via instrução, superou o GPT-3 175B zero-shot em 20 de 25 tarefas.</p>
+          <p class="fonte">Fonte: Wei et al., arXiv 2109.01652</p>
+        </div>
+      </div>
+
+      <!-- Espécie 05: RLHF/DPO -->
+      <div class="species-card">
+        <p class="species-eyebrow">ESPÉCIE 05</p>
+        <h3 class="species-name">RLHF / DPO</h3>
+        <span class="tag-pill mono" style="background:var(--purple-bg); color:var(--purple);">uso especializado &middot; alinhamento</span>
+        <p class="field-label">MUDA</p>
+        <p class="field-text">Alinhamento com preferência humana (recompensa no RLHF, otimização direta no DPO).</p>
+        <p class="field-label">HABITAT IDEAL</p>
+        <p class="field-text">Tom e comportamento alinhados à preferência humana, não extração de tarefa.</p>
+        <div class="diagram-box">
+          <p class="rlhf-title">RLHF (3 estágios)</p>
+          <div class="rlhf-row">
+            <div class="rlhf-box">SFT</div><span class="rlhf-arrow">&rarr;</span>
+            <div class="rlhf-box">modelo de recompensa</div><span class="rlhf-arrow">&rarr;</span>
+            <div class="rlhf-box">PPO</div>
+          </div>
+          <p class="rlhf-title">DPO (direto)</p>
+          <div class="rlhf-row">
+            <div class="rlhf-box filled">pares de preferência</div><span class="rlhf-arrow">&rarr;</span>
+            <div class="rlhf-box filled">política</div>
+            <span class="rlhf-note">(sem modelo de recompensa)</span>
+          </div>
+          <p class="diagram-caption">DPO deriva a política ótima direto dos pares, sem RL nem modelo de recompensa</p>
+        </div>
+        <div class="species-footer">
+          <p><strong>Espécime registrado:</strong> InstructGPT (OpenAI, RLHF), 1,3B preferido ao GPT-3 175B pelos avaliadores. Zephyr-7B (Hugging Face, DPO) igualou modelos bem maiores.</p>
+          <p class="fonte">Fonte: Ouyang et al., arXiv 2203.02155; Hugging Face</p>
+        </div>
+      </div>
+
+      <!-- Espécie 06: Distillation -->
+      <div class="species-card">
+        <p class="species-eyebrow">ESPÉCIE 06</p>
+        <h3 class="species-name">Distillation</h3>
+        <span class="tag-pill mono" style="background:var(--bg-content); color:var(--distill-dark);">caso à parte &middot; compressão</span>
+        <p class="field-label">MUDA</p>
+        <p class="field-text">Um modelo pequeno aprende a imitar o comportamento de um modelo grande.</p>
+        <p class="field-label">HABITAT IDEAL</p>
+        <p class="field-text">Reduzir custo de inferência em produção, não aprender tarefa nova.</p>
+        <div class="diagram-box">
+          <div class="dist-diagram">
+            <div class="dist-teacher">PROFESSOR<br>R1, RL-otimizado</div>
+            <div class="dist-arrow-col">
+              <span class="dist-arrow-label">800k exemplos CoT</span>
+              <span class="it-arrow" style="color:var(--distill-dark);">&rarr;</span>
+            </div>
+            <div class="dist-student">ALUNO<br>1,5B&ndash;70B</div>
+          </div>
+          <p class="diagram-caption">imita via SFT, sem etapa de RL</p>
+          <p class="diagram-caption">Só ajuste supervisionado no aluno, o RL fica no professor</p>
+        </div>
+        <div class="species-footer">
+          <p><strong>Espécime registrado:</strong> DeepSeek-R1-Distill (jan/2025). 800 mil exemplos de treinamento (majoritariamente de raciocínio) destilados em modelos de 1,5B a 70B, superando baselines maiores.</p>
+          <p class="fonte">Fonte: DeepSeek-AI, relatório técnico do R1</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================== PARTE 3 ===================== -->
+  <section class="parte parte-3">
+    <div class="parte-header">
+      <div>
+        <p class="eyebrow">Parte 3</p>
+        <h2 class="section-title">Hospedeiros: onde treinar em 2026</h2>
+      </div>
+      <p class="section-desc">A espécie de técnica precisa de um modelo base pra habitar. Estes quatro são os hospedeiros abertos mais usados pra fine-tuning agora.</p>
+    </div>
+
+    <div class="hosts-grid">
+      <div class="host-card">
+        <p class="host-vendor mono">Google</p>
+        <h3 class="host-name">Gemma 4</h3>
+        <span class="host-license mono">Apache 2.0</span>
+        <p class="host-desc">Variantes E2B, E4B, 26B MoE e 31B Dense. Líder em eficiência de raciocínio por parâmetro, forte pra edge e on-device.</p>
+        <div class="host-divider"></div>
+        <p class="host-note">É o modelo usado ao vivo nesta disciplina (Módulo 4.2, MLX-LM, variante E2B).</p>
+        <p class="host-fonte">Fonte: Google Open Source Blog, abr/2026</p>
+      </div>
+      <div class="host-card">
+        <p class="host-vendor mono">Alibaba</p>
+        <h3 class="host-name">Qwen 3.5 / 3.6</h3>
+        <span class="host-license mono">Apache 2.0</span>
+        <p class="host-desc">Variantes de 0,8B a 9B (3.5) e 35B-A3B MoE (3.6). Maior ecossistema de fine-tunes no Hugging Face, forte em código e multilíngue.</p>
+        <div class="host-divider"></div>
+        <p class="host-note">Licença mais permissiva do grupo: sem teto de uso, sem exigência de atribuição.</p>
+        <p class="host-fonte">Fonte: Qwen, github.com/QwenLM</p>
+      </div>
+      <div class="host-card">
+        <p class="host-vendor mono">Meta</p>
+        <h3 class="host-name">Llama 4</h3>
+        <span class="host-license mono">Licença própria</span>
+        <p class="host-desc">Variante Scout: janela de contexto muito acima da concorrência, cabe um repositório inteiro de código.</p>
+        <div class="host-divider"></div>
+        <p class="host-note">Uso comercial livre até 700 milhões de usuários ativos mensais; acima disso, exige licença separada da Meta e atribuição &ldquo;Built with Llama&rdquo;.</p>
+        <p class="host-fonte">Fonte: llama.com/llama4/license</p>
+      </div>
+      <div class="host-card">
+        <p class="host-vendor mono">DeepSeek</p>
+        <h3 class="host-name">DeepSeek V4</h3>
+        <span class="host-license mono">MIT</span>
+        <p class="host-desc">Variantes V4-Pro (1,6T parâmetros, MoE) e V4-Flash (284B). A licença mais permissiva de todas: sem teto de uso, sem cláusula de atribuição.</p>
+        <div class="host-divider"></div>
+        <p class="host-note">Mesma linhagem que gerou o R1, o modelo-professor do case de Distillation acima.</p>
+        <p class="host-fonte">Fonte: DeepSeek-AI, jul/2026</p>
+      </div>
+    </div>
+
+    <div class="field-note">
+      <p class="eyebrow">Nota de campo</p>
+      <p>Mistral 7B, antes o queridinho pra fine-tuning acessível, ficou pra trás em benchmark bruto contra esses quatro. Isso muda: o Zoo registra o estado de agosto de 2026, não uma verdade fixa. Reavalie periodicamente, como o Módulo 1.3 ensina com o caso Harvey.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <footer class="poster-footer">
+    <span><strong>Fine-Tuning Zoo</strong> &middot; material de apoio, Módulo 1</span>
+    <span>Prof. Ahirton Lopes, Ph.D. &middot; Processamento de Dados e Fine-Tuning de Modelos &middot; UNIPDS</span>
+  </footer>
+
+</body>
+</html>

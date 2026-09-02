@@ -1,0 +1,96 @@
+{
+  "_comentario": "Dados de entrada do decision-framework-tool (Módulo 1.2). Números de negócio (volume, custo por chamada, custo de treino, taxa de desconto) são ilustrativos, calibrados pra dar uma história financeira coerente com o case fictício Amplitude Seguros, não são dado real de mercado. Os números de custo de fine-tuning (LoRA em GPU cloud) usam a mesma faixa já verificada no cheatsheet da disciplina (~US$0,40-0,80/hora consumer a US$2,50-4,00/hora H100).",
+  "limiarVerde": 0.6,
+  "ahp": {
+    "_comentario": "Matriz de comparação pareada (escala de Saaty 1-9) pra derivar o peso de cada pergunta por Analytic Hierarchy Process, em vez de peso escolhido a dedo. Ordem das linhas/colunas: p1, p2, p3, p4. Julgamento: p3 (dado suficiente) é moderadamente mais importante que p1/p2 (nota 3) e um pouco mais importante que p4 (nota 2), porque é o único constraint que não se resolve por decisão de equipe, só por tempo/coleta. p4 (estabilidade) é um pouco mais importante que p1/p2 (nota 2) porque afeta o retorno de longo prazo do investimento. p1 e p2 são julgadas equivalentes entre si.",
+    "ordemPerguntas": ["p1", "p2", "p3", "p4"],
+    "matriz": [
+      [1, 1, 0.3333333333, 0.5],
+      [1, 1, 0.3333333333, 0.5],
+      [3, 3, 1, 2],
+      [2, 2, 0.5, 1]
+    ]
+  },
+  "casos": [
+    {
+      "id": "amplitude-atendimento-cliente",
+      "nome": "Amplitude Atendimento ao Cliente",
+      "tarefa": "Negociar e resolver contestações de sinistro em conversas abertas com o segurado, incluindo exceção de cobertura caso a caso",
+      "scores": { "p1": 0.30, "p2": 0.75, "p3": 0.92, "p4": 0.35 },
+      "justificativas": {
+        "p1": "Cada contestação é um caso diferente: motivo do sinistro, histórico do segurado, cobertura contratada, tudo varia. Não existe uma estrutura de saída fixa como segurado-placa-valor. Score baixo porque a tarefa em si é aberta, não é falta de padronização que mais dado resolveria.",
+        "p2": "Prompt bem escrito, RAG com a base de apólices e regras de cobertura, e roteamento pra especialista humano nos casos mais sensíveis já estão em produção há meses, cobrindo a maior parte dos atendimentos de rotina. Score alto de propósito: esse caminho já foi esgotado de verdade, não é falta de tentar mais prompt.",
+        "p3": "Maior volume de atendimento entre todos os casos da Amplitude, milhares de conversas por mês. Score alto de propósito: prova que dado não é o gargalo aqui.",
+        "p4": "Política de cobertura muda a cada revisão regulatória da SUSEP e a cada produto novo lançado; o que era exceção aceita há seis meses pode não ser mais. Score baixo porque um modelo treinado hoje ficaria desatualizado rápido demais pra justificar o investimento."
+      },
+      "governanca": {
+        "_comentario": "Gate binário de governança de dado (LGPD), avaliado ANTES do AHP -- não é uma 5ª pergunta ponderável, é um bloqueador: nenhum volume de dado ou retorno financeiro compensa base legal ausente ou dado sensível sem DPA.",
+        "dadoSensivelLGPD": false,
+        "baseLegalDefinida": true,
+        "baseLegalDescricao": "Execução de contrato de seguro (LGPD Art. 7º, V) -- histórico de sinistro e conversa de contestação fazem parte da relação contratual já estabelecida.",
+        "dpaAssinado": true
+      }
+    },
+    {
+      "id": "amplitude-auto",
+      "nome": "Amplitude Auto",
+      "tarefa": "Extrair segurado, placa e valor de orçamentos de oficina",
+      "scores": { "p1": 0.90, "p2": 0.85, "p3": 0.90, "p4": 0.85 },
+      "justificativas": {
+        "p1": "Sempre a mesma estrutura de saída: segurado, placa, valor, mesmo com oficinas heterogêneas na entrada. Score alto porque a variação está só no documento de origem, nunca no formato esperado de saída.",
+        "p2": "Prompt bem escrito mais RAG já testados em produção; formato de saída ainda inconsistente o bastante em escala pra justificar o próximo passo. Não é score máximo porque ainda cabe algum ajuste fino de prompt antes de esgotar de vez.",
+        "p3": "Milhares de sinistros de colisão já processados historicamente, linha madura da Amplitude. Score alto refletindo volume real e diversidade de casos cobertos.",
+        "p4": "Contrato de saída fixo com o sistema de sinistros, não muda toda semana. Não é score máximo porque nenhum contrato é imutável para sempre."
+      },
+      "governanca": {
+        "dadoSensivelLGPD": false,
+        "baseLegalDefinida": true,
+        "baseLegalDescricao": "Execução de contrato de seguro (LGPD Art. 7º, V) -- dado de sinistro veicular e orçamento de oficina não é categoria sensível.",
+        "dpaAssinado": true
+      },
+      "financeiro": {
+        "volumeInicialMensal": 8000,
+        "crescimentoMensal": { "min": 0.01, "moda": 0.03, "max": 0.05 },
+        "custoPorChamadaStatusQuo": { "min": 0.035, "moda": 0.045, "max": 0.06 },
+        "custoPorChamadaFineTuned": { "min": 0.012, "moda": 0.016, "max": 0.022 },
+        "custoTreinamento": 2400,
+        "horizonteMeses": 24,
+        "taxaDescontoMensal": 0.01
+      }
+    },
+    {
+      "id": "amplitude-saude-empresarial",
+      "nome": "Amplitude Saúde Empresarial",
+      "tarefa": "Extrair beneficiário, procedimento e valor de recibos médicos, cruzando com o cadastro de beneficiários",
+      "scores": { "p1": 0.85, "p2": 0.80, "p3": 0.35, "p4": 0.80 },
+      "justificativas": {
+        "p1": "Mesma estrutura de saída toda vez: beneficiário, procedimento, valor, resultado do cruzamento titular-dependente.",
+        "p2": "Também já testado com prompt mais RAG em produção, mesmo caminho que o Auto percorreu.",
+        "p3": "Linha mais nova da Amplitude, volume histórico ainda baixo, não cobre a variação real de recibos e convênios o bastante pra treinar com confiança. Score abaixo do limiar de propósito: não é ausência total de dado, é dado insuficiente pra generalizar.",
+        "p4": "Contrato de saída também é fixo, com o mesmo sistema de sinistros do Auto."
+      },
+      "governanca": {
+        "_comentario": "Este é o caso que realmente testa o gate: dado de saúde é categoria sensível por definição legal (LGPD Art. 5º, II), então o bloqueador extra (DPA assinado) passa a valer -- não é decorativo, é o único dos 3 casos onde essa condição é exigida.",
+        "dadoSensivelLGPD": true,
+        "baseLegalDefinida": true,
+        "baseLegalDescricao": "Execução de contrato + tutela da saúde (LGPD Art. 7º V e Art. 11, II-f) -- procedimento realizado por profissional/entidade de saúde, no contexto de reembolso contratado.",
+        "dpaAssinado": true
+      },
+      "financeiro": {
+        "volumeInicialMensal": 1200,
+        "crescimentoMensal": { "min": 0.02, "moda": 0.05, "max": 0.08 },
+        "custoPorChamadaStatusQuo": { "min": 0.035, "moda": 0.045, "max": 0.06 },
+        "custoPorChamadaFineTuned": { "min": 0.012, "moda": 0.016, "max": 0.022 },
+        "custoTreinamento": 2400,
+        "horizonteMeses": 24,
+        "taxaDescontoMensal": 0.01,
+        "opcaoReal": {
+          "_comentario": "Só se aplica quando a única pergunta reprovada é a de dado suficiente (p3) -- é o único tipo de reprovação que se resolve esperando, não decidindo diferente.",
+          "custoDeErroEsperadoPorChamada": 0.08,
+          "taxaCrescimentoScorePorMes": 0.03,
+          "scoreAlvo": 0.6
+        }
+      }
+    }
+  ]
+}
