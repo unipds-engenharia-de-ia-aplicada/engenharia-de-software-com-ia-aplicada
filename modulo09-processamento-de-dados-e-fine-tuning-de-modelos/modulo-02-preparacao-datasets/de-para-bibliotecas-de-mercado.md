@@ -9,6 +9,17 @@ Este documento não é parte do material gravado nem da ementa submetida ao MEC.
 
 ---
 
+## TL;DR
+
+- **3 das 6 peças construídas do zero no Módulo 2 não têm alternativa de mercado madura, nem em Python nem em JavaScript** (deduplicação completa, amostragem por temperatura, validação de schema JSONL) - não foi atalho didático, é que a lib não existe.
+- **2 peças tinham lib pronta e a escolha de construir foi só pedagógica** (normalização de texto, similaridade) - num pipeline de produção real, `natural`/`compromise` e `fastest-levenshtein` resolveriam sem reinventar nada.
+- **2 peças nem são pergunta de "construir vs. comprar"**: o gate de relevância é lógica de negócio da Amplitude Seguros, e a higienização de PII já está no companion do M2.1.
+- Pesquisa de mercado real, verificada ao vivo em 22/08/2026 (downloads/semana, status de manutenção, fonte primária) - não é opinião, é checagem.
+
+*Quer o detalhe de cada linha, com fonte e número? Continue lendo. Só quer o veredito? Pare aqui.*
+
+---
+
 ## Resumo executivo
 
 | Componente do M2 | Existe lib de mercado madura? | Por que construímos do zero |
@@ -32,7 +43,11 @@ A linha mais importante desta tabela: **três dos seis componentes construídos 
 
 **Biblioteca de mercado equivalente:**
 - **Python**: `datasketch` (ekzhu/datasketch) é o núcleo de fato usado por quase todo pipeline de dedup de LLM - inclusive por `text-dedup`, `datatrove` (Hugging Face, usado pra construir o FineWeb) e indiretamente pelo NVIDIA NeMo Curator. Ativa, ~4,5 milhões de downloads/mês no PyPI, mas o próprio mantenedor pediu colaboradores em 2025/2026 por estar mudando de foco.
-- **JavaScript/Node**: **não existe equivalente vivo da técnica completa (MinHash + LSH banding).** O pacote npm `minhash` está parado na versão 0.0.9 há cerca de 8 anos. A alternativa em Rust-pra-Node (`minhash-node-rs`) tem 15 estrelas e sinal fraco de atividade. Existe uma opção parcial real - `bloom-filters` (Callidon/bloom-filters, npm, ~455 mil downloads/semana, verificado em 2026-08-22) implementa MinHash de verdade (`add()`, `bulkLoad()`, `compareWith()`), mas **só a assinatura e a comparação par-a-par**, sem banding/bucketing - ou seja, sem a peça que evita O(n²) e que fez nossos 549 pares virarem 20 candidatos. Usar `bloom-filters` sozinho pra um dataset grande ainda exigiria comparar todo par, o problema que o LSH banding existe pra evitar. A opção mais viável pra ter o pacote completo (assinatura + indexação por banda) hoje em JS é falar com um banco vetorial como o Milvus (índice `MINHASH_LSH` nativo desde a v2.6, função server-side desde a v3.0-beta de maio/2026) via SDK Node oficial - delegar pra um serviço externo, não uma lib local.
+- **JavaScript/Node**: **não existe equivalente vivo da técnica completa (MinHash + LSH banding).** Quatro opções reais, nenhuma completa:
+  - `minhash` (npm): parado na versão 0.0.9 há cerca de 8 anos.
+  - `minhash-node-rs` (Rust-pra-Node): 15 estrelas, sinal fraco de atividade.
+  - `bloom-filters` (Callidon/bloom-filters, npm, ~455 mil downloads/semana, verificado em 2026-08-22): implementa MinHash de verdade (`add()`, `bulkLoad()`, `compareWith()`), mas **só a assinatura e a comparação par-a-par**, sem banding/bucketing - ou seja, sem a peça que evita O(n²) e que fez nossos 549 pares virarem 20 candidatos. Sozinho, pra um dataset grande, ainda exigiria comparar todo par - o problema que o LSH banding existe pra evitar.
+  - Banco vetorial externo (Milvus, índice `MINHASH_LSH` nativo desde a v2.6, função server-side desde a v3.0-beta de maio/2026, via SDK Node oficial): única forma de ter o pacote completo (assinatura + indexação por banda) hoje em JS - mas delega pra um serviço externo, não é uma lib local.
 
 **Por que construímos do zero**: forçado pra técnica completa. Mesmo usando `bloom-filters` pra assinatura MinHash, a peça de banding LSH (`bandingLSH`, `encontrarQuaseDuplicatasMinHashLSH` no nosso código) ainda precisaria ser escrita na mão - nenhuma lib JS entrega isso pronto. O código implementado nesta disciplina é, na prática, uma reimplementação didática completa do que `datasketch` faz em Python - o aluno aprende o algoritmo real de ponta a ponta, incluindo a parte que nem `bloom-filters` cobre.
 
@@ -43,6 +58,8 @@ A linha mais importante desta tabela: **três dos seis componentes construídos 
 ---
 
 ## 2. Amostragem por temperatura: `pesosAmostragemPorTemperatura` / `balancearPorTemperatura`
+
+A ideia central, antes da fórmula: fonte com muito exemplo passa a pesar menos, fonte com pouco exemplo passa a pesar mais - a "temperatura" só controla o quanto desse ajuste acontece. O resto desta seção é como isso vira código e o que o mercado oferece pronto (nada, como vai ficar claro).
 
 **O que nosso código faz**: implementa a fórmula real do paper T5/mT5 (peso proporcional a `contagem^alpha`, alpha=0,3, exatamente a convenção de Xue et al. 2021/mT5 - o próprio comentário do código cita Raffel et al. 2020 e Xue et al. 2021) pra corrigir concentração de fonte sem inventar exemplo. Rodando de verdade: Amplitude Auto vai de 53,8% de concentração numa fonte só pra 40%, número efetivo de fontes sobe de 3,28 pra 3,74; Amplitude Saúde Empresarial vai de 61,1% pra 50%, número efetivo de 2,54 pra 2,81 - sempre alocando pelo resto maior (`alocarMaiorResto`), nunca fracionando exemplo.
 
@@ -76,7 +93,10 @@ A linha mais importante desta tabela: **três dos seis componentes construídos 
 - **`natural`**: v8.1.1 (27/fev/2026), a mais completa (stemming, classificador, etc.) e hoje também a mais baixada das três NLP libs leves: **1,19 milhão de downloads/semana**, crescimento de ~600-700% no último ano.
 - **`compromise`**: v14.16.0 (14/jul/2026), ativa (12.150 estrelas, push recente em 20/jul/2026), **880 mil downloads/semana**, crescimento de ~333% no último ano - a que mais cresceu proporcionalmente das três.
 - **`wink-nlp`** (+ `wink-nlp-utils`): **166 mil downloads/semana** (wink-nlp sozinho) - bem menor que as outras duas em volume e em crescimento (~142%), apesar de ser frequentemente citada como "a nova referência de performance". `wink-nlp-utils` não recebe commit desde março/2024.
-- **Distância de edição/similaridade**: dois pacotes de nome parecido, resultado bem diferente do que se esperava. `fastest-levenshtein` tem 25,9 milhões de downloads/semana - mas existe um pacote MAIS baixado ainda, `fast-levenshtein` (sem "est", autor diferente), com **144,9 milhões de downloads/semana**, provavelmente puxado por dependência transitiva de ferramenta de lint/teste, não escolha ativa - vale citar os dois, não só um. `string-similarity` está arquivado (confirmado, `archived: true` no GitHub) mas **não foi abandonado no sentido de uso**: ainda soma 2,1 milhões de downloads/semana. O tempo parado é ~3 anos e 4 meses (arquivamento em mai/2023), não os "~6 anos" que a pesquisa original estimou.
+- **Distância de edição/similaridade**: dois pacotes de nome parecido, resultado bem diferente do esperado:
+  - `fastest-levenshtein`: 25,9 milhões de downloads/semana.
+  - `fast-levenshtein` (sem "est", autor diferente): **144,9 milhões de downloads/semana** - MAIS baixado que o "fastest", provavelmente puxado por dependência transitiva de ferramenta de lint/teste, não escolha ativa. Vale citar os dois, não só um.
+  - `string-similarity`: está arquivado (confirmado, `archived: true` no GitHub) mas **não foi abandonado no sentido de uso** - ainda soma 2,1 milhões de downloads/semana. O tempo parado é ~3 anos e 4 meses (arquivamento em mai/2023), não os "~6 anos" que a pesquisa original estimou.
 - **`lodash`** (`_.deburr`, `_.words`): ainda muito usada em pipeline de limpeza, embora não seja lib de texto dedicada.
 
 **Por que construímos do zero**: escolha pedagógica, não necessidade. `normalizarTexto` é simples o bastante que trazer uma dependência externa só pra isso seria over-engineering - mas é honesto reconhecer que, num pipeline de produção real, `natural` ou `compromise` cobririam essa etapa (e bem mais, como remoção de stopword e stemming) sem reinventar nada. Vale corrigir aqui uma alegação errada da primeira pesquisa: `wink-nlp` não é "a que mais cresce" - é a que menos cresce e a de menor volume das três libs comparadas, ao vivo, no npm.
@@ -104,3 +124,8 @@ A linha mais importante desta tabela: **três dos seis componentes construídos 
 ## Conclusão: o que isso prova sobre o Módulo 2
 
 A pesquisa de mercado confirma, com fonte, uma coisa que o material já demonstrava na prática: pra três das seis peças centrais do pipeline (dedup, balanceamento, validação de schema por API), **construir do zero não foi atalho didático - foi a única opção real**, porque o mercado (JS e, em boa parte, até Python) ainda não resolveu isso de forma madura e unificada. Pras outras duas (normalização, similaridade), existia lib pronta e a escolha de não usar foi pedagógica, pra ensinar o algoritmo. E pro gate de relevância e o parsing de documento, a pergunta "por que não usar uma lib" nem se aplica - é lógica de negócio, não um problema genérico.
+
+---
+
+Ahirton Lopes · Fine-Tuning Toolkit - UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
+Prof. Ahirton Lopes, Ph.D. - GDE AI, Microsoft MVP, Senior Manager
