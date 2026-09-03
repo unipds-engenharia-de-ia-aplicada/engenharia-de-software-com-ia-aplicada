@@ -8,6 +8,8 @@ O slide do vídeo mostra um card resumido por tipo. Este documento é o companio
 
 > **Versão visual:** as seis primeiras técnicas abaixo, com o mesmo caso real de cada uma, mais os modelos abertos recomendados pra treinar em 2026, estão reunidas como pôster de campo em [`fine-tuning-zoo-poster.png`](fine-tuning-zoo-poster.png), na mesma pasta deste arquivo; inclui também a chave de decisão do Módulo 1.1/1.2 (vale a pena fazer fine-tuning ou não). A sétima técnica (GRPO/RFT) é a mais recente e ainda não entrou no pôster: fica documentada aqui e no demo rodável da seção 7.
 
+> **Sobre os valores de custo e preço de GPU citados neste documento:** são a faixa de mercado observada na época desta gravação (ago/2026) - preço de GPU cloud e de hardware de consumidor muda rápido. Antes de usar esses números pra decidir orçamento de verdade, confira o preço vigente (ex.: [Vast.ai](https://vast.ai/pricing/gpu), [RunPod](https://www.runpod.io/pricing)) em vez de assumir que o valor aqui continua igual.
+
 ---
 
 ## 1. Full Fine-Tuning
@@ -56,7 +58,7 @@ O slide do vídeo mostra um card resumido por tipo. Este documento é o companio
 
 **O que é:** LoRA aplicado sobre um modelo base quantizado em 4-bit, reduzindo ainda mais o consumo de memória e permitindo treinar modelos grandes em hardware de consumidor.
 
-**Quando usar (best practice de mercado):** é a opção pra quem não tem orçamento de datacenter, permitindo treinar modelos de dezenas de bilhões de parâmetros numa única GPU de consumidor (ex.: RTX 4090, ~US$ 1.500) em vez de um cluster de H100. QLoRA reduz significativamente o consumo de memória de GPU frente ao LoRA padrão, mantendo qualidade comparável ao full fine-tuning de 16-bit; a redução exata de memória e o gap de qualidade variam por tarefa e benchmark, não é garantia universal.
+**Quando usar (best practice de mercado):** é a opção pra quem não tem orçamento de datacenter, permitindo treinar modelos de dezenas de bilhões de parâmetros numa única GPU de consumidor (ex.: RTX 4090, ~US$ 2.500 em ago/2026 - preço bem acima do MSRP de lançamento por escassez e demanda de IA, confira o valor atual antes de orçar) em vez de um cluster de H100. QLoRA reduz significativamente o consumo de memória de GPU frente ao LoRA padrão, mantendo qualidade comparável ao full fine-tuning de 16-bit; a redução exata de memória e o gap de qualidade variam por tarefa e benchmark, não é garantia universal.
 
 **Requisitos práticos:**
 | Item | Faixa de referência |
