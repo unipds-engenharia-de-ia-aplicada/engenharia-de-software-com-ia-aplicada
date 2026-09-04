@@ -458,7 +458,7 @@ Disciplina completa em [modulo09-processamento-de-dados-e-fine-tuning-de-modelos
 *   [LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685) — Hu et al. (Microsoft), 2021. Fundamenta a técnica central do Módulo 4.
 *   [QLoRA: Efficient Finetuning of Quantized LLMs](https://arxiv.org/abs/2305.14314) — Dettmers et al., NeurIPS 2023. Um dos seis tipos de fine-tuning do cheatsheet do Módulo 1.
 *   [Deduplicating Training Data Makes Language Models Better](https://arxiv.org/abs/2107.06499) — Lee et al. (Google Research). Fundamenta a deduplicação MinHash+LSH do Módulo 2.
-*   [The Analytic Hierarchy Process](https://www.mcgraw-hill.co.uk/) — Saaty, T.L., McGraw-Hill. Base do framework de decisão ponderada do Módulo 1.
+*   [The Analytic Hierarchy Process](https://archive.org/details/analytichierarch0000saat) — Saaty, T.L., McGraw-Hill, 1980. Base do framework de decisão ponderada do Módulo 1.
 *   Lista completa com mais de 50 referências (papers, casos de mercado, documentação oficial) na "Indicações de leitura" da disciplina.
 
 ### Ferramentas & Plataformas
