@@ -3,7 +3,7 @@
 > **Ahirton Lopes · Fine-Tuning Toolkit**
 > **Documento extra, fora da ementa oficial - Módulo 2 (Preparação de Datasets para Fine-Tuning)**
 
-Este documento não é parte do material gravado nem da ementa submetida ao MEC. É uma referência de bastidor: pra cada peça que construímos do zero no Módulo 2, mostra qual biblioteca de mercado resolveria o mesmo problema hoje (pesquisa feita em 2026-08-22, campo em evolução rápida, revisar antes de reusar em versão futura), valida contra o código real desta disciplina, e explica por que construímos na mão em vez de importar uma lib pronta - às vezes foi escolha pedagógica, às vezes foi porque a lib simplesmente não existe.
+Este documento é material extra, complementar ao Módulo 2 (não é parte do vídeo gravado): pra cada peça que construímos do zero no Módulo 2, mostra qual biblioteca de mercado resolveria o mesmo problema hoje (pesquisa feita em 2026-08-22, campo em evolução rápida), valida contra o código real desta disciplina, e explica por que construímos na mão em vez de importar uma lib pronta - às vezes foi escolha pedagógica, às vezes foi porque a lib simplesmente não existe.
 
 **Como ler cada linha:** O que nosso código faz -> Biblioteca(s) de mercado equivalente -> Por que construímos do zero -> Status real 2025-2026 (com fonte).
 
@@ -20,6 +20,29 @@ Este documento não é parte do material gravado nem da ementa submetida ao MEC.
 
 ---
 
+## Resumo executivo
+
+| Componente do M2 | Existe lib de mercado madura? | Por que construímos do zero |
+|---|---|---|
+| Deduplicação (MinHash+LSH) | Madura em Python; em JS só a metade (MinHash sem LSH banding) | **Forçado**: banding LSH não existe pronto em nenhuma lib JS |
+| Amostragem por temperatura | Não, nem em Python (é fórmula de paper, não lib) | **Forçado**: nem o próprio Google publica isso como lib genérica |
+| Validação de schema JSONL por API | Não existe nem em Python, oficial de nenhum provedor | **Forçado**: o mercado inteiro também não resolveu isso |
+| Normalização de texto básica | Sim, `natural`/`compromise`, maduras e ativas, em JS | **Escolha pedagógica**: dava pra usar uma lib |
+| Similaridade/fuzzy match | Sim, `fastest-levenshtein`/`fast-levenshtein`, maduras, em JS | **Escolha pedagógica**: dava pra usar uma lib |
+| Gate de relevância (4 perguntas) | Não existe (é lógica de negócio, não um problema genérico) | Não aplicável: não é o tipo de coisa que vira lib |
+| Extração de campo (OCR + regex) | Parcialmente (OCR sim, parsing de layout de seguradora não) | Domínio específico demais pra lib genérica cobrir a parte de parsing |
+| Higienização de PII | Sim, Microsoft Presidio é a referência - **já documentado** | Ver `privacy-preserving-finetuning-companion.md` (M2.1), não repetido aqui |
+
+A linha mais importante desta tabela: **três dos seis componentes construídos do zero não têm alternativa de mercado madura, nem em JavaScript nem em Python** (dedup, amostragem por temperatura, validação de schema por API). Não foi atalho didático evitar uma lib - pesquisamos de verdade em 2026-08-22 e a lib não existe.
+
+---
+
+## 1. Deduplicação: `encontrarQuaseDuplicatasMinHashLSH` / `similaridadeJaccardExata`
+
+**O que nosso código faz** (`dataset-cleaning-balancing-tool.js`, funções `hashString`, `assinaturaMinHash`, `bandingLSH`, `encontrarQuaseDuplicatasMinHashLSH`, `similaridadeJaccardExata`): implementa MinHash (k=32 hashes) + LSH banding (b=8 bandas, r=4 linhas) do zero em JavaScript vanilla, sem nenhuma dependência externa. Rodando de verdade contra o dataset simulado da Amplitude Seguros: 549 pares força-bruta reduzidos a 20 candidatos LSH (96,4% de redução), 3 quase-duplicatas reais confirmadas após refino por Jaccard exato, zero falso negativo nos testes.
+
+**Biblioteca de mercado equivalente:**
+- **Python**: `datasketch` (ekzhu/datasketch) é o núcleo de fato usado por quase todo pipeline de dedup de LLM - inclusive por `text-dedup`, `datatrove` (Hugging Face, usado pra construir o FineWeb) e indiretamente pelo NVIDIA NeMo Curator. Ativa, ~4,5 milhões de downloads/mês no PyPI, mas o próprio mantenedor pediu colaboradores em 2025/2026 por estar mudando de foco.
 - **JavaScript/Node**: **não existe equivalente vivo da técnica completa (MinHash + LSH banding).** Quatro opções reais, nenhuma completa:
   - `minhash` (npm): parado na versão 0.0.9 há cerca de 8 anos.
   - `minhash-node-rs` (Rust-pra-Node): 15 estrelas, sinal fraco de atividade.
@@ -94,7 +117,7 @@ A ideia central, antes da fórmula: fonte com muito exemplo passa a pesar menos,
 
 ## 6. Higienização de PII
 
-**Já documentado em detalhe** em `../gravacao-m2.1/demos/privacy-preserving-finetuning-companion.md` (seção 1) - inclusive o próprio `pii-scrubbing-gate-tool.js` já cita o Microsoft Presidio como "ferramenta de referência de mercado" na própria saída do programa. Não repetido aqui pra evitar duplicar conteúdo já correto. Achado novo desta pesquisa, revalidado ao vivo (2026-08-22), que pode valer atualizar lá: em 2026, o Presidio migrou da Microsoft pra uma org independente ("Data Privacy Stack", presidio.dataprivacystack.org - transição descrita como em andamento, sem data única de conclusão, licença MIT mantida), e surgiram dois modelos PII abertos e leves novos que rodam on-premise sem mandar dado sensível pra API de terceiro: **OpenAI Privacy Filter** (22/abr/2026, Apache 2.0, model card oficial confirma F1 96,0% no benchmark PII-Masking-300k - a OpenAI também reporta uma versão "corrected" do mesmo benchmark com F1 97,4%, número ainda melhor que o citado aqui) e **GLiNER2-PII** (arXiv:2605.09973, 11/mai/2026, 0,3B parâmetros, 42 tipos de entidade em 7 categorias) - que, aliás, se compara diretamente contra o OpenAI Privacy Filter no próprio paper e reivindica F1 melhor no benchmark SPY. Os dois modelos competem entre si; relevante justamente pro cenário de dado de saúde que este companion já discute.
+**Já documentado em detalhe** em `privacy-preserving-finetuning-companion.md` (seção 1) - inclusive o próprio `pii-scrubbing-gate-tool.js` já cita o Microsoft Presidio como "ferramenta de referência de mercado" na própria saída do programa. Não repetido aqui pra evitar duplicar conteúdo já correto. Achado novo desta pesquisa, revalidado ao vivo (2026-08-22): em 2026, o Presidio migrou da Microsoft pra uma org independente ("Data Privacy Stack", presidio.dataprivacystack.org - transição descrita como em andamento, sem data única de conclusão, licença MIT mantida), e surgiram dois modelos PII abertos e leves novos que rodam on-premise sem mandar dado sensível pra API de terceiro: **OpenAI Privacy Filter** (22/abr/2026, Apache 2.0, model card oficial confirma F1 96,0% no benchmark PII-Masking-300k - a OpenAI também reporta uma versão "corrected" do mesmo benchmark com F1 97,4%, número ainda melhor que o citado aqui) e **GLiNER2-PII** (arXiv:2605.09973, 11/mai/2026, 0,3B parâmetros, 42 tipos de entidade em 7 categorias) - que, aliás, se compara diretamente contra o OpenAI Privacy Filter no próprio paper e reivindica F1 melhor no benchmark SPY. Os dois modelos competem entre si; relevante justamente pro cenário de dado de saúde que este companion já discute.
 
 ---
 

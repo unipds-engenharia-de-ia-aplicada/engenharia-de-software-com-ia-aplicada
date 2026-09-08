@@ -97,6 +97,8 @@ O gate de governança do Módulo 1.2 já verifica se o piloto *pode* nascer, do 
 
 **Fontes:** ANPD, agenda de fiscalização 2026-2027; ANPD, Nota Técnica 12/2025.
 
+**Material extra relacionado:** `de-para-bibliotecas-de-mercado.md` (na mesma pasta) cita o Presidio como a referência de mercado pra higienização de PII, com uma seção dedicada comparando esta técnica contra o que o mercado oferece pronto.
+
 ---
 
 *Ahirton Lopes · Fine-Tuning Toolkit, UNIPDS: Processamento de Dados e Fine-Tuning de Modelos*

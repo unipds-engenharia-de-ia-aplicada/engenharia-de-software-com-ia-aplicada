@@ -46,6 +46,8 @@ python3 extracao_llm_multimodal_tool.py
 
 Os dois scripts do LLM multimodal chamam a API de verdade (mesmo projeto GCP dos jobs reais de fine-tuning do Módulo 3) e reportam latência e uso de token real de cada chamada, não um número estimado.
 
+**Material extra relacionado:** pra quem quer saber se existe lib de mercado pronta pra cada peça deste módulo (OCR, dedup, normalização, etc.), ver `de-para-bibliotecas-de-mercado.md`, na mesma pasta.
+
 ---
 
 *Ahirton Lopes · Fine-Tuning Toolkit, UNIPDS: Processamento de Dados e Fine-Tuning de Modelos*
