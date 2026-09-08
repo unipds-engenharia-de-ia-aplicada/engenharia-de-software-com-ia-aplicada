@@ -23,7 +23,7 @@ Uso: python3 reavaliacao_saude_empresarial.py
 import importlib.util
 from pathlib import Path
 
-_M1_2_PATH = Path(__file__).parent.parent.parent / "gravacao-m1.2" / "demos" / "decision_framework_tool.py"
+_M1_2_PATH = Path(__file__).parent.parent / "modulo-01-decision-framework" / "decision_framework_tool.py"
 _spec = importlib.util.spec_from_file_location("decision_framework_tool", _M1_2_PATH)
 dft = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(dft)

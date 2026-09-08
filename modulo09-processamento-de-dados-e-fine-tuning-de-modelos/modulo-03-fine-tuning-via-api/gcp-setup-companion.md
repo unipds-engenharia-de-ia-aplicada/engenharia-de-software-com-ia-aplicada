@@ -3,7 +3,7 @@
 > **Ahirton Lopes · Fine-Tuning Toolkit**
 > **Artefato de apoio - Módulo 3, antes das demos de M3.2 em diante**
 
-**Este guia é opcional.** Nada nesta disciplina exige que vocês tenham uma conta Google Cloud. Todas as demos ao vivo dos Módulos 3.2 a 3.5 já rodaram contra um projeto real (`amplitude-seguros-demo`) antes da gravação, e a Missão Prática #03 tem caminho completo sem gastar nada: os Passos 1-3 rodam 100% local, e o Passo 4 aceita tanto um job simulado quanto a alternativa por análise, usando um resultado real já publicado (ver "Alternativa ao Passo 4" na `Atividade 3 - Módulo 3.docx`).
+**Este guia é opcional.** Nada nesta disciplina exige que vocês tenham uma conta Google Cloud. Todas as demos ao vivo dos Módulos 3.2 a 3.5 já rodaram contra um projeto real (`amplitude-seguros-demo`) antes da gravação, e a Missão Prática #03 tem caminho completo sem gastar nada: os Passos 1-3 rodam 100% local, e o Passo 4 aceita tanto um job simulado quanto a alternativa por análise, usando um resultado real já publicado (ver "Alternativa ao Passo 4" na `Atividade 3 - Módulo 3.pdf`).
 
 Use este guia só se vocês quiserem rodar as próprias chamadas de verdade contra a Vertex AI, com o próprio dataset, no próprio projeto.
 

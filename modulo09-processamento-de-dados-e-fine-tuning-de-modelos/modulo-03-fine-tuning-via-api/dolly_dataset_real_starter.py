@@ -43,7 +43,7 @@ import os
 import sys
 
 _AQUI = os.path.dirname(os.path.abspath(__file__))
-_CAMINHO_M22 = os.path.join(_AQUI, "..", "..", "gravacao-m2.2", "demos", "dataset_cleaning_balancing_tool.py")
+_CAMINHO_M22 = os.path.join(_AQUI, "..", "modulo-02-preparacao-datasets", "dataset_cleaning_balancing_tool.py")
 _spec = importlib.util.spec_from_file_location("dataset_cleaning_balancing_tool", _CAMINHO_M22)
 m2 = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(m2)
@@ -284,6 +284,7 @@ def rodar_demo(caminho_jsonl):
     print("\n--- Resumo ---")
     print(f"Dataset bruto: {len(r['bruto'])} exemplos reais (databricks-dolly-15k, CC-BY-SA-3.0)")
     print(f"Compativeis com o schema canonico (tem contexto real): {len(r['compativeis'])}")
+    print(f"Distribuicao por fonte antes do dedup: {m2.contar_por_fonte(r['mapeados'], CASO)}")
     print(f"Dedup no dataset INTEIRO (comparando instrucao+entrada): {c['dedup']['candidatos_lsh']} candidatos LSH de {c['dedup']['total_forca_bruta']} pares forca-bruta, {len(c['dedup']['pares'])} pares confirmados, {c['itens_removidos']} itens unicos removidos -> {len(c['sem_duplicatas'])} restantes")
     print(f"Balanceado pro alvo: {c['alocacao']}, total {len(c['balanceado'])}")
     ha = m2.entropia_shannon(r["dist_antes"])

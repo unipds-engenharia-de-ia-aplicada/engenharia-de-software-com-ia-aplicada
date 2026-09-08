@@ -34,6 +34,17 @@ REGIAO = "us-central1"
 JOB_REAL = "projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744"
 CAMINHO_DATASET = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset-treinado.jsonl")
 
+# Job real de preference tuning (DPO) do Modulo 3.5, continuacao do job SFT
+# acima sobre o mesmo modelo base. Historico e congelado (ja concluido em
+# 2026-08), por isso e uma constante, nao uma consulta nova a API a cada
+# rodada -- ao contrario do job SFT acima, que e sempre revalidado de verdade.
+JOB_DPO_REAL = {
+    "jobId": "tuningJobs/3733013646142341120",
+    "estado": "JOB_STATE_SUCCEEDED",
+    "duracaoFormatada": "17min 32s",
+    "exemplos": 40,
+}
+
 # Faixa de custo de GPU cloud por hora, do cheatsheet do Modulo 1.3
 # (fine-tuning-types-cheatsheet.md, secao LoRA): referencia de mercado, nao
 # a fatura real do job (Vertex AI cobra por token de treino, nao por hora de GPU).
@@ -266,6 +277,28 @@ def gerar_model_card_markdown(ficha):
     return "\n".join(linhas)
 
 
+def gerar_secao_dpo():
+    """Secao fixa sobre o job real de preference tuning (DPO) do Modulo 3.5,
+    continuacao do job SFT documentado acima sobre o mesmo modelo base.
+    Separada de gerar_model_card_markdown de proposito: aquela funcao e sempre
+    gerada a partir de um `job` consultado ao vivo na API (pode mudar de
+    conteudo a cada rodada real), esta e um fato historico ja congelado
+    (job concluido em 2026-08) que nao depende de nenhuma consulta nova."""
+    j = JOB_DPO_REAL
+    linhas = [
+        "",
+        "## Continuação: preference tuning (DPO)",
+        "",
+        "O Módulo 3.5 vai além do fine-tuning supervisionado acima e testa preference tuning (DPO) sobre o mesmo modelo base: 40 dos 200 exemplos deste job foram convertidos em pares de preferência (`chosen`/`rejected`) - a extração correta de sempre (`chosen`) contra uma resposta real gerada por um prompt deliberadamente mais fraco (`rejected`, sem exigir JSON estrito). O dataset de preferência resultante está em `preference-dataset-amplitude.jsonl`, nesta mesma pasta.",
+        "",
+        f"- Job: `{j['jobId']}`",
+        f"- Estado: {j['estado']}",
+        f"- Duração real: {j['duracaoFormatada']} (mais rápido que o SFT acima, dataset 5x menor: {j['exemplos']} exemplos contra 200)",
+        f"- Exemplos: {j['exemplos']} pares de preferência",
+    ]
+    return "\n".join(linhas)
+
+
 def rodar_testes():
     print("== Testes: hash de conteúdo do dataset ==")
 
@@ -401,6 +434,16 @@ def rodar_testes():
 
     testar("custo real usa tokens faturáveis x épocas x taxa real do billing", teste_custo_real_calculado)
 
+    def teste_secao_dpo():
+        secao = gerar_secao_dpo()
+        assert "## Continuação: preference tuning (DPO)" in secao
+        assert "tuningJobs/3733013646142341120" in secao
+        assert "17min 32s" in secao
+        assert "40 pares de preferência" in secao
+        assert "preference-dataset-amplitude.jsonl" in secao
+
+    testar("seção de DPO cita o job real de preference tuning do Módulo 3.5", teste_secao_dpo)
+
     print()
     print(f"Total: {total_testes} teste(s), {total_testes - testes_com_falha} passou(passaram), {testes_com_falha} falhou(falharam).")
 
@@ -422,7 +465,7 @@ def main():
         print("\nFicha completa e validada:")
         print(json.dumps(ficha, indent=2, ensure_ascii=False))
 
-        markdown = gerar_model_card_markdown(ficha)
+        markdown = gerar_model_card_markdown(ficha) + "\n" + gerar_secao_dpo()
         caminho_saida = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model-card-amplitude-auto-saude-m3-200-py.md")
         with open(caminho_saida, "w") as f:
             f.write(markdown)

@@ -33,3 +33,12 @@ Nota: a Vertex AI cobra por token de treino, não por hora de GPU alugada; a fai
 
 ## Nota de validade (ago/2026)
 Este model card documenta um job real, rodado com gemini-2.5-flash. O processo -- upload, hiperparâmetro, versionamento -- é o mesmo independente da versão exata do modelo-base. A Google aposenta versões do Gemini com aviso prévio (a família 2.5 tem retirement anunciado pra 16/out/2026); antes de treinar você mesmo, confira em [Vertex AI release notes](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/release-notes) quais modelos têm suporte a fine-tuning supervisionado no momento.
+
+## Continuação: preference tuning (DPO)
+
+O Módulo 3.5 vai além do fine-tuning supervisionado acima e testa preference tuning (DPO) sobre o mesmo modelo base: 40 dos 200 exemplos deste job foram convertidos em pares de preferência (`chosen`/`rejected`) - a extração correta de sempre (`chosen`) contra uma resposta real gerada por um prompt deliberadamente mais fraco (`rejected`, sem exigir JSON estrito). O dataset de preferência resultante está em `preference-dataset-amplitude.jsonl`, nesta mesma pasta.
+
+- Job: `tuningJobs/3733013646142341120`
+- Estado: JOB_STATE_SUCCEEDED
+- Duração real: 17min 32s (mais rápido que o SFT acima, dataset 5x menor: 40 exemplos contra 200)
+- Exemplos: 40 pares de preferência

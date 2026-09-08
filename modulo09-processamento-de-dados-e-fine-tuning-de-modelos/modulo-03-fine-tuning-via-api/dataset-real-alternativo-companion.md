@@ -5,7 +5,7 @@
 
 Todas as Missões Práticas desta disciplina pedem duas coisas: use um caso do seu próprio contexto de trabalho, ou simule de forma realista. Este companion é uma terceira opção: se você não tem um caso de trabalho pronto e prefere não simular, aqui está um dataset **real**, público e citável, processado de ponta a ponta contra o pipeline completo desta disciplina, incluindo um job de fine-tuning real, treinado de verdade.
 
-**Por que os arquivos vivem na pasta do Módulo 3, mas parte do conteúdo é conceitualmente Módulo 2.2:** pra não espalhar o extra em duas pastas diferentes, tudo fica aqui, em `gravacao-m3.4/demos/`. Mas o pipeline tem duas partes bem separadas, e cada uma corresponde a um estágio diferente da disciplina:
+**Por que os arquivos vivem na pasta do Módulo 3, mas parte do conteúdo é conceitualmente Módulo 2.2:** pra não espalhar o extra em duas pastas diferentes, tudo fica aqui, nesta mesma pasta. Mas o pipeline tem duas partes bem separadas, e cada uma corresponde a um estágio diferente da disciplina:
 
 | Parte | Arquivo | Conceitualmente equivalente a |
 |---|---|---|

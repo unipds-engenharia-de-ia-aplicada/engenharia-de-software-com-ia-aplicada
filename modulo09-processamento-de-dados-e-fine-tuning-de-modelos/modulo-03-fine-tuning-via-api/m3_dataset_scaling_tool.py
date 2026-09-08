@@ -18,7 +18,7 @@ Uso: python3 m3_dataset_scaling_tool.py
 import importlib.util
 from pathlib import Path
 
-_M2_2_PATH = Path(__file__).parent.parent.parent / "gravacao-m2.2" / "demos" / "dataset_cleaning_balancing_tool.py"
+_M2_2_PATH = Path(__file__).parent.parent / "modulo-02-preparacao-datasets" / "dataset_cleaning_balancing_tool.py"
 _spec = importlib.util.spec_from_file_location("dataset_cleaning_balancing_tool", _M2_2_PATH)
 m22 = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(m22)
