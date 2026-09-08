@@ -1,4 +1,7 @@
 .DS_Store
 *.docx
 *.safetensors
+!modulo-04-lora-e-peft/mlx-adapters/adapters.safetensors
+!modulo-04-lora-e-peft/mlx-adapters-rank4/adapters.safetensors
+!modulo-04-lora-e-peft/mlx-adapters-rank16/adapters.safetensors
 __pycache__/

@@ -450,7 +450,7 @@ Disciplina completa em [modulo09-processamento-de-dados-e-fine-tuning-de-modelos
 *   [Módulo 1 — Decision Framework](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-01-decision-framework) — framework de 4 perguntas, AHP, NPV, cheatsheet dos tipos de fine-tuning, Bestiário do Zoo das técnicas.
 *   [Módulo 2 — Preparação de Datasets](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-02-preparacao-datasets) — extração OCR, schema JSONL, deduplicação (MinHash+LSH), balanceamento, comparativo OCR vs. LLM multimodal.
 *   [Módulo 3 — Fine-Tuning via API](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-03-fine-tuning-via-api) — upload, hiperparâmetros, automação, versionamento (Vertex AI).
-*   Módulo 4 — LoRA e PEFT
+*   [Módulo 4 — LoRA e PEFT](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo09-processamento-de-dados-e-fine-tuning-de-modelos/modulo-04-lora-e-peft) — LoRA, DoRA, QLoRA e full fine-tuning local (MLX/Apple Silicon), comparação de rank e custo-benefício, alternativas Colab/CUDA pra quem não tem Mac.
 *   Módulo 5 — Avaliação de Modelos
 *   Módulo 6 — Projeto Final
 

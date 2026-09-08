@@ -1,0 +1,22 @@
+model: "mlx-community/gemma-4-e2b-it-bf16"
+train: true
+data: "./mlx-data"
+fine_tune_type: lora
+num_layers: 16
+batch_size: 1
+iters: 20
+learning_rate: 1.0e-5
+val_batches: 25
+steps_per_report: 10
+steps_per_eval: 200
+save_every: 100
+seed: 0
+lora_parameters:
+  rank: 8
+  dropout: 0.0
+  scale: 20.0
+# Sem sufixo "-rank8" de propósito: reaproveita o adaptador real já
+# treinado no Módulo 4.2 (mesmo rank 8, mesmos hiperparâmetros), em vez de
+# treinar de novo. Os outros configs deste módulo (rank4, rank16) salvam
+# em pastas com sufixo porque são treinos novos desta demo.
+adapter_path: "./mlx-adapters"

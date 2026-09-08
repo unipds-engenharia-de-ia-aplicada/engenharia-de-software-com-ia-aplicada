@@ -15,7 +15,7 @@ Cada módulo tem sua pasta com os artefatos usados nas demos dos vídeos: ferram
 ├── modulo-01-decision-framework/    # Framework de 4 perguntas, AHP, NPV, cheatsheet dos 6 tipos de fine-tuning, Bestiário do Zoo das técnicas
 ├── modulo-02-preparacao-datasets/   # Extração OCR, schema JSONL, deduplicação (MinHash+LSH), balanceamento, comparativo OCR vs. LLM multimodal
 ├── modulo-03-fine-tuning-via-api/   # Upload, hiperparâmetros, automação, versionamento (Vertex AI)
-├── modulo-04-lora-e-peft/           # (em breve)
+├── modulo-04-lora-e-peft/           # LoRA, DoRA, QLoRA e full fine-tuning local (MLX/Apple Silicon), comparação de rank e custo-benefício, alternativas Colab/CUDA pra quem não tem Mac
 ├── modulo-05-avaliacao-modelos/     # (em breve)
 └── modulo-06-projeto-final/         # (em breve)
 ```
@@ -38,6 +38,10 @@ Cada módulo tem sua pasta com os artefatos usados nas demos dos vídeos: ferram
 | `dataset-real-alternativo-companion.md` | Dataset real alternativo (Dolly-15k) pra quem quiser praticar sem dado sintético (M3.4) |
 | `Atividade N - Módulo N.pdf` | Missão Prática do módulo |
 | `Exemplo - Módulo N.pdf` | Exemplo resolvido da atividade |
+| `*-config.yaml` | Config real do `mlx_lm.lora` usado pra treinar cada checkpoint (rank 4/8/16), reproduzível com `python3 -m mlx_lm lora --config <arquivo>.yaml` (M4.2/M4.3) |
+| `mlx-adapters*/` | Checkpoints LoRA reais (pesos + config), rank 4/8/16, prontos pra inferência sem retreinar (M4.2/M4.3) |
+| `*-notebook.ipynb` | Notebook Colab, alternativa multiplataforma pra quem não tem Apple Silicon (M4.2) |
+| `gpu-cuda-anatomia-poster.html` | Pôster de campo com corte transversal real de GPU/CUDA (M4.2) |
 
 ## 🛠️ Stack Central
 
