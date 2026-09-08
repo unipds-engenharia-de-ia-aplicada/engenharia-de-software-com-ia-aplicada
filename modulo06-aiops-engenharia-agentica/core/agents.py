@@ -39,6 +39,18 @@ def get_sre_agent(tools: Optional[List] = None) -> Agent:
     )
 
 
+def get_safety_sre_agent(tools: Optional[List] = None) -> Agent:
+    """Returns the Safety-focused SRE Agent (guardrails & human-in-the-loop)."""
+    return Agent(
+        role='Safety_SRE',
+        goal='Diagnosticar falhas e propor correções seguras no Kubernetes, sempre via dry-run e aprovação humana.',
+        backstory='Você é um engenheiro sênior cauteloso. Você SEMPRE usa dry-run e nunca aplica mudanças sem aprovação explícita de um humano.',
+        tools=tools or [],
+        llm=nexus_llm,
+        verbose=True
+    )
+
+
 def get_oncall_sre(tools: Optional[List] = None) -> Agent:
     """Returns the On-Call Troubleshooting SRE Agent."""
     return Agent(
