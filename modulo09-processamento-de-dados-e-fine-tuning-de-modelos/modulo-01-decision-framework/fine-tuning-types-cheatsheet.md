@@ -7,6 +7,8 @@ O slide do vídeo mostra um card resumido por tipo. Este documento é o companio
 **Como ler cada seção:** O que é → Quando usar (best practice do mercado) → Requisitos práticos → Caso real verificado → Fontes. Nenhum número aqui foi assumido: todo case e toda faixa numérica tem fonte primária ou guia oficial por trás.
 
 > **Versão visual:** as seis primeiras técnicas abaixo, com o mesmo caso real de cada uma, mais os modelos abertos recomendados pra treinar em 2026, estão reunidas como pôster de campo em [`fine-tuning-zoo-poster.png`](fine-tuning-zoo-poster.png), na mesma pasta deste arquivo; inclui também a chave de decisão do Módulo 1.1/1.2 (vale a pena fazer fine-tuning ou não). A sétima técnica (GRPO/RFT) é a mais recente e ainda não entrou no pôster: fica documentada aqui e no demo rodável da seção 7.
+>
+> **Dossiê completo:** pra quem quer o mecanismo teórico de cada técnica (por que funciona, não só o que é) com fontes acadêmicas verificadas, o pôster tem uma versão interativa com um dossiê de pesquisa por espécie: [`mecanismo-estado-arte-companion.html`](mecanismo-estado-arte-companion.html) ("Bestiário do Zoo"), na mesma pasta.
 
 > **Sobre os valores de custo e preço de GPU citados neste documento:** são a faixa de mercado observada na época desta gravação (ago/2026) - preço de GPU cloud e de hardware de consumidor muda rápido. Antes de usar esses números pra decidir orçamento de verdade, confira o preço vigente (ex.: [Vast.ai](https://vast.ai/pricing/gpu), [RunPod](https://www.runpod.io/pricing)) em vez de assumir que o valor aqui continua igual.
 
