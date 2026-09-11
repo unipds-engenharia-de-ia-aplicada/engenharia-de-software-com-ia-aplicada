@@ -3,7 +3,7 @@
 > **Ahirton Lopes · Fine-Tuning Toolkit**
 > **Artefato de apoio - Módulo 3, antes das demos de M3.2 em diante**
 
-**Este guia é opcional.** Nada nesta disciplina exige que vocês tenham uma conta Google Cloud. Todas as demos ao vivo dos Módulos 3.2 a 3.5 já rodaram contra um projeto real (`amplitude-seguros-demo`) antes da gravação, e a Missão Prática #03 tem caminho completo sem gastar nada: os Passos 1-3 rodam 100% local, e o Passo 4 aceita tanto um job simulado quanto a alternativa por análise, usando um resultado real já publicado (ver "Alternativa ao Passo 4" na `Atividade 3 - Módulo 3.pdf`).
+**Este guia é opcional.** Nada nesta disciplina exige que vocês tenham uma conta Google Cloud. A Missão Prática #03 tem caminho completo sem gastar nada: os Passos 1-3 rodam 100% local, e o Passo 4 aceita tanto um job simulado quanto a alternativa por análise, usando um resultado real já publicado (ver "Alternativa ao Passo 4" na `Atividade 3 - Módulo 3.pdf`).
 
 Use este guia só se vocês quiserem rodar as próprias chamadas de verdade contra a Vertex AI, com o próprio dataset, no próprio projeto.
 
@@ -17,7 +17,7 @@ Criar projeto, ativar API e criar bucket não custam nada por si só. O custo re
 
 Contas novas do Google Cloud recebem um crédito de US$300, válido por 90 dias, através do Google Cloud Free Trial - cobre o custo desta disciplina inteira várias vezes, mas o cartão de crédito continua sendo obrigatório pra ativar ([Google Cloud Free Trial FAQs](https://cloud.google.com/signup-faqs); [Free Google Cloud features and trial offer](https://docs.cloud.google.com/free/docs/free-cloud-features)).
 
-Os valores acima (US$300, 90 dias) são os termos do Google Cloud Free Trial na época desta gravação (ago/2026) e podem ter mudado quando vocês estiverem lendo isto. Antes de contar com esse crédito pra rodar as demos reais, confiram a oferta vigente em [Google Cloud Free Programs](https://cloud.google.com/free?hl=pt_br), página mantida e atualizada pelo próprio Google, não um valor fixo que este guia possa deixar desatualizado.
+Os valores acima (US$300, 90 dias) são os termos do Google Cloud Free Trial na época da publicação deste guia (ago/2026) e podem ter mudado quando vocês estiverem lendo isto. Antes de contar com esse crédito pra rodar as demos reais, confiram a oferta vigente em [Google Cloud Free Programs](https://cloud.google.com/free?hl=pt_br), página mantida e atualizada pelo próprio Google, não um valor fixo que este guia possa deixar desatualizado.
 
 ## Passo 0 - Criar a conta e instalar o gcloud CLI
 
@@ -38,7 +38,7 @@ gcloud projects create SEU-PROJETO-ID --name="Nome do seu projeto"
 gcloud config set project SEU-PROJETO-ID
 ```
 
-Substituam `SEU-PROJETO-ID` por um identificador único (letras minúsculas, números e hífen). Guardem esse ID: ele substitui o `amplitude-seguros-demo` hardcoded no topo de cada script desta disciplina (constante `PROJETO`/`PROJETO = '...'`).
+Substituam `SEU-PROJETO-ID` por um identificador único (letras minúsculas, números e hífen). Guardem esse ID: é o valor que vocês vão exportar como `GCP_PROJECT_ID` no Passo 7, pra todo script desta disciplina que precisa dele.
 
 ## Passo 2 - Vincular uma conta de billing
 
@@ -93,16 +93,21 @@ Pela tela: **[console.cloud.google.com/storage/browser](https://console.cloud.go
 
 ## Passo 7 - Apontar os scripts pro seu projeto
 
-Em cada arquivo de demo que vocês forem rodar de verdade, troquem as constantes do topo do arquivo:
+Os scripts desta disciplina leem a configuração de variáveis de ambiente -- não precisa editar nenhum arquivo de código-fonte. Sem essas variáveis definidas, cada script para com um erro claro dizendo qual falta; nenhum usa um valor padrão de terceiros. Defina antes de rodar, trocando pelos valores reais do que vocês criaram acima:
 
-```js
-const PROJETO = 'amplitude-seguros-demo';  // troquem pelo SEU-PROJETO-ID
-const REGIAO = 'us-central1';              // mantenham, ou troquem se usaram outra região no Passo 6
+```bash
+export GCP_PROJECT_ID=SEU-PROJETO-ID
+export TUNING_JOB_NAME=projects/SEU-PROJETO-ID/locations/us-central1/tuningJobs/SEU-JOB-ID
 ```
 
-E, se for criar um job novo (não só consultar um já existente), troquem também a URI do bucket (`gs://amplitude-seguros-demo-tuning/...` ou equivalente) pelo bucket que vocês criaram no Passo 6.
+`TUNING_JOB_NAME` é o nome completo do recurso que a própria Vertex AI devolve quando vocês criam ou listam um job (já vem com o *número* do projeto embutido, não precisam calcular nada à parte).
 
-**Exceção: `hyperparameter-and-monitoring-tool` e `model-versioning-tool` não têm `PROJETO`.** Esses dois só consultam um job já criado, então referenciam ele direto pelo caminho completo do recurso (`NOME_JOB`/`JOB_REAL`, algo como `projects/113512199474/locations/us-central1/tuningJobs/...`) - que carrega o *número* do projeto, não o ID em texto. Pra montar o caminho equivalente com o seu job, troquem o número: `gcloud projects describe SEU-PROJETO-ID --format="value(projectNumber)"` devolve o número do seu projeto, e vocês reconstroem o caminho trocando só esse número e o ID do job.
+| Variável | Necessária em |
+|---|---|
+| `GCP_PROJECT_ID` | `extracao-llm-multimodal-tool` (M2.1); `finetuning-automation-tool`; `dolly-vertex-pipeline`, só pra `rodarPipeline`, protegido por `confirmar: true` |
+| `TUNING_JOB_NAME` | `dataset-upload-and-tracking-tool`, `hyperparameter-and-monitoring-tool`, `finetuning-automation-tool` (acompanhamento), `model-versioning-tool` |
+
+`dolly-vertex-pipeline` não lê o bucket de uma variável de ambiente: quem chamar `rodarPipeline` passa a URI completa do dataset (`gs://SEU-BUCKET/...`, usando o bucket que vocês criaram no Passo 6) direto no `config` do job, como `uriDataset`.
 
 ## Ache a fronteira nuvem/local em cada script
 

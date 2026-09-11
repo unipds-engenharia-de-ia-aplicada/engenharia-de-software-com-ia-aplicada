@@ -10,15 +10,14 @@
  * concreto que existe entre os dois, específico de preparar dado pra
  * fine-tuning.
  *
- * Abordagem híbrida, a mesma usada em pipelines reais de produção
- * (Microsoft Presidio combina regex + NER; ver companion
- * privacy-preserving-finetuning-companion.md pras fontes completas):
+ * Mesma ideia por trás de pipelines reais de produção (Microsoft Presidio
+ * combina regex + NER; ver companion privacy-preserving-finetuning-companion.md
+ * pras fontes completas e pra limitação honesta desta versão):
  *   - CPF: regex de formato + validação real do dígito verificador
  *     (algoritmo Módulo 11 da Receita Federal), não só formato.
- *   - Nome: âncora de rótulo (Segurado:/Beneficiário:) mais confiável;
- *     fallback heurístico de sequência de palavras capitalizadas pra
- *     nome solto no texto, com taxa de falso positivo/negativo honesta,
- *     não perfeita.
+ *   - Nome: âncora de rótulo (Segurado:/Beneficiário:), alta confiança.
+ *     Não pega nome solto fora de um rótulo conhecido -- isso exigiria
+ *     NER de verdade, fora do escopo deste gate (ver companion).
  *
  * Uso: node pii-scrubbing-gate-tool.js
  */
@@ -58,13 +57,6 @@ function validarCPF(cpfComOuSemMascara) {
  * -------------------------------------------------------------------------- */
 
 const REGEX_NOME_ANCORADO = /(Segurado|Beneficiário|Beneficiario|Nome do segurado)[ \t]*:[ \t]*([A-ZÀ-Ú][\wÀ-ú]*(?:[ \t]+[A-ZÀ-Ú][\wÀ-ú]*){1,4})/g;
-
-// Heurística de fallback: 2 a 5 palavras capitalizadas em sequência, fora de
-// um rótulo conhecido. Pega nome solto no meio do texto, mas também gera
-// falso positivo em nome de oficina/clínica em letra maiúscula -- por isso
-// é só o fallback, roda depois da âncora de rótulo já ter capturado o que
-// pôde com alta confiança.
-const REGEX_NOME_HEURISTICO = /\b([A-ZÀ-Ú][a-zà-ú]+(?:\s+[A-ZÀ-Ú][a-zà-ú]+){1,4})\b/g;
 
 function detectarNomesAncorados(texto) {
   const encontrados = [];
@@ -197,6 +189,10 @@ function rodarTestes() {
 
   console.log();
   console.log(`Total: ${totalTestes} teste(s), ${totalTestes - testesComFalha} passou(passaram), ${testesComFalha} falhou(falharam).`);
+
+  if (testesComFalha > 0) {
+    throw new Error(`${testesComFalha} teste(s) falharam. A implementação não bate com a especificação.`);
+  }
 }
 
 /* --------------------------------------------------------------------------

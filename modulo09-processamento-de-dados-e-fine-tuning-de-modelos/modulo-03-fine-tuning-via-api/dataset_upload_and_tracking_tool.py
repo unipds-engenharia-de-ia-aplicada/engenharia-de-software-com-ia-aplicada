@@ -7,24 +7,34 @@ supervisionado da Vertex AI / Gemini Enterprise Agent Platform
 (contents/role/parts), e acompanhamento real de job via a API REST
 do aiplatform.googleapis.com.
 
-O job consultado aqui ja rodou de verdade antes desta gravacao:
-tuningJobs/4180970763655839744, 200 exemplos reais (120 Amplitude Auto +
-80 Amplitude Saude Empresarial), gerados pelo mesmo pipeline formal do
-Modulo 2.2 (MinHash+LSH, amostragem por temperatura, entropia de Shannon),
-so que escalado pro volume que um job de treino de verdade pede. Consultar
-o status de um job ja concluido nao gera custo de treino novo.
+O job consultado aqui roda de verdade contra a Vertex AI: 200 exemplos
+(120 Amplitude Auto + 80 Amplitude Saude Empresarial), gerados pelo mesmo
+pipeline formal do Modulo 2.2 (MinHash+LSH, amostragem por temperatura,
+entropia de Shannon), so que escalado pro volume que um job de treino de
+verdade pede. Consultar o status de um job ja concluido nao gera custo de
+treino novo.
 
 Uso: python3 dataset_upload_and_tracking_tool.py
+Requer: TUNING_JOB_NAME definida com o nome completo do SEU job de
+fine-tuning (veja README.md, secao "Antes de rodar").
 """
 
 import json
+import os
 import subprocess
 import urllib.request
 from datetime import datetime, timezone
 
-PROJETO = "amplitude-seguros-demo"
 REGIAO = "us-central1"
-NOME_JOB = "projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744"
+# CONFIGURACAO: defina TUNING_JOB_NAME com o nome completo do job de
+# fine-tuning que VOCE rodou (projects/.../tuningJobs/...), criado no
+# Modulo 3.2 -- nao ha valor padrao, cada aluno usa o proprio job.
+NOME_JOB = os.environ.get("TUNING_JOB_NAME")
+if not NOME_JOB:
+    raise RuntimeError(
+        "Defina a variavel de ambiente TUNING_JOB_NAME com o nome completo "
+        "do seu job de fine-tuning antes de rodar este script."
+    )
 
 total_testes = 0
 testes_com_falha = 0

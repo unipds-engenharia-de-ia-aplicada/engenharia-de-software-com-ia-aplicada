@@ -4,9 +4,9 @@
 
 Use este checklist antes de decidir treinar seu próprio modelo. Ele não substitui o framework completo (que ganha uma ferramenta de decisão aplicada a casos reais no Módulo 1.2, e rodada de verdade no terminal no Módulo 1.3), mas evita o erro mais caro: tratar fine-tuning como se ensinasse fato novo, quando na verdade ensina comportamento e formato.
 
-> **Versão visual:** este mesmo gate + as quatro perguntas abaixo estão desenhados como pôster de campo em [`fine-tuning-zoo-poster.png`](../../gravacao-m1.3/demos/fine-tuning-zoo-poster.png), junto com as seis técnicas de fine-tuning (Módulo 1.3) e os modelos abertos recomendados pra treinar em 2026.
+> **Versão visual:** este mesmo gate + as quatro perguntas abaixo estão desenhados como pôster de campo em [`fine-tuning-zoo-poster.png`](fine-tuning-zoo-poster.png), junto com as seis técnicas de fine-tuning (Módulo 1.3) e os modelos abertos recomendados pra treinar em 2026.
 
-> **Decidindo em comitê, não sozinho (depois do Módulo 1.3):** depois que vocês virem AHP rodar de verdade no Módulo 1.3, vale saber que o peso de cada uma das quatro perguntas vem de uma matriz preenchida por uma pessoa só. Se o seu contexto real envolve várias pessoas com julgamento diferente (produto, compliance, engenharia), `decision-framework-tool.js`/`.py`, na pasta de demos do Módulo 1.2, também sabe agregar a matriz de vários avaliadores numa só, pela média geométrica de cada célula, sem trocar o resto do pipeline. Rode o script e veja a seção "AHP de comitê" no final da saída.
+> **Decidindo em comitê, não sozinho (depois do Módulo 1.3):** depois que vocês virem AHP rodar de verdade no Módulo 1.3, vale saber que o peso de cada uma das quatro perguntas vem de uma matriz preenchida por uma pessoa só. Se o seu contexto real envolve várias pessoas com julgamento diferente (produto, compliance, engenharia), `decision-framework-tool.js`/`.py`, nesta mesma pasta, também sabe agregar a matriz de vários avaliadores numa só, pela média geométrica de cada célula, sem trocar o resto do pipeline. Rode o script e veja a seção "AHP de comitê" no final da saída.
 
 ## Pergunta 0 (elimina antes de tudo): é problema de conhecimento ou de comportamento?
 

@@ -24,13 +24,15 @@ O que foi validado antes de qualquer rodada real: assinatura de `LoraConfig`/`SF
 
 ## Resultado real (Colab Pro, T4)
 
-Revalidado em 31/08 depois da correção do split (157 treino / 30 validação / 13 teste, agrupado por entidade - substitui o split antigo 160/30/10, que vazava pessoa entre treino e teste). Rodada nova, completa, sem erro.
+Validado com o split corrigido (157 treino / 30 validação / 13 teste, agrupado por entidade - substitui o split antigo 160/30/10, que vazava pessoa entre treino e teste). Rodada completa, sem erro.
 
-- **Treino**: 20 passos (batch 1, mesmo orçamento do Módulo 4.2 real), 62,1s de duração.
-- **Loss de treino no passo final**: 0,9579
-- **Loss de validação no passo final**: 0,8305
-- **Acurácia média de token**: 79,6%
-- **Comparação com o Módulo 4.2 (MLX)**: lá, val loss foi de 4,752 → 0,895 (rank 8). Aqui, 0,8305 no passo final - mesma ordem de grandeza, mesmo padrão de queda acentuada, apesar de os dois frameworks não serem comparáveis número a número (ver nota sobre `scale` vs `lora_alpha` abaixo). Confirma a mesma conclusão qualitativa por dois caminhos de implementação diferentes: LoRA rank 8, orçamento curto de treino, já produz ajuste real e mensurável nesse dataset.
+- **Treino**: 20 passos (batch 1, mesmo orçamento do Módulo 4.2 real), 57,6s de duração.
+- **Loss de treino no passo final**: 0,9489
+- **Loss de validação no passo final**: 0,8248
+- **Acurácia média de token**: 79,96%
+- **Comparação com o Módulo 4.2 (MLX)**: lá, val loss foi de 4,752 → 0,895 (rank 8). Aqui, 0,8248 no passo final - mesma ordem de grandeza, mesmo padrão de queda acentuada, apesar de os dois frameworks não serem comparáveis número a número (ver nota sobre `scale` vs `lora_alpha` abaixo). Confirma a mesma conclusão qualitativa por dois caminhos de implementação diferentes: LoRA rank 8, orçamento curto de treino, já produz ajuste real e mensurável nesse dataset.
+
+**Nota sobre reprodutibilidade**: `SFTConfig` fixa `seed=0`, mas treino em GPU não garante bit-a-bit idêntico entre sessões diferentes (ordem de redução de ponto flutuante varia por hardware/driver) -- se você rodar este notebook de novo, espere o mesmo *padrão* de resultado (queda acentuada de loss, mesma ordem de grandeza), não necessariamente os mesmos dígitos depois da vírgula.
 - **Teste do exemplo difícil (Passo 5)**: o exemplo tinha um distrator de propósito - placa e valor de uma revisão ANTERIOR (`QRS-1122`, R$ 890,00) misturados no texto, antes do sinistro de verdade (`TUV-4499`, R$ 2.310,75). O modelo ajustado extraiu certo: `{"segurado":"Roberta Almeida Castro","placa":"TUV-4499","valor":2310.75}` - ignorou o distrator, não decorou posição de texto.
 
 ## Diferenças conceituais em relação ao MLX (Módulo 4.2)
@@ -45,7 +47,7 @@ Revalidado em 31/08 depois da correção do split (157 treino / 30 validação /
 
 ## Quando usar
 
-Pra alunos sem Mac Apple Silicon que querem rodar fine-tuning local de verdade (não simular, não só ler os números do Módulo 4.2) como parte da Atividade 4 (Missão Prática #04), Passo 2. Referenciado no TP do Módulo 4.2 (resultado real citado: val loss 0,8305) e na Atividade 4 - Módulo 4.pdf (Missão Prática #04, Passo 2, como alternativa opcional pra quem não tem Apple Silicon).
+Pra alunos sem Mac Apple Silicon que querem rodar fine-tuning local de verdade (não simular, não só ler os números do Módulo 4.2) como parte da Atividade 4 (Missão Prática #04), Passo 2. Referenciado no TP do Módulo 4.2 (resultado real citado no vídeo: val loss 0,8305, de uma execução anterior deste mesmo notebook -- ver nota sobre reprodutibilidade acima pra por que o valor salvo hoje é 0,8248, não idêntico) e na Atividade 4 - Módulo 4.pdf (Missão Prática #04, Passo 2, como alternativa opcional pra quem não tem Apple Silicon).
 
 ---
 

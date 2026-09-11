@@ -2,7 +2,7 @@
 > **Ahirton Lopes · Fine-Tuning Toolkit**
 > **Artefato de Demo Complementar - Módulo 2.1**
 
-O vídeo ensina o pipeline de OCR clássico (`extraction-to-jsonl-tool.js`/`.py`): Tesseract real + parser tolerante a variação de rótulo. Este é o contraponto que o vídeo não cobre: mandar a mesma imagem direto pro Gemini multimodal (`extracao-llm-multimodal-tool.js`/`.py`), pedindo o JSON estruturado sem nenhum passo de OCR ou regex no meio.
+O Módulo 2.1 ensina o pipeline de OCR clássico (`extraction-to-jsonl-tool.js`/`.py`): Tesseract real + parser tolerante a variação de rótulo. Este é o contraponto que o módulo não cobre: mandar a mesma imagem direto pro Gemini multimodal (`extracao-llm-multimodal-tool.js`/`.py`), pedindo o JSON estruturado sem nenhum passo de OCR ou regex no meio.
 
 Os dois caminhos rodaram de verdade contra os mesmos 4 documentos sintéticos de `documentos-brutos/`, comparados contra o mesmo gabarito (`esperado`) usado no teste automatizado do pipeline de OCR.
 
@@ -35,16 +35,16 @@ A diferença real que aparece nos números não é de acerto, é de **engenharia
 ## Rode você mesmo
 
 ```bash
-# OCR clássico (já ensinado no vídeo)
+# OCR clássico (Módulo 2.1)
 node extraction-to-jsonl-tool.js
 python3 extraction_to_jsonl_tool.py
 
-# Contraponto: LLM multimodal (requer gcloud autenticado no projeto amplitude-seguros-demo)
+# Contraponto: LLM multimodal (requer GCP_PROJECT_ID definida com o SEU projeto GCP -- veja README.md)
 node extracao-llm-multimodal-tool.js
 python3 extracao_llm_multimodal_tool.py
 ```
 
-Os dois scripts do LLM multimodal chamam a API de verdade (mesmo projeto GCP dos jobs reais de fine-tuning do Módulo 3) e reportam latência e uso de token real de cada chamada, não um número estimado.
+Os dois scripts do LLM multimodal chamam a API de verdade (mesmo projeto GCP que você configurou pro Módulo 3) e reportam latência e uso de token real de cada chamada, não um número estimado.
 
 **Material extra relacionado:** pra quem quer saber se existe lib de mercado pronta pra cada peça deste módulo (OCR, dedup, normalização, etc.), ver `de-para-bibliotecas-de-mercado.md`, na mesma pasta.
 

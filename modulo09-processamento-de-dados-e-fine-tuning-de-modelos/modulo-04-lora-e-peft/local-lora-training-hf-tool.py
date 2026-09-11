@@ -17,7 +17,7 @@ não de célula em célula.
 
 STATUS DE VALIDAÇÃO (honesto): a lógica de treino (Passo 3 em diante) é uma adaptação
 DIRETA do `colab-lora-training-notebook.ipynb`, que já rodou de verdade numa GPU T4 real
-do Colab (resultado real de lá: val loss caindo pra 0,8305). Mas este arquivo específico,
+do Colab (resultado real de lá: val loss caindo pra 0,8248). Mas este arquivo específico,
 como script standalone rodando numa GPU CUDA local (não Colab), AINDA NÃO FOI TESTADO
 numa máquina real com GPU - só a lógica equivalente foi validada, dentro do notebook.
 Se vocês forem os primeiros a rodar isso numa GPU de verdade, tratem qualquer erro de
@@ -91,7 +91,7 @@ def validar_hiperparametros(rank, max_steps, learning_rate):
 
 
 # ==============================================================================
-# 2. Carregar o mesmo dataset real do Módulo 3.5, já convertido em mlx-data/
+# 2. Carregar o mesmo dataset real do Módulo 3.2, já convertido em mlx-data/
 # ==============================================================================
 
 def carregar_split(nome_arquivo):
@@ -100,7 +100,7 @@ def carregar_split(nome_arquivo):
         raise FileNotFoundError(
             f"{caminho} não existe. Rode `node local-lora-training-tool.js` (ou a versão "
             f".py) nesta mesma pasta primeiro -- ele gera train/valid/test.jsonl em "
-            f"mlx-data/ a partir do dataset real do Módulo 3.5, e este script reusa esses "
+            f"mlx-data/ a partir do dataset real do Módulo 3.2, e este script reusa esses "
             f"mesmos arquivos, sem duplicar a conversão."
         )
     exemplos = []
@@ -157,7 +157,7 @@ def montar_modelo_e_peft_config():
     peft_config = LoraConfig(
         r=RANK,
         lora_alpha=LORA_ALPHA,
-        target_modules=["q_proj", "v_proj"],
+        target_modules="all-linear",  # mesmo escopo do colab-lora-training-notebook.ipynb (Passo 3)
         lora_dropout=0.0,
         bias="none",
         task_type="CAUSAL_LM",
@@ -348,7 +348,7 @@ def main():
     print(
         "\nCompare o eval_loss acima com o resultado real do Módulo 4.2 (val loss 4,752 → "
         "0,895 pra rank 8) e com o resultado real do notebook Colab "
-        "(val loss 0,8305). Os três frameworks não vão bater número a número - o que "
+        "(val loss 0,8248). Os três frameworks não vão bater número a número - o que "
         "importa é a mesma pergunta dos Módulos 4.3/4.4: o modelo aprendeu o padrão de "
         "extração, ou só decorou o formato? O exemplo difícil do Passo 5 responde isso, "
         "não o número de loss sozinho."

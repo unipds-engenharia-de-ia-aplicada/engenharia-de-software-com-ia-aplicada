@@ -1,5 +1,7 @@
 # Model Card, modelo fine-tunado
 
+> Este é o model card de referência do curso, gerado rodando `model_versioning_tool.py` contra o job publicado pelo professor -- mostra o formato exato do que a ferramenta produz. Pra gerar o seu, rode o script com `TUNING_JOB_NAME` apontando pro job que você mesmo criou (veja README.md, seção "Antes de rodar").
+
 ## Identificação
 - Job: projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744
 - Modelo ajustado: projects/113512199474/locations/us-central1/models/391725756406824960@1

@@ -9,7 +9,8 @@
  *
  * Uso: node rank-adapter-comparison-tool.js
  *
- * Par oficial: rank-adapter-comparison-tool.js / rank_adapter_comparison_tool.py
+ * Par oficial desta disciplina: rank-adapter-comparison-tool.js (oficial) /
+ * rank_adapter_comparison_tool.py (referência espelhada).
  */
 
 'use strict';
@@ -113,28 +114,54 @@ function rodarTestes() {
 function rodarComparacaoReal() {
   console.log('\n===== Boa Vista Reparos Automotivos: sem adaptador vs. rank 4/8/16 =====\n');
 
-  console.log('--- sem adaptador ---');
-  const semAdaptador = parsearSaida(rodarReal(null));
-  console.log(`${semAdaptador.tokens} tokens, bate com o gabarito? ${baterComGabarito(semAdaptador.json)}`);
+  const resultados = {};
+  const falhas = [];
 
-  const resultados = { 'sem adaptador': semAdaptador };
+  console.log('--- sem adaptador ---');
+  try {
+    const semAdaptador = parsearSaida(rodarReal(null));
+    console.log(`${semAdaptador.tokens} tokens, bate com o gabarito? ${baterComGabarito(semAdaptador.json)}`);
+    resultados['sem adaptador'] = semAdaptador;
+  } catch (erro) {
+    console.log(`[FALHOU] ${erro.message}`);
+    falhas.push({ nome: 'sem adaptador', erro: erro.message });
+  }
+
   for (const [nome, caminho] of Object.entries(ADAPTERS)) {
     console.log(`--- ${nome} ---`);
-    const r = parsearSaida(rodarReal(caminho));
-    console.log(`${r.tokens} tokens, bate com o gabarito? ${baterComGabarito(r.json)}`);
-    if (r.json) console.log(JSON.stringify(r.json));
-    resultados[nome] = r;
+    try {
+      const r = parsearSaida(rodarReal(caminho));
+      console.log(`${r.tokens} tokens, bate com o gabarito? ${baterComGabarito(r.json)}`);
+      if (r.json) console.log(JSON.stringify(r.json));
+      resultados[nome] = r;
+    } catch (erro) {
+      console.log(`[FALHOU] ${erro.message}`);
+      falhas.push({ nome, erro: erro.message });
+    }
+  }
+
+  if (falhas.length > 0) {
+    console.log(`\n${falhas.length}/${Object.keys(ADAPTERS).length + 1} configuração(ões) falharam ao rodar mlx_lm generate.`);
+  }
+  if (Object.keys(resultados).length === 0) {
+    throw new Error('Nenhuma configuração rodou com sucesso -- verifique o modelo/adaptadores locais.');
   }
   return resultados;
 }
 
 if (require.main === module) {
   rodarTestes();
-  rodarComparacaoReal();
+  try {
+    rodarComparacaoReal();
+  } catch (erro) {
+    console.error('Erro:', erro.message);
+    process.exitCode = 1;
+  }
 }
 
 module.exports = { ADAPTERS, PROMPT, GABARITO, montarArgumentos, parsearSaida, baterComGabarito, rodarReal, rodarComparacaoReal };
 
 /*
  * Ahirton Lopes · Fine-Tuning Toolkit - UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
+ * Prof. Ahirton Lopes, Ph.D. - GDE AI, Microsoft MVP, Senior Manager
  */

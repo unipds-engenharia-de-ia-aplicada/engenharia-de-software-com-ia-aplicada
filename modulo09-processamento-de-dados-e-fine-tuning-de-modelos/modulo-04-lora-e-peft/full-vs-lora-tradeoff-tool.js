@@ -38,7 +38,7 @@ const CONFIGURACOES_REAIS = [
     percentualModelo: 0.147,
     valLossFinal: 0.895,
     picoMemGB: 10.833,
-    tamanhoCheckpointMB: 27,
+    tamanhoCheckpointMB: 26,
   },
   {
     tipo: 'LoRA rank 16',
@@ -137,9 +137,9 @@ function rodarTestes() {
     assert.ok(Math.abs(razao.parametro - 153.5) < 1, `razao=${razao.parametro}`);
   });
 
-  testar('checkpoint do full fine-tuning é ~73,8x maior que o adaptador LoRA rank 8', () => {
+  testar('checkpoint do full fine-tuning é ~76,6x maior que o adaptador LoRA rank 8', () => {
     const razao = calcularRazaoCusto(loraOito, full);
-    assert.equal(razao.checkpoint, 73.8);
+    assert.equal(razao.checkpoint, 76.6);
   });
 
   testar('full fine-tuning usa mais memória de pico que qualquer configuração LoRA', () => {

@@ -7,14 +7,16 @@
  * (contents/role/parts), e acompanhamento real de job via a API REST
  * do aiplatform.googleapis.com.
  *
- * O job consultado aqui já rodou de verdade antes desta gravação:
- * tuningJobs/4180970763655839744, 200 exemplos reais (120 Amplitude Auto +
- * 80 Amplitude Saúde Empresarial), gerados pelo mesmo pipeline formal do
- * Módulo 2.2 (MinHash+LSH, amostragem por temperatura, entropia de Shannon),
- * só que escalado pro volume que um job de treino de verdade pede. Consultar
- * o status de um job já concluído não gera custo de treino novo.
+ * O job consultado aqui roda de verdade contra a Vertex AI: 200 exemplos
+ * (120 Amplitude Auto + 80 Amplitude Saúde Empresarial), gerados pelo mesmo
+ * pipeline formal do Módulo 2.2 (MinHash+LSH, amostragem por temperatura,
+ * entropia de Shannon), só que escalado pro volume que um job de treino de
+ * verdade pede. Consultar o status de um job já concluído não gera custo de
+ * treino novo.
  *
  * Uso: node dataset-upload-and-tracking-tool.js
+ * Requer: TUNING_JOB_NAME definida com o nome completo do SEU job de
+ * fine-tuning (veja README.md, seção "Antes de rodar").
  */
 
 'use strict';
@@ -22,9 +24,14 @@
 const assert = require('assert').strict;
 const { execSync } = require('child_process');
 
-const PROJETO = 'amplitude-seguros-demo';
 const REGIAO = 'us-central1';
-const NOME_JOB = 'projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744';
+// CONFIGURAÇÃO: defina TUNING_JOB_NAME com o nome completo do job de
+// fine-tuning que VOCÊ rodou (projects/.../tuningJobs/...), criado no
+// Módulo 3.2 -- não há valor padrão, cada aluno usa o próprio job.
+const NOME_JOB = process.env.TUNING_JOB_NAME;
+if (!NOME_JOB) {
+  throw new Error('Defina a variável de ambiente TUNING_JOB_NAME com o nome completo do seu job de fine-tuning antes de rodar este script.');
+}
 
 /* --------------------------------------------------------------------------
  * 1. Conversão do schema canônico pro formato Gemini

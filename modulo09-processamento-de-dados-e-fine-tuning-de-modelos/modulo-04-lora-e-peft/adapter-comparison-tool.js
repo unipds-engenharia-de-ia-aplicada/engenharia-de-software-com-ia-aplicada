@@ -2,19 +2,17 @@
  * Ahirton Lopes · Fine-Tuning Toolkit
  * Artefato de Demo - Módulo 4.2 (Demo, parte 3 -- companion)
  *
- * A gravação do Módulo 4.2 ficou sem tempo pra parte 3 da demo ao vivo
- * (comparar a saída do modelo com e sem o adaptador). Este arquivo é o
- * companion pra rodar exatamente essa comparação por conta própria: chama
- * `python3 -m mlx_lm generate` duas vezes contra o MESMO exemplo real do
- * conjunto de teste (índice 8 de mlx-data/test.jsonl, o recibo médico de
- * Felipe Alves Monteiro) -- uma vez sem --adapter-path, uma vez com --, e
- * compara as duas saídas. Mesmo par modelo+adaptador que
+ * Este arquivo é o companion da Demo, parte 3 do Módulo 4.2 (comparar a
+ * saída do modelo com e sem o adaptador). Roda exatamente essa comparação
+ * por conta própria: chama `python3 -m mlx_lm generate` duas vezes contra o
+ * MESMO exemplo real do conjunto de teste (índice 8 de mlx-data/test.jsonl,
+ * o recibo médico de Felipe Alves Monteiro) -- uma vez sem --adapter-path,
+ * uma vez com --, e compara as duas saídas. Mesmo par modelo+adaptador que
  * local-lora-training-tool.js treina (mlx-community/gemma-4-e2b-it-bf16 +
  * ./mlx-adapters, rank 8).
  *
- * Resultado real capturado nesta máquina em 2026-09-04, com o adaptador do
- * próprio treino gravado no vídeo do Módulo 4.2 (mlx-adapters/, treinado
- * 09:51-10:35 no dia da gravação):
+ * Resultado real capturado nesta máquina, com o adaptador treinado pelo
+ * próprio local-lora-training-tool.js (mlx-adapters/, rank 8):
  *   - SEM adaptador: 80 tokens gerados (bateu no limite), o modelo entra
  *     num modo de raciocínio em texto livre e nunca chega a um JSON.
  *   - COM adaptador: 28 tokens gerados, JSON exato batendo com o gabarito
@@ -255,7 +253,7 @@ function rodarComparacaoReal() {
   console.log(`Bate com o gabarito? ${compararComGabarito(saidaCom.json, gabarito)}`);
 
   console.log(
-    `\nConclusão: ${saidaCom.tokensGerados} tokens de diferença de configuração (o adaptador de 27MB) `
+    `\nConclusão: ${saidaCom.tokensGerados} tokens de diferença de configuração (o adaptador de 26MB) `
     + `são a diferença entre um modelo que ${compararComGabarito(saidaSem.json, gabarito) ? 'também acerta' : 'não chega a um JSON'} `
     + `e um modelo que acerta o formato inteiro, campo a campo, num exemplo que nunca esteve no treino.`,
   );

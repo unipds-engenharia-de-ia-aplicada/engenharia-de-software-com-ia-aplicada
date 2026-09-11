@@ -11,13 +11,14 @@ jobs reais de fine-tuning do Modulo 3), pedindo o JSON estruturado sem
 nenhum passo de regex intermediario, e compara contra o mesmo gabarito
 (`esperado`) usado no teste automatizado do pipeline de OCR.
 
-Nao substitui o pipeline OCR ensinado no video, e um contraponto real:
+Nao substitui o pipeline OCR ensinado no Modulo 2.1, e um contraponto real:
 mesmo dado de entrada, abordagem diferente, metricas comparaveis
 (acerto por campo, latencia, uso de token) lado a lado.
 
 Uso: python3 extracao_llm_multimodal_tool.py
-Requer: gcloud autenticado (gcloud auth application-default login) com
-acesso ao projeto amplitude-seguros-demo.
+Requer: gcloud autenticado (gcloud auth application-default login) e um
+projeto GCP proprio com Vertex AI habilitado -- defina GCP_PROJECT_ID
+com o ID desse projeto antes de rodar.
 
 Nota de validade (ago/2026): este demo foi validado com gemini-2.5-flash.
 O processo -- montar o payload multimodal, comparar contra o gabarito -- e
@@ -30,14 +31,24 @@ quais modelos estao disponiveis no momento e troque a constante MODELO.
 
 import base64
 import json
+import os
 import subprocess
+import sys
 import time
 import unicodedata
 import urllib.error
 import urllib.request
 from pathlib import Path
 
-PROJETO = "amplitude-seguros-demo"
+# CONFIGURACAO: defina GCP_PROJECT_ID com o ID do seu projeto GCP (com Vertex
+# AI habilitado) antes de rodar -- nao ha valor padrao, cada aluno usa o
+# proprio projeto, nunca o do autor do curso.
+PROJETO = os.environ.get("GCP_PROJECT_ID")
+if not PROJETO:
+    raise RuntimeError(
+        "Defina a variavel de ambiente GCP_PROJECT_ID com o ID do seu projeto "
+        "GCP (com Vertex AI habilitado) antes de rodar este script."
+    )
 REGIAO = "us-central1"
 MODELO = "gemini-2.5-flash"
 
@@ -202,9 +213,15 @@ def main():
     print("== Extração via LLM multimodal (Gemini/Vertex AI) vs. OCR clássico ==\n")
 
     resultados = []
+    falhas = []
     for doc in DOCUMENTOS:
         print(f"--- {doc['arquivo']} ({doc['caso']}) ---")
-        chamada = extrair_via_llm(doc)
+        try:
+            chamada = extrair_via_llm(doc)
+        except RuntimeError as erro:
+            print(f"  [FALHOU] {erro}\n")
+            falhas.append({"doc": doc, "erro": str(erro)})
+            continue
         comparacao = comparar_com_esperado(chamada["extraido"], doc["esperado"])
         resultados.append({"doc": doc, **chamada, "comparacao": comparacao})
 
@@ -212,6 +229,15 @@ def main():
         print(f"  acerto: {comparacao['acertos']}/{comparacao['total']} campos")
         print(f"  latência: {chamada['latenciaMs']}ms · tokens entrada/saída: {chamada['tokensEntrada']}/{chamada['tokensSaida']}")
         print("")
+
+    if falhas:
+        nomes = ", ".join(f["doc"]["arquivo"] for f in falhas)
+        print(f"{len(falhas)}/{len(DOCUMENTOS)} documento(s) falharam na chamada real: {nomes} -- verifique projeto/API/billing.\n")
+    if not resultados:
+        raise RuntimeError(
+            "Nenhum documento processado com sucesso -- verifique GCP_PROJECT_ID, a API do "
+            "Vertex AI habilitada, e a autenticacao (gcloud auth login)."
+        )
 
     print("== Testes: LLM multimodal acerta o gabarito campo a campo ==")
     passaram = 0
@@ -264,7 +290,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except RuntimeError as erro:
+        print(f"Erro: {erro}")
+        sys.exit(1)
 
 # Ahirton Lopes - Fine-Tuning Toolkit - UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
 # Prof. Ahirton Lopes, Ph.D. - GDE AI, Microsoft MVP, Senior Manager

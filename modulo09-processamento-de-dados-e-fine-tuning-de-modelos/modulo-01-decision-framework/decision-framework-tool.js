@@ -485,7 +485,7 @@ function derivarVolatilidade(financeiro, n = 10000, rng = Math.random) {
  * o modelo exerce só se valer a pena -- é uma opção americana com uma única
  * janela de exercício, o desenho padrão pra "esperar informação chegar".
  * Sem essa árvore, não é Real Options, é só comparar dois NPVs de datas
- * diferentes -- essa era a versão anterior desta função.
+ * diferentes.
  */
 function precificarOpcaoDeEsperar(financeiro, scoreAtualP3, limiarVerde, n = 10000, rng = Math.random) {
   const { opcaoReal } = financeiro;
@@ -993,9 +993,10 @@ function rodarDemo(config, {
  * Conteúdo extra opcional, NÃO chamado por padrão no fluxo principal (ver
  * `if (require.main === module)` mais abaixo): caso hipotético de gate de
  * governança bloqueado, e o panorama de risco operacional de provedor.
- * Ambos ficam de fora da saída padrão do script porque, no vídeo do Módulo
- * 1.3, o primeiro já está coberto pelos testes automatizados narrados antes,
- * e o segundo é spoiler do cheatsheet do Slide 9. Continuam disponíveis pra
+ * Ambos ficam de fora da saída padrão do script porque o primeiro já está
+ * coberto pelos testes automatizados (caso de governança bloqueada) e o
+ * segundo é coberto pelo cheatsheet de tipos de fine-tuning (risco
+ * operacional de provedor). Continuam disponíveis pra
  * quem quiser chamar `rodarDemoExtras()` manualmente (ex.: na missão
  * prática, pra explorar o restante do código).
  */

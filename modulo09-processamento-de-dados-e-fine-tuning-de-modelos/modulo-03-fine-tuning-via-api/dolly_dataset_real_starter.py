@@ -89,10 +89,9 @@ def filtrar_compativeis(registros_dolly):
 # -----------------------------------------------------------------------
 
 def texto_para_dedup(exemplo):
-    """Correcao 25/08 (achado de painel de avaliacao): comparar so `entrada`
-    confunde pares de PERGUNTA DIFERENTE sobre o mesmo trecho de contexto
-    (Jaccard=1,0 na entrada) com duplicata real. Concatenar instrucao+entrada
-    corrige isso."""
+    """Comparar so `entrada` confunde pares de PERGUNTA DIFERENTE sobre o
+    mesmo trecho de contexto (Jaccard=1,0 na entrada) com duplicata real.
+    Concatenar instrucao+entrada evita isso."""
     return f"{exemplo['instrucao']}\n{exemplo['entrada']}"
 
 
@@ -110,9 +109,9 @@ def dedup_generico(exemplos, n=N_SHINGLE):
 
 
 def preparar_dataset_completo(caminho_jsonl, alvo_total):
-    """Pipeline completo de preparo (achado de painel: v1 nao exportava isso,
-    entao os numeros do model card nao eram reproduziveis a partir do
-    arquivo entregue). Roda dedup no dataset INTEIRO e balanceia pro alvo."""
+    """Pipeline completo de preparo: roda dedup no dataset INTEIRO e balanceia
+    pro alvo, pra que os numeros do model card sejam reproduziveis a partir
+    do arquivo entregue."""
     bruto = carregar_dolly(caminho_jsonl)
     compativeis = filtrar_compativeis(bruto)
     mapeados = [para_schema_canonico(r, i) for i, r in enumerate(compativeis)]
@@ -206,7 +205,7 @@ def rodar_testes(caminho_jsonl):
 
     _testar("distribuicao por fonte bate com a contagem real do dataset", _checar_distribuicao)
 
-    print("\n== Testes: dedup generico, comparando instrucao+entrada (correcao pos-painel) ==")
+    print("\n== Testes: dedup generico, comparando instrucao+entrada ==")
 
     def _checar_entrada_sozinha_seria_1():
         a = next(e for e in mapeados if e["instrucao"] == "What caused the Global Financial Crises?")
@@ -222,7 +221,7 @@ def rodar_testes(caminho_jsonl):
 
     _testar("com instrucao+entrada, esse mesmo par NAO e mais Jaccard 1,0 (fix funcionando)", _checar_fix_funciona)
 
-    print("\n== Testes: pipeline completo (dataset inteiro, nao amostra - correcao pos-painel) ==")
+    print("\n== Testes: pipeline completo (dataset inteiro, nao amostra) ==")
 
     completo = preparar_dataset_completo(caminho_jsonl, 200)
 
@@ -291,9 +290,9 @@ def rodar_demo(caminho_jsonl):
     hd = m2.entropia_shannon(r["dist_depois"])
     print(f"Entropia antes/depois do balanceamento: {ha:.4f} -> {hd:.4f} nats")
     print(
-        "\nCorrecao pos-painel de avaliacao (25/08): a v1 deste arquivo comparava so `entrada` no "
-        "dedup, o que confundia pares de PERGUNTA DIFERENTE sobre o MESMO trecho de contexto "
-        "(Jaccard=1,0 na entrada) com duplicata real. Comparar instrucao+entrada corrige isso."
+        "\nComparar so `entrada` no dedup confundiria pares de PERGUNTA DIFERENTE sobre o MESMO "
+        "trecho de contexto (Jaccard=1,0 na entrada) com duplicata real. Comparar instrucao+entrada "
+        "evita isso."
     )
 
 

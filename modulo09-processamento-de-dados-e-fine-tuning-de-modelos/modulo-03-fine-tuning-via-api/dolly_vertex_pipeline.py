@@ -19,9 +19,9 @@ estruturado (saida e dict). O Dolly-15k tem resposta em texto solto
 senao a resposta esperada do modelo sairia com aspas duplas extras em
 volta.
 
-Rodado de verdade em 25/08/2026 contra o projeto amplitude-seguros-demo:
-job criado, monitorado ate o fim, resultado real documentado no
-companion.md e na Missao Pratica #03 (Modulo 3.5).
+Requer: GCP_PROJECT_ID (seu projeto GCP) -- veja README.md, secao "Antes
+de rodar". So afeta rodar_pipeline (protegido por confirmar=True); a
+suite de testes padrao nao toca rede.
 
 Nota de validade (ago/2026): validado com gemini-2.5-flash, passado como
 config["baseModel"] pra rodar_pipeline (nao e uma constante de topo de
@@ -36,11 +36,17 @@ que voce passar.
 
 import asyncio
 import json
+import os
 import subprocess
 import urllib.error
 import urllib.request
 
-PROJETO = "amplitude-seguros-demo"
+# CONFIGURACAO: cada aluno usa o proprio projeto GCP -- nenhum valor padrao
+# aponta pro autor do curso. So afeta rodar_pipeline (protegido por
+# confirmar=True); a suite de testes padrao nao toca rede. A checagem em
+# si roda dentro de criar_job_fine_tuning (ver abaixo), nao aqui no topo
+# do arquivo, pra nao travar a suite de testes local sem motivo.
+PROJETO = os.environ.get("GCP_PROJECT_ID")
 REGIAO = "us-central1"
 
 
@@ -87,8 +93,9 @@ def executar_upload(caminho_local, uri_gcs):
 
 # -----------------------------------------------------------------------
 # 3. Criacao de job, com a mesma trava de confirmacao E validacao de
-#    hiperparametro do Modulo 3.4 (achado de painel: a v1 deste arquivo
-#    criava job real sem validar hiperparametro antes)
+#    hiperparametro do Modulo 3.4 -- essencial pra manter o mesmo padrao
+#    de seguranca ja estabelecido em finetuning-automation-tool.py, sem
+#    regressao pra criacao de job sem validacao previa
 # -----------------------------------------------------------------------
 
 FAIXAS_VALIDAS = {
@@ -121,8 +128,8 @@ _token_cache = {"valor": None, "expira_em": 0}
 
 
 def obter_token_acesso(forcar_novo=False):
-    """Cache de token (achado de painel: v1 chamava gcloud a cada consulta do
-    loop de polling, sem necessidade - o token dura ~1h). Renova com 5min de margem."""
+    """Cache de token: evita chamar gcloud a cada consulta do loop de
+    polling, sem necessidade (o token dura ~1h). Renova com 5min de margem."""
     import time
     agora = time.time()
     if not forcar_novo and _token_cache["valor"] and agora < _token_cache["expira_em"]:
@@ -169,6 +176,11 @@ def _get_json(url, token):
 def criar_job_fine_tuning(config, opcoes):
     exigir_confirmacao(opcoes)
     validar_hiperparametros(config)
+    if not PROJETO:
+        raise RuntimeError(
+            "Defina a variavel de ambiente GCP_PROJECT_ID com o ID do seu "
+            "projeto GCP antes de rodar rodar_pipeline."
+        )
     url = f"https://{REGIAO}-aiplatform.googleapis.com/v1/projects/{PROJETO}/locations/{REGIAO}/tuningJobs"
     corpo = {
         "baseModel": config["baseModel"],
@@ -201,8 +213,8 @@ def calcular_proximo_intervalo(atual_ms, fator, maximo_ms):
 
 
 async def consultar_com_retry(consultar_fn, nome_job, tentativas=3, atraso_ms=3000, esperar_fn=None):
-    """Retry limitado (achado de painel: v1 nao tinha isso - uma falha
-    transiente de rede num job de 13min matava o acompanhamento inteiro)."""
+    """Retry limitado: uma falha transiente de rede num job de acompanhamento
+    longo nao pode matar o processo inteiro."""
     esperar_fn = esperar_fn or (lambda ms: asyncio.sleep(ms / 1000))
     ultimo_erro = None
     for tentativa in range(1, tentativas + 1):
@@ -252,8 +264,8 @@ async def _talvez_async(fn, arg):
 # -----------------------------------------------------------------------
 
 def rodar_inferencia(endpoint_nome, texto_usuario, generation_config=None):
-    # temperature=0 (achado de painel: v1 nao documentava sampling; geracao e
-    # estocastica, e sem isso o mesmo teste nao e reproduzivel de novo)
+    # temperature=0: geracao e estocastica por padrao, documentar e fixar o
+    # valor e o que torna o mesmo teste reproduzivel de novo
     generation_config = generation_config if generation_config is not None else {"temperature": 0}
     url = f"https://{REGIAO}-aiplatform.googleapis.com/v1/{endpoint_nome}:generateContent"
     corpo = {"contents": [{"role": "user", "parts": [{"text": texto_usuario}]}], "generationConfig": generation_config}
@@ -376,7 +388,7 @@ async def rodar_testes():
         except ValueError as e:
             _assert("Hiperparametro invalido" in str(e))
 
-    await _testar_async("bloqueia job com hiperparametro invalido mesmo com confirmar=True (achado de painel)", _t5b)
+    await _testar_async("bloqueia job com hiperparametro invalido mesmo com confirmar=True", _t5b)
 
     def _t5c():
         _assert(validar_hiperparametros({"epochCount": 3, "learningRateMultiplier": 5}))

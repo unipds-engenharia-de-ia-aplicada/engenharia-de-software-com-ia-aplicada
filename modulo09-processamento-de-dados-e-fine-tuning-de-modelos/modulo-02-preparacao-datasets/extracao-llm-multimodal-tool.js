@@ -11,13 +11,14 @@
  * nenhum passo de regex intermediário, e compara contra o mesmo gabarito
  * (`esperado`) usado no teste automatizado do pipeline de OCR.
  *
- * Não substitui o pipeline OCR ensinado no vídeo, é um contraponto real:
+ * Não substitui o pipeline OCR ensinado no Módulo 2.1, é um contraponto real:
  * mesmo dado de entrada, abordagem diferente, métricas comparáveis
  * (acerto por campo, latência, uso de token) lado a lado.
  *
  * Uso: node extracao-llm-multimodal-tool.js
- * Requer: gcloud autenticado (gcloud auth application-default login) com
- * acesso ao projeto amplitude-seguros-demo.
+ * Requer: gcloud autenticado (gcloud auth application-default login) e um
+ * projeto GCP próprio com Vertex AI habilitado -- defina GCP_PROJECT_ID
+ * com o ID desse projeto antes de rodar.
  *
  * Nota de validade (ago/2026): este demo foi validado com gemini-2.5-flash.
  * O processo -- montar o payload multimodal, comparar contra o gabarito -- é
@@ -35,7 +36,13 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const PROJETO = 'amplitude-seguros-demo';
+// CONFIGURAÇÃO: defina GCP_PROJECT_ID com o ID do seu projeto GCP (com Vertex
+// AI habilitado) antes de rodar -- não há valor padrão, cada aluno usa o
+// próprio projeto, nunca o do autor do curso.
+const PROJETO = process.env.GCP_PROJECT_ID;
+if (!PROJETO) {
+  throw new Error('Defina a variável de ambiente GCP_PROJECT_ID com o ID do seu projeto GCP (com Vertex AI habilitado) antes de rodar este script.');
+}
 const REGIAO = 'us-central1';
 const MODELO = 'gemini-2.5-flash';
 
@@ -198,9 +205,18 @@ async function main() {
   console.log('== Extração via LLM multimodal (Gemini/Vertex AI) vs. OCR clássico ==\n');
 
   const resultados = [];
+  const falhas = [];
   for (const doc of DOCUMENTOS) {
     console.log(`--- ${doc.arquivo} (${doc.caso}) ---`);
-    const { extraido, latenciaMs, tokensEntrada, tokensSaida } = await extrairViaLlm(doc);
+    let extracao;
+    try {
+      extracao = await extrairViaLlm(doc);
+    } catch (e) {
+      console.log(`  [FALHOU] ${e.message}\n`);
+      falhas.push({ doc, erro: e.message });
+      continue;
+    }
+    const { extraido, latenciaMs, tokensEntrada, tokensSaida } = extracao;
     const comparacao = compararComEsperado(extraido, doc.esperado);
     resultados.push({ doc, extraido, latenciaMs, tokensEntrada, tokensSaida, comparacao });
 
@@ -208,6 +224,13 @@ async function main() {
     console.log(`  acerto: ${comparacao.acertos}/${comparacao.total} campos`);
     console.log(`  latência: ${latenciaMs}ms · tokens entrada/saída: ${tokensEntrada}/${tokensSaida}`);
     console.log('');
+  }
+
+  if (falhas.length > 0) {
+    console.log(`${falhas.length}/${DOCUMENTOS.length} documento(s) falharam na chamada real: ${falhas.map((f) => f.doc.arquivo).join(', ')} -- verifique projeto/API/billing.\n`);
+  }
+  if (resultados.length === 0) {
+    throw new Error('Nenhum documento processado com sucesso -- verifique GCP_PROJECT_ID, a API do Vertex AI habilitada, e a autenticação (gcloud auth login).');
   }
 
   console.log('== Testes: LLM multimodal acerta o gabarito campo a campo ==');

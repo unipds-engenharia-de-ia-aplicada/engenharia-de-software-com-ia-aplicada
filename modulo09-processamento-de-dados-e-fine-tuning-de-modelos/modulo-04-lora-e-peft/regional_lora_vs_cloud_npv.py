@@ -137,7 +137,7 @@ def rodar_demo(r):
     print(f"  NPV em {HORIZONTE_MESES} meses: R$ {npv_gerenciado['npv']:.2f}")
     print(f"  Breakeven: {'mês ' + str(npv_gerenciado['mesBreakeven']) if npv_gerenciado['mesBreakeven'] else 'não atinge no horizonte'}")
 
-    print("\n--- Caminho 2: LoRA local (Módulo 4, este vídeo) ---")
+    print("\n--- Caminho 2: LoRA local (Módulo 4) ---")
     print(f"  Custo fixo de treino: R$ {CUSTO_LORA_LOCAL:.2f} (hardware já existe, custo marginal é tempo de máquina)")
     print(f"  NPV em {HORIZONTE_MESES} meses: R$ {npv_lora['npv']:.2f}")
     print(f"  Breakeven: mês {npv_lora['mesBreakeven']}")

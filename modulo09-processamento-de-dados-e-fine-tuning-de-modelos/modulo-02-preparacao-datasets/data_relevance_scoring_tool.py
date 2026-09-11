@@ -190,7 +190,7 @@ def rodar_demo(resultados):
 
     print("\n-----------------------------------------------------------------------------")
     print("De 7 candidatos plausíveis, só 2 passam: orçamento de oficina e recibo médico --")
-    print("exatamente os que o pipeline de extração deste vídeo usa. Identificar dado")
+    print("exatamente os que o pipeline de extração do Módulo 2 usa. Identificar dado")
     print("relevante é filtrar antes de coletar, não aceitar tudo que existir no arquivo.")
     print("-----------------------------------------------------------------------------")
 

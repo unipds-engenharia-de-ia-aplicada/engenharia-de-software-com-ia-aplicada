@@ -129,7 +129,7 @@ function rodarDemo({ npvGerenciado, npvLora }) {
   console.log(`  NPV em ${HORIZONTE_MESES} meses: R$ ${npvGerenciado.npv.toFixed(2)}`);
   console.log(`  Breakeven: ${npvGerenciado.mesBreakeven ? `mês ${npvGerenciado.mesBreakeven}` : 'não atinge no horizonte'}`);
 
-  console.log('\n--- Caminho 2: LoRA local (Módulo 4, este vídeo) ---');
+  console.log('\n--- Caminho 2: LoRA local (Módulo 4) ---');
   console.log(`  Custo fixo de treino: R$ ${CUSTO_LORA_LOCAL.toFixed(2)} (hardware já existe, custo marginal é tempo de máquina)`);
   console.log(`  NPV em ${HORIZONTE_MESES} meses: R$ ${npvLora.npv.toFixed(2)}`);
   console.log(`  Breakeven: mês ${npvLora.mesBreakeven}`);

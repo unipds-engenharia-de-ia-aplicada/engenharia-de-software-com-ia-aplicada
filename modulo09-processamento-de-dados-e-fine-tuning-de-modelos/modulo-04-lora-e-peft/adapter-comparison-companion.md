@@ -5,7 +5,7 @@
 
 ## O que é
 
-O teleprompter do Módulo 4.2 descreve uma terceira parte da demo: rodar `python3 -m mlx_lm generate` duas vezes contra o mesmo exemplo real do conjunto de teste, uma vez sem `--adapter-path` e uma vez com, pra provar que o adaptador de 27MB muda o comportamento do modelo de verdade, não só na teoria. A gravação do módulo ficou sem tempo pra essa parte ao vivo. Este companion resolve isso: `adapter-comparison-tool.js` (e seu par em Python, `adapter_comparison_tool.py`) rodam exatamente essa comparação, de verdade, na própria máquina de quem estiver assistindo.
+O teleprompter do Módulo 4.2 descreve uma terceira parte da demo: rodar `python3 -m mlx_lm generate` duas vezes contra o mesmo exemplo real do conjunto de teste, uma vez sem `--adapter-path` e uma vez com, pra provar que o adaptador de 26MB muda o comportamento do modelo de verdade, não só na teoria. Este companion cobre essa parte: `adapter-comparison-tool.js` (e seu par em Python, `adapter_comparison_tool.py`) rodam exatamente essa comparação, de verdade, na própria máquina de quem estiver assistindo.
 
 ## Por que não foi só documentado
 
@@ -13,7 +13,7 @@ Porque o ponto da demo é justamente deixar o aluno ver a diferença rodando na 
 
 ## Status de validação (honesto)
 
-Rodado de verdade nesta máquina em 2026-09-04, com o adaptador do próprio treino gravado no vídeo do Módulo 4.2 (`mlx-adapters/`, rank 8, treinado ao vivo 09:51–10:35 no dia da gravação). Os 7 testes automatizados do script (contra essa mesma saída real, capturada como fixture) passam: `7/7 testes passaram`.
+Rodado de verdade nesta máquina, com o adaptador treinado pelo próprio `local-lora-training-tool.js` do Módulo 4.2 (`mlx-adapters/`, rank 8). Os 7 testes automatizados do script (contra essa mesma saída real, capturada como fixture) passam: `7/7 testes passaram`.
 
 ## Resultado real
 
@@ -53,13 +53,13 @@ python3 adapter_comparison_tool.py
 
 Cada rodada carrega o modelo do zero duas vezes (uma sem adaptador, uma com) e gera de verdade — leva uns 30-40s no total, sem rede nenhuma envolvida além do primeiro download do modelo (cacheado depois). Não é uma simulação nem um resultado pré-gravado: se você tiver retreinado o adaptador em `mlx-adapters/` com hiperparâmetros diferentes, os números podem sair diferentes — é esperado, é o ponto do script.
 
-O adaptador rank 8 do Módulo 4.2 (`mlx-adapters/adapters.safetensors`, 27MB) já vem publicado no repositório — não precisa treinar nada pra rodar o companion. Se quiser reproduzir o treino do zero (outros hiperparâmetros, por exemplo), o comando real é:
+O adaptador rank 8 do Módulo 4.2 (`mlx-adapters/adapters.safetensors`, 26MB) já vem publicado no repositório — não precisa treinar nada pra rodar o companion. Se quiser reproduzir o treino do zero (outros hiperparâmetros, por exemplo), o comando real é:
 
 ```bash
 python3 -m mlx_lm lora --config lora-rank8-config.yaml
 ```
 
-Esse YAML já vem com os hiperparâmetros reais usados no treino gravado (`iters: 20`, `learning_rate: 1.0e-5`, rank 8, `adapter_path: ./mlx-adapters`) — é só rodar e esperar terminar antes de chamar o companion.
+Esse YAML já vem com os hiperparâmetros reais usados no treino original (`iters: 20`, `learning_rate: 1.0e-5`, rank 8, `adapter_path: ./mlx-adapters`) — é só rodar e esperar terminar antes de chamar o companion.
 
 ## Quando usar
 

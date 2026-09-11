@@ -18,12 +18,11 @@
  * JSON.stringify, senão a resposta esperada do modelo sairia com aspas
  * duplas extras em volta.
  *
- * Rodado de verdade em 25/08/2026 contra o projeto amplitude-seguros-demo:
- * job criado, monitorado até o fim, resultado real documentado no
- * companion.md e na Missão Prática #03 (Módulo 3.5).
- *
- * Uso: node dolly-vertex-pipeline.js  (cria job real, CUSTA DINHEIRO -
- * exige --confirmar explícito, ver rodarPipeline)
+ * Uso: node dolly-vertex-pipeline.js  (roda a suíte de testes local, sem
+ * rede e sem custo -- rodarPipeline, que cria job real e CUSTA DINHEIRO,
+ * só roda se chamado com confirmar: true)
+ * Requer: GCP_PROJECT_ID (seu projeto), só pra rodarPipeline -- veja
+ * README.md, seção "Antes de rodar".
  *
  * Nota de validade (ago/2026): validado com gemini-2.5-flash, passado como
  * config.baseModel pra rodarPipeline (não é uma constante de topo de
@@ -43,9 +42,14 @@ const path = require('path');
 const assert = require('assert').strict;
 const { execSync } = require('child_process');
 
-const PROJETO = 'amplitude-seguros-demo';
+// CONFIGURAÇÃO: cada aluno usa o próprio projeto GCP -- nenhum valor
+// padrão aponta pro autor do curso. Só afeta rodarPipeline (protegido por
+// confirmar: true); a suíte de testes padrão não toca rede. A checagem em
+// si roda dentro de criarJobFineTuning (ver abaixo), não aqui no topo do
+// arquivo, pra não travar node dolly-vertex-pipeline.js sem motivo quando
+// o objetivo é só rodar a suíte de testes local.
+const PROJETO = process.env.GCP_PROJECT_ID;
 const REGIAO = 'us-central1';
-const BUCKET_URI = 'gs://amplitude-seguros-demo-tuning/dolly-extra-200.jsonl';
 
 /* --------------------------------------------------------------------------
  * 1. Conversão (adaptada do Módulo 3.2/3.4: saida do Dolly é texto, não objeto)
@@ -88,10 +92,9 @@ function executarUpload(caminhoLocal, uriGcs) {
 
 /* --------------------------------------------------------------------------
  * 3. Criação de job, com a mesma trava de confirmação E validação de
- *    hiperparâmetro do Módulo 3.4 (achado de painel: a v1 deste arquivo
- *    criava job real sem validar hiperparâmetro antes - regressão de
- *    segurança em relação ao padrão já estabelecido em
- *    finetuning-automation-tool.js)
+ *    hiperparâmetro do Módulo 3.4 -- essencial pra manter o mesmo padrão
+ *    de segurança já estabelecido em finetuning-automation-tool.js, sem
+ *    regressão pra criação de job sem validação prévia
  * -------------------------------------------------------------------------- */
 
 const FAIXAS_VALIDAS = {
@@ -118,9 +121,9 @@ function exigirConfirmacao(opcoes) {
 }
 
 /**
- * Cache de token (achado de painel: v1 chamava `gcloud auth print-access-token`
- * via subprocesso síncrono a cada consulta do loop de polling, sem
- * necessidade - o token do gcloud dura ~1h). Renova com 5min de margem.
+ * Cache de token: evita chamar `gcloud auth print-access-token` via
+ * subprocesso síncrono a cada consulta do loop de polling, sem necessidade
+ * (o token do gcloud dura ~1h). Renova com 5min de margem.
  */
 let _tokenCache = null;
 let _tokenCacheExpiraEm = 0;
@@ -152,6 +155,9 @@ async function comTokenValido(chamarFn) {
 async function criarJobFineTuning(config, opcoes) {
   exigirConfirmacao(opcoes);
   validarHiperparametros(config);
+  if (!PROJETO) {
+    throw new Error('Defina a variável de ambiente GCP_PROJECT_ID com o ID do seu projeto GCP antes de rodar rodarPipeline.');
+  }
   const url = `https://${REGIAO}-aiplatform.googleapis.com/v1/projects/${PROJETO}/locations/${REGIAO}/tuningJobs`;
   const corpo = {
     baseModel: config.baseModel,
@@ -190,10 +196,10 @@ function calcularProximoIntervalo(atualMs, fator, maximoMs) {
 }
 
 /**
- * Retry limitado (achado de painel: v1 não tinha isso - uma falha
- * transiente de rede num job de 13min matava o acompanhamento inteiro).
- * Mesmo princípio do Módulo 3.4: retry age DEPOIS da chamada já
- * autorizada, só absorve instabilidade de rede numa consulta de leitura.
+ * Retry limitado: uma falha transiente de rede num job de acompanhamento
+ * longo não pode matar o processo inteiro. Mesmo princípio do Módulo 3.4:
+ * retry age DEPOIS da chamada já autorizada, só absorve instabilidade de
+ * rede numa consulta de leitura.
  */
 async function consultarComRetry(consultarFn, nomeJob, { tentativas = 3, atrasoMs = 3000, esperarFn = esperar } = {}) {
   let ultimoErro;
@@ -235,8 +241,8 @@ async function acompanharAteFinalizar(nomeJob, {
  * -------------------------------------------------------------------------- */
 
 async function rodarInferencia(endpointNome, textoUsuario, generationConfig = { temperature: 0 }) {
-  // temperature=0 (achado de painel: v1 não documentava sampling; geração é
-  // estocástica, e sem isso o mesmo teste não é reproduzível de novo)
+  // temperature=0: geração é estocástica por padrão, documentar e fixar
+  // o valor é o que torna o mesmo teste reproduzível de novo
   const url = `https://${REGIAO}-aiplatform.googleapis.com/v1/${endpointNome}:generateContent`;
   const corpo = { contents: [{ role: 'user', parts: [{ text: textoUsuario }] }], generationConfig };
   const resposta = await comTokenValido((token) => fetch(url, {
@@ -331,7 +337,7 @@ async function rodarTestes() {
     await assert.rejects(() => criarJobFineTuning({}, {}), /bloqueado/);
   });
 
-  await testarAssincrono('bloqueia job com hiperparâmetro inválido, mesmo com confirmar:true (achado de painel: v1 não tinha essa checagem)', async () => {
+  await testarAssincrono('bloqueia job com hiperparâmetro inválido, mesmo com confirmar:true', async () => {
     await assert.rejects(
       () => criarJobFineTuning({ epochCount: 0, learningRateMultiplier: 5 }, { confirmar: true }),
       /Hiperparâmetro inválido/

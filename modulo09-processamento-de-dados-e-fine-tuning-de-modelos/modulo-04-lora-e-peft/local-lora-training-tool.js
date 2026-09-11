@@ -58,8 +58,8 @@ function extrairNomeEntidade(exemploMlx) {
 /**
  * Divide a lista de exemplos em train/valid/test por proporção fixa,
  * agrupando por entidade (segurado/beneficiário) antes de dividir --
- * corrige vazamento real encontrado em 31/08: o dataset de origem tem só
- * vinte e oito pessoas sintéticas distintas nos duzentos exemplos, cada
+ * evita um vazamento real: o dataset de origem tem só vinte e oito
+ * pessoas sintéticas distintas nos duzentos exemplos, cada
  * uma repetida em vários templates de documento (até onze vezes a mesma
  * pessoa). Um corte sequencial simples deixava a mesma pessoa aparecer no
  * treino E no teste, só com cabeçalho de oficina/clínica diferente --
@@ -524,7 +524,7 @@ function rodarPreparacaoDeVerdade() {
 
 /* --------------------------------------------------------------------------
  * Demo: curva de convergência de verdade -- a mesma configuração deste
- * módulo, repetida com iters=20 (val loss final 0,895 na tela do vídeo,
+ * módulo, repetida com iters=20 (val loss final 0,895 no treino original,
  * 0,907 nesta repetição -- ruído normal entre corridas) e, pra comparação,
  * estendida pra iters=120 com steps-per-eval mais fino. Números reais,
  * capturados rodando `python3 -m mlx_lm lora` de verdade nesta máquina.
@@ -542,7 +542,7 @@ function rodarDemoCurvaConvergencia() {
     { iter: 20, valLoss: 0.907 },
   ];
   const analise20 = analisarCurvaConvergencia(curva20Iters);
-  console.log('Repetição das 20 iterações originais (val loss final 0,895 na tela do vídeo, 0,907 aqui -- ruído normal):');
+  console.log('Repetição das 20 iterações originais (val loss final 0,895 no treino original, 0,907 aqui -- ruído normal):');
   curva20Iters.forEach((m) => console.log(`  Iter ${String(m.iter).padStart(2)}: val loss ${m.valLoss.toFixed(3)}`));
   console.log(`  -> melhor iteração: ${analise20.melhorIteracao} (val loss ${analise20.melhorValLoss.toFixed(3)})`);
   console.log(`  -> queda relativa entre os 2 últimos pontos medidos: ${(analise20.quedaRelativaFinal * 100).toFixed(1)}%`);

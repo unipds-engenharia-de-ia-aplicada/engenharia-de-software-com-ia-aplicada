@@ -204,7 +204,7 @@ function rodarDemo(resultados) {
 
   console.log('\n-----------------------------------------------------------------------------');
   console.log('De 7 candidatos plausíveis, só 2 passam: orçamento de oficina e recibo médico --');
-  console.log('exatamente os que o pipeline de extração deste vídeo usa. Identificar dado');
+  console.log('exatamente os que o pipeline de extração do Módulo 2 usa. Identificar dado');
   console.log('relevante é filtrar antes de coletar, não aceitar tudo que existir no arquivo.');
   console.log('-----------------------------------------------------------------------------');
 }
