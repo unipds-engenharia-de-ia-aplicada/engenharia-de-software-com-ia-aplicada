@@ -29,7 +29,7 @@ CONFIGURACOES_REAIS = [
         "percentualModelo": 0.147,
         "valLossFinal": 0.895,
         "picoMemGB": 10.833,
-        "tamanhoCheckpointMB": 27,
+        "tamanhoCheckpointMB": 26,
     },
     {
         "tipo": "LoRA rank 16",
@@ -130,9 +130,9 @@ def rodar_testes():
 
     def t3():
         razao = calcular_razao_custo(lora_oito, full)
-        assert razao["checkpoint"] == 73.8
+        assert razao["checkpoint"] == 76.6
 
-    testar("checkpoint do full fine-tuning é ~73,8x maior que o adaptador LoRA rank 8", t3)
+    testar("checkpoint do full fine-tuning é ~76,6x maior que o adaptador LoRA rank 8", t3)
 
     def t4():
         loras = [c for c in CONFIGURACOES_REAIS if c["tipo"].startswith("LoRA")]

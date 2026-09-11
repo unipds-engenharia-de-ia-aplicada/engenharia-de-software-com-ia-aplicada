@@ -2,7 +2,7 @@
 > **Ahirton Lopes · Fine-Tuning Toolkit**
 > **Artefato de Demo - Módulo 1.3**
 
-O slide do vídeo mostra um card resumido por tipo. Este documento é o companion completo: cruza o caso real verificado de cada tipo com guias de mercado (OpenAI, Hugging Face, Google Vertex AI) e comparativos de custo/infraestrutura, pra você ter requisito prático de dado, hardware e hiperparâmetro na mão, não só o conceito.
+Este documento é o companion completo: cruza o caso real verificado de cada tipo com guias de mercado (OpenAI, Hugging Face, Google Vertex AI) e comparativos de custo/infraestrutura, pra você ter requisito prático de dado, hardware e hiperparâmetro na mão, não só o conceito.
 
 **Como ler cada seção:** O que é → Quando usar (best practice do mercado) → Requisitos práticos → Caso real verificado → Fontes. Nenhum número aqui foi assumido: todo case e toda faixa numérica tem fonte primária ou guia oficial por trás.
 
@@ -10,7 +10,7 @@ O slide do vídeo mostra um card resumido por tipo. Este documento é o companio
 >
 > **Dossiê completo:** pra quem quer o mecanismo teórico de cada técnica (por que funciona, não só o que é) com fontes acadêmicas verificadas, o pôster tem uma versão interativa com um dossiê de pesquisa por espécie: [`mecanismo-estado-arte-companion.html`](mecanismo-estado-arte-companion.html) ("Bestiário do Zoo"), na mesma pasta.
 
-> **Sobre os valores de custo e preço de GPU citados neste documento:** são a faixa de mercado observada na época desta gravação (ago/2026) - preço de GPU cloud e de hardware de consumidor muda rápido. Antes de usar esses números pra decidir orçamento de verdade, confira o preço vigente (ex.: [Vast.ai](https://vast.ai/pricing/gpu), [RunPod](https://www.runpod.io/pricing)) em vez de assumir que o valor aqui continua igual.
+> **Sobre os valores de custo e preço de GPU citados neste documento:** são a faixa de mercado observada na época da publicação deste documento (ago/2026) - preço de GPU cloud e de hardware de consumidor muda rápido. Antes de usar esses números pra decidir orçamento de verdade, confira o preço vigente (ex.: [Vast.ai](https://vast.ai/pricing/gpu), [RunPod](https://www.runpod.io/pricing)) em vez de assumir que o valor aqui continua igual.
 
 ---
 
@@ -213,7 +213,7 @@ A lição não é que fine-tuning parou de valer a pena: em 2023, e de novo em 2
 
 ## Como usar na atividade prática
 
-1. Releia os três casos da Amplitude Seguros aplicados nos vídeos (Auto, Saúde Empresarial e Atendimento ao Cliente) e identifique: qual tipo de fine-tuning desta lista melhor se encaixaria em cada um, considerando volume de dado e orçamento.
+1. Releia os três casos da Amplitude Seguros aplicados no Módulo 5 (Auto, Saúde Empresarial e Atendimento ao Cliente) e identifique: qual tipo de fine-tuning desta lista melhor se encaixaria em cada um, considerando volume de dado e orçamento.
 2. Aplique a tabela "Seu caso" acima à sua própria tarefa real de trabalho.
 3. Guarde este documento: os Módulos 3 e 4 desta disciplina aprofundam, respectivamente, fine-tuning via API gerenciada (Vertex AI) e LoRA/PEFT local. Este cheatsheet é o mapa de referência pra saber onde cada um se encaixa.
 

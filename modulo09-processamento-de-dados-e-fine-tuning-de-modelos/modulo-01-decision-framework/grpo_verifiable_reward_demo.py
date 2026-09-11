@@ -293,5 +293,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Ahirton Lopes - Fine-Tuning Toolkit, UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
+# Ahirton Lopes - Fine-Tuning Toolkit - UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
 # Prof. Ahirton Lopes, Ph.D. - GDE AI, Microsoft MVP, Senior Manager

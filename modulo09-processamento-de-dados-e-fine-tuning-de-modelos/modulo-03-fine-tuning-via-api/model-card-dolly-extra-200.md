@@ -1,6 +1,6 @@
 # Model Card, modelo fine-tunado (dataset real alternativo, Dolly-15k)
 
-> **Correção pós-avaliação (25/08/2026)**: esta é a v2 deste model card. Um painel de 5 especialistas em fine-tuning avaliou a v1 e achou problemas reais: `learning_rate_multiplier=1` contradizia o que o Módulo 3.3 ensina pro mesmo volume de dado, o dedup comparava só `entrada` (confundindo pergunta-diferente-mesmo-contexto com duplicata real), e a inferência de teste original não documentava `generationConfig`. Os três foram corrigidos e o job foi refeito. O job original (`tuningJobs/7139833932131860480`) não foi apagado, ver seção "Comparação real v1 vs. v2" no fim deste documento.
+> **Este job é uma correção de hiperparâmetro sobre um job anterior**: `learning_rate_multiplier=1` contradizia o que o Módulo 3.3 ensina pro mesmo volume de dado, o dedup comparava só `entrada` (confundindo pergunta-diferente-mesmo-contexto com duplicata real), e a inferência de teste original não documentava `generationConfig`. Os três foram corrigidos e o job foi refeito. O job original (`tuningJobs/7139833932131860480`) não foi apagado, ver seção "Comparação real v1 vs. v2" no fim deste documento.
 
 ## Identificação
 - Job: `tuningJobs/7943269068780339200`
@@ -46,7 +46,7 @@ Resposta do modelo ajustado: "Virgin Australia commenced services on 31 August 2
 
 ## Comparação real v1 vs. v2 (mesmo dataset, hiperparâmetro diferente)
 
-| | v1 (`tuningJobs/...61480`) | v2 (`tuningJobs/...49200`) |
+| | v1 (`tuningJobs/...60480`) | v2 (`tuningJobs/...39200`) |
 |---|---|---|
 | Dataset (hash) | `412c38ce...` | `412c38ce...` (idêntico) |
 | `learning_rate_multiplier` | 1 | 5 |

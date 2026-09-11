@@ -12,7 +12,7 @@ Todas as Missões Práticas desta disciplina pedem duas coisas: use um caso do s
 | 1/2 - Preparar dataset | `dolly-dataset-real-starter.js` / `.py` | **Módulo 2.2**: mapear pro schema canônico, dedup MinHash+LSH, balanceamento por temperatura |
 | 2/2 - Upload, job, inferência | `dolly-vertex-pipeline.js` / `.py` | **Módulos 3.2-3.4**: conversão pro formato Vertex AI, upload, criação de job real, acompanhamento com backoff, inferência |
 
-**Como ler esta seção:** O que é → Parte 1 → Parte 2 → Resultado real → Achado real → Correção pós-avaliação → Limite honesto → Fontes.
+**Como ler esta seção:** O que é → Parte 1 → Parte 2 → Resultado real → Achado real → Iteração de hiperparâmetro → Limite honesto → Fontes.
 
 ---
 
@@ -65,18 +65,18 @@ Rodado de verdade em 25/08/2026, contra o projeto `amplitude-seguros-demo`, mesm
 
 ## 5. Achado real: dedup em dado real não é igual dedup em dado sintético
 
-Rodando o dedup completo (não uma amostra) contra os 4.467 exemplos compatíveis, comparando `instrução + entrada`: **778 candidatos via LSH, 748 pares confirmados, 396 itens únicos removidos** (pares se sobrepõem: 748 pares não significa 748 itens diferentes). Isso ainda inclui pares de verdadeira duplicata, mas evita o problema que a primeira versão deste companion tinha: comparar só `entrada` confundia pares de **pergunta diferente sobre o mesmo trecho de contexto** com duplicata real. Exemplo real: "What caused the Global Financial Crises?" e "What caused the 2007-2008 financial crisis?" compartilham o texto-fonte inteiro (Jaccard = 1,0 só na `entrada`), mas são duas perguntas genuinamente diferentes, cada uma um exemplo de treino válido. Com `instrução + entrada`, esse par específico não é mais candidato a duplicata.
+Rodando o dedup completo (não uma amostra) contra os 4.467 exemplos compatíveis, comparando `instrução + entrada`: **778 candidatos via LSH, 748 pares confirmados, 396 itens únicos removidos** (pares se sobrepõem: 748 pares não significa 748 itens diferentes). Isso ainda inclui pares de verdadeira duplicata, mas evita um problema real: comparar só `entrada` confundia pares de **pergunta diferente sobre o mesmo trecho de contexto** com duplicata real. Exemplo real: "What caused the Global Financial Crises?" e "What caused the 2007-2008 financial crisis?" compartilham o texto-fonte inteiro (Jaccard = 1,0 só na `entrada`), mas são duas perguntas genuinamente diferentes, cada uma um exemplo de treino válido. Com `instrução + entrada`, esse par específico não é mais candidato a duplicata.
 
-## 6. Correção pós-avaliação (25/08/2026)
+## 6. Iteração real: por que o job foi refeito com outro hiperparâmetro
 
-Depois de publicar a primeira versão deste extra, pedi uma avaliação de um painel de 5 especialistas em fine-tuning (rigor técnico, práticas de produção, honestidade científica, valor pedagógico, comparação com mercado). O painel confirmou que o job real funcionava e os números não eram fabricados, mas achou problemas reais, que verifiquei um a um antes de corrigir:
+O primeiro job real (`tuningJobs/7139833932131860480`, multiplicador 1) rodou com sucesso, mas a inferência de teste mostrou um modelo praticamente igual ao base, sem ajuste perceptível. Investigando a causa, veio à tona uma lista de pontos reais a corrigir, tanto no hiperparâmetro quanto no próprio pipeline:
 
 - **`learning_rate_multiplier=1` contradizia o que o Módulo 3.3 ensina** pro mesmo volume de dado (200 exemplos, 3 épocas): um multiplicador baixo "andaria devagar demais pra produzir ajuste perceptível", segundo a própria disciplina. É plausível que isso explique (ao menos em parte) o comportamento de "modelo quase igual ao base" observado na inferência de teste original. Corrigido pra `learning_rate_multiplier=5`, igual ao case Amplitude, com a mesma justificativa.
-- **O dedup comparava só `entrada`**, um problema que a v1 deste companion já identificava em texto, mas não corrigia no código que efetivamente gerou o dataset do job real. Corrigido: agora compara `instrução + entrada` (seção 5).
+- **O dedup comparava só `entrada`**, o que confundia pares de pergunta-diferente-mesmo-contexto com duplicata real (seção 5). Corrigido: agora compara `instrução + entrada`.
 - **Faltava validação de hiperparâmetro** antes de criar o job real e cobrável, diferente do padrão já estabelecido no Módulo 3.4. Corrigido: `validarHiperparametros`/`validar_hiperparametros`, mesma faixa (época 1-20, multiplicador 0,1-10).
-- **O script publicado não reproduzia os números do resultado**: só processava amostra de 1.500, não os 4.467 completos. Corrigido: `prepararDatasetCompleto()` roda o pipeline inteiro.
+- **O script não reproduzia os números do resultado a partir do arquivo entregue**: só processava amostra de 1.500, não os 4.467 completos. Corrigido: `prepararDatasetCompleto()` roda o pipeline inteiro.
 - **Faltava retry em falha transiente no polling** e cache de token de acesso (chamava `gcloud` a cada consulta, sem necessidade). Corrigidos.
-- **A inferência de teste original não documentava `generationConfig`**: geração de LLM é estocástica, sem isso o mesmo teste não é reproduzível. Corrigido: `temperature=0` por padrão.
+- **A inferência de teste não documentava `generationConfig`**: geração de LLM é estocástica, sem isso o mesmo teste não é reproduzível. Corrigido: `temperature=0` por padrão.
 
 O job original (`tuningJobs/7139833932131860480`, multiplicador 1) não foi apagado nem escondido: ficou como exemplo real de como um hiperparâmetro mal escolhido, contrariando a própria recomendação da disciplina, produz um sintoma real e observável. O job novo (multiplicador 5) confirmou a hipótese: mesma pergunta de teste, mesmo dataset (hash idêntico, ver model card), resposta completamente diferente - de um parágrafo com CEO e rota inventados pra uma frase correta e fiel ao contexto. Comparação real, controlada, documentada no model card, não uma suposição não-testada.
 

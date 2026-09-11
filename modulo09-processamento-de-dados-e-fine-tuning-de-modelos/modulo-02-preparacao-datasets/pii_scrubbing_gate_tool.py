@@ -179,6 +179,9 @@ def rodar_testes():
     print()
     print(f"Total: {total_testes} teste(s), {total_testes - testes_com_falha} passou(passaram), {testes_com_falha} falhou(falharam).")
 
+    if testes_com_falha > 0:
+        raise RuntimeError(f"{testes_com_falha} teste(s) falharam. A implementação não bate com a especificação.")
+
 
 def main():
     rodar_testes()
@@ -231,5 +234,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# Ahirton Lopes - Fine-Tuning Toolkit, UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
+# Ahirton Lopes - Fine-Tuning Toolkit - UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
 # Prof. Ahirton Lopes, Ph.D. - GDE AI, Microsoft MVP, Senior Manager

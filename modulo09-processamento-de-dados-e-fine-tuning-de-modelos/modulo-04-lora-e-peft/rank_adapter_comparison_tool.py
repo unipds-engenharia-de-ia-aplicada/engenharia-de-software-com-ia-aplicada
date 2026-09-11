@@ -1,11 +1,11 @@
 """
 Ahirton Lopes - Fine-Tuning Toolkit
-Artefato de Demo - Modulo 4.3 (Demo, parte 2 -- companion, referencia espelhada)
+Artefato de Demo - Módulo 4.3 (Demo, parte 2 -- companion, referência espelhada)
 
-Roda o exemplo dificil do TP (Boa Vista Reparos Automotivos, com dois
-valores distratores antes do valor certo) sem adaptador e com os tres
-postos testados no modulo -- rank 4, 8 (reaproveita o adaptador real do
-Modulo 4.2) e 16. Mesmo modelo, mesmo prompt, saida real dos quatro.
+Roda o exemplo difícil do TP (Boa Vista Reparos Automotivos, com dois
+valores distratores antes do valor certo) sem adaptador e com os três
+postos testados no módulo -- rank 4, 8 (reaproveita o adaptador real do
+Módulo 4.2) e 16. Mesmo modelo, mesmo prompt, saída real dos quatro.
 
 Uso: python3 rank_adapter_comparison_tool.py
 """
@@ -126,25 +126,46 @@ def rodar_testes():
 def rodar_comparacao_real():
     print("\n===== Boa Vista Reparos Automotivos: sem adaptador vs. rank 4/8/16 =====\n")
 
-    print("--- sem adaptador ---")
-    sem_adaptador = parsear_saida(rodar_real(None))
-    print(f"{sem_adaptador['tokens']} tokens, bate com o gabarito? {bater_com_gabarito(sem_adaptador['json'])}")
+    resultados = {}
+    falhas = []
 
-    resultados = {"sem adaptador": sem_adaptador}
+    print("--- sem adaptador ---")
+    try:
+        sem_adaptador = parsear_saida(rodar_real(None))
+        print(f"{sem_adaptador['tokens']} tokens, bate com o gabarito? {bater_com_gabarito(sem_adaptador['json'])}")
+        resultados["sem adaptador"] = sem_adaptador
+    except Exception as erro:
+        print(f"[FALHOU] {erro}")
+        falhas.append({"nome": "sem adaptador", "erro": str(erro)})
+
     for nome, caminho in ADAPTERS.items():
         print(f"--- {nome} ---")
-        r = parsear_saida(rodar_real(caminho))
-        print(f"{r['tokens']} tokens, bate com o gabarito? {bater_com_gabarito(r['json'])}")
-        if r["json"]:
-            print(json.dumps(r["json"]))
-        resultados[nome] = r
+        try:
+            r = parsear_saida(rodar_real(caminho))
+            print(f"{r['tokens']} tokens, bate com o gabarito? {bater_com_gabarito(r['json'])}")
+            if r["json"]:
+                print(json.dumps(r["json"]))
+            resultados[nome] = r
+        except Exception as erro:
+            print(f"[FALHOU] {erro}")
+            falhas.append({"nome": nome, "erro": str(erro)})
+
+    if falhas:
+        print(f"\n{len(falhas)}/{len(ADAPTERS) + 1} configuracao(oes) falharam ao rodar mlx_lm generate.")
+    if not resultados:
+        raise RuntimeError("Nenhuma configuracao rodou com sucesso -- verifique o modelo/adaptadores locais.")
     return resultados
 
 
 if __name__ == "__main__":
     ok = rodar_testes()
-    rodar_comparacao_real()
+    try:
+        rodar_comparacao_real()
+    except RuntimeError as erro:
+        print(f"Erro: {erro}")
+        ok = False
     if not ok:
         raise SystemExit(1)
 
 # Ahirton Lopes - Fine-Tuning Toolkit - UNIPDS: Processamento de Dados e Fine-Tuning de Modelos
+# Prof. Ahirton Lopes, Ph.D. - GDE AI, Microsoft MVP, Senior Manager

@@ -35,7 +35,7 @@ EXECUCOES_REAIS = [
         "valLossFinal": 0.895,
         "picoMemGB": 10.833,
         "itPorSegundoFinal": 7.295,
-        "tamanhoAdapterMB": 27,
+        "tamanhoAdapterMB": 26,
     },
     {
         "rank": 16,
@@ -59,13 +59,13 @@ COMPARACAO_QUANTIZACAO = {
         "tamanhoModeloDiscoGB": 10.241,
         "picoMemTreinoGB": 10.833,
         "valLossFinal": 0.895,
-        "tamanhoAdapterMB": 27,
+        "tamanhoAdapterMB": 26,
     },
     "4bit": {
         "tamanhoModeloDiscoGB": 3.583,
         "picoMemTreinoGB": 4.193,
         "valLossFinal": 0.932,
-        "tamanhoAdapterMB": 27,
+        "tamanhoAdapterMB": 26,
         "picoMemGeracaoGB": 2.794,
     },
 }
@@ -81,7 +81,7 @@ COMPARACAO_TIPO_ADAPTACAO = {
         "parametrosTreinaveis": 6.816e6,
         "picoMemGB": 10.833,
         "valLossFinal": 0.895,
-        "tamanhoAdapterMB": 27,
+        "tamanhoAdapterMB": 26,
     },
     "dora": {
         "parametrosTreinaveis": 7.328e6,

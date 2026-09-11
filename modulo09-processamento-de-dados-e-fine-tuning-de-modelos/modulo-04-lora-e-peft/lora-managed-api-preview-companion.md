@@ -7,9 +7,9 @@
 
 O teleprompter do Módulo 4.2 explica que o MLX-LM não tem binding nativo em Node — por isso o script principal do módulo monta um comando e dispara um processo Python via `child_process`, uma API do sistema operacional, não uma API de ML. Este companion mostra o outro lado: como a MESMA configuração de LoRA treinada localmente (rank 8, scale 20.0, dropout 0.0 — valores reais de `mlx-adapters/adapter_config.json`) fica quando enviada de verdade em JavaScript puro, via `fetch()`, pra uma API gerenciada que expõe os parâmetros de LoRA direto no corpo da requisição: a API de fine-tuning da Together AI (endpoint e formato de payload verificados contra a documentação oficial em 2026-08-22).
 
-## Por que não foi mostrado ao vivo
+## Por que a chamada não é disparada automaticamente
 
-O teleprompter é explícito sobre isso: "Não disparamos essa chamada ao vivo hoje, mas a requisição está montada e testada, pronta pra rodar de verdade com uma chave de API real." Não é um placeholder — é uma escolha deliberada de não gastar uma chamada paga de API numa gravação, mantendo o script pronto pra quem quiser rodar de verdade depois, com a própria chave.
+O teleprompter é explícito sobre isso: "Não disparamos essa chamada ao vivo hoje, mas a requisição está montada e testada, pronta pra rodar de verdade com uma chave de API real." Não é um placeholder — é uma escolha deliberada de não gastar uma chamada paga de API à toa, mantendo o script pronto pra quem quiser rodar de verdade depois, com a própria chave.
 
 ## Status de validação (honesto)
 

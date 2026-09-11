@@ -52,9 +52,9 @@ def extrair_nome_entidade(exemplo_mlx):
 
 def dividir_train_valid_test(exemplos, proporcao_valid=0.15, proporcao_test=0.05):
     """Divide por proporção fixa, agrupando por entidade (segurado/
-    beneficiário) antes de dividir -- corrige vazamento real encontrado em
-    31/08: o dataset de origem tem só vinte e oito pessoas sintéticas
-    distintas nos duzentos exemplos, cada uma repetida em vários templates
+    beneficiário) antes de dividir -- evita um vazamento real: o dataset de
+    origem tem só vinte e oito pessoas sintéticas distintas nos duzentos
+    exemplos, cada uma repetida em vários templates
     de documento (até onze vezes a mesma pessoa). Um corte sequencial
     simples deixava a mesma pessoa aparecer no treino E no teste, só com
     cabeçalho de oficina/clínica diferente -- "exemplo nunca visto no
@@ -493,7 +493,7 @@ def rodar_preparacao_de_verdade():
 
 # ---------------------------------------------------------------------------
 # Demo: curva de convergência de verdade -- a mesma configuração deste
-# módulo, repetida com iters=20 (val loss final 0,895 na tela do vídeo,
+# módulo, repetida com iters=20 (val loss final 0,895 no treino original,
 # 0,907 nesta repetição -- ruído normal entre corridas) e, pra comparação,
 # estendida pra iters=120 com steps-per-eval mais fino. Números reais,
 # capturados rodando `python3 -m mlx_lm lora` de verdade nesta máquina.
@@ -512,7 +512,7 @@ def rodar_demo_curva_convergencia():
         {"iter": 20, "valLoss": 0.907},
     ]
     analise_20 = analisar_curva_convergencia(curva_20_iters)
-    print("Repetição das 20 iterações originais (val loss final 0,895 na tela do vídeo, 0,907 aqui -- ruído normal):")
+    print("Repetição das 20 iterações originais (val loss final 0,895 no treino original, 0,907 aqui -- ruído normal):")
     for m in curva_20_iters:
         print(f"  Iter {m['iter']:>2}: val loss {m['valLoss']:.3f}")
     print(f"  -> melhor iteração: {analise_20['melhorIteracao']} (val loss {analise_20['melhorValLoss']:.3f})")

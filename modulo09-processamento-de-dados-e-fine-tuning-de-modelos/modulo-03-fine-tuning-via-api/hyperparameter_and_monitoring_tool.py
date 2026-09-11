@@ -8,23 +8,33 @@ pedido e hiperparametro realmente aplicado por um job ja criado, e leitura
 de estatistica real de monitoramento de um job concluido (contagem de
 token, distribuicao de token por exemplo).
 
-Descoberta real desta disciplina, feita testando de proposito antes de
-gravar: pedir epoch_count=0 (hiperparametro invalido) pra Vertex AI NAO
-gera erro rapido e gratuito. A API aceita a criacao do job, ele vai pra
-RUNNING de verdade, com o hiperparametro internamente ignorado e
-substituido por um default silencioso. So cancelar na mao parou o gasto.
-A validacao client-side deste arquivo e a mitigacao real pra esse gap:
-pegar o hiperparametro invalido ANTES de qualquer chamada de rede.
+Achado tecnico real: pedir epoch_count=0 (hiperparametro invalido) pra
+Vertex AI NAO gera erro rapido e gratuito. A API aceita a criacao do job,
+ele vai pra RUNNING de verdade, com o hiperparametro internamente ignorado
+e substituido por um default silencioso -- so cancelar na mao para o
+gasto. A validacao client-side deste arquivo e a mitigacao real pra esse
+gap: pegar o hiperparametro invalido ANTES de qualquer chamada de rede.
 
 Uso: python3 hyperparameter_and_monitoring_tool.py
+Requer: TUNING_JOB_NAME definida com o nome completo do SEU job de
+fine-tuning (veja README.md, secao "Antes de rodar").
 """
 
 import json
+import os
 import subprocess
 import urllib.request
 
 REGIAO = "us-central1"
-NOME_JOB = "projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744"
+# CONFIGURACAO: defina TUNING_JOB_NAME com o nome completo do job de
+# fine-tuning que VOCE rodou (projects/.../tuningJobs/...), criado no
+# Modulo 3.2 -- nao ha valor padrao, cada aluno usa o proprio job.
+NOME_JOB = os.environ.get("TUNING_JOB_NAME")
+if not NOME_JOB:
+    raise RuntimeError(
+        "Defina a variavel de ambiente TUNING_JOB_NAME com o nome completo "
+        "do seu job de fine-tuning antes de rodar este script."
+    )
 
 FAIXAS_VALIDAS = {
     "epoch_count": {"min": 1, "max": 20},
@@ -215,7 +225,7 @@ def main():
     rodar_testes()
 
     print()
-    print("== Reprodução do problema real encontrado antes de gravar ==")
+    print("== Reprodução do problema real: epochCount invalido aceito sem erro ==")
     print("Pedido: epoch_count=0, learning_rate_multiplier=5.0")
     try:
         validar_hiperparametros({"epoch_count": 0, "learning_rate_multiplier": 5.0})

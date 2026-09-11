@@ -388,7 +388,7 @@ def precificar_opcao_de_esperar(financeiro, score_atual_p3, limiar_verde, n=1000
     novo), o modelo exerce so se valer a pena -- e uma opcao americana com
     uma unica janela de exercicio, o desenho padrao pra "esperar informacao
     chegar". Sem essa arvore, nao e Real Options, e so comparar dois NPVs
-    de datas diferentes -- essa era a versao anterior desta funcao."""
+    de datas diferentes."""
     if rng is None:
         rng = random.random
     opcao_real = financeiro["opcaoReal"]
@@ -901,10 +901,10 @@ def rodar_demo_extras():
     """Conteúdo extra opcional, NÃO chamado por padrão no fluxo principal
     (ver `if __name__ == "__main__"` mais abaixo): caso hipotético de gate
     de governança bloqueado, e o panorama de risco operacional de provedor.
-    Ambos ficam de fora da saída padrão do script porque, no vídeo do
-    Módulo 1.3, o primeiro já está coberto pelos testes automatizados
-    narrados antes, e o segundo é spoiler do cheatsheet do Slide 9.
-    Continuam disponíveis pra quem quiser chamar rodar_demo_extras()
+    Ambos ficam de fora da saída padrão do script porque o primeiro já
+    está coberto pelos testes automatizados (caso de governança bloqueada)
+    e o segundo é coberto pelo cheatsheet de tipos de fine-tuning (risco
+    operacional de provedor). Continuam disponíveis pra quem quiser chamar rodar_demo_extras()
     manualmente (ex.: na missão prática, pra explorar o restante do código).
     """
     print("\n===== E se a governança não tivesse sido resolvida? (caso hipotético, pra provar o gate) =====")

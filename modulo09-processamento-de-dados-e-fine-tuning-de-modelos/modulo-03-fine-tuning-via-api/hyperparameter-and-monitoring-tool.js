@@ -8,15 +8,16 @@
  * criado, e leitura de estatística real de monitoramento de um job
  * concluído (contagem de token, distribuição de token por exemplo).
  *
- * Descoberta real desta disciplina, feita testando de propósito antes de
- * gravar: pedir epoch_count=0 (hiperparâmetro inválido) pra Vertex AI NÃO
- * gera erro rápido e gratuito. A API aceita a criação do job, ele vai pra
- * RUNNING de verdade, com o hiperparâmetro internamente ignorado e
- * substituído por um default silencioso. Só cancelar na mão parou o gasto.
- * A validação client-side deste arquivo é a mitigação real pra esse gap:
- * pegar o hiperparâmetro inválido ANTES de qualquer chamada de rede.
+ * Achado técnico real: pedir epoch_count=0 (hiperparâmetro inválido) pra
+ * Vertex AI NÃO gera erro rápido e gratuito. A API aceita a criação do job,
+ * ele vai pra RUNNING de verdade, com o hiperparâmetro internamente ignorado
+ * e substituído por um default silencioso -- só cancelar na mão para o
+ * gasto. A validação client-side deste arquivo é a mitigação real pra esse
+ * gap: pegar o hiperparâmetro inválido ANTES de qualquer chamada de rede.
  *
  * Uso: node hyperparameter-and-monitoring-tool.js
+ * Requer: TUNING_JOB_NAME definida com o nome completo do SEU job de
+ * fine-tuning (veja README.md, seção "Antes de rodar").
  */
 
 'use strict';
@@ -25,7 +26,13 @@ const assert = require('assert').strict;
 const { execSync } = require('child_process');
 
 const REGIAO = 'us-central1';
-const NOME_JOB = 'projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744';
+// CONFIGURAÇÃO: defina TUNING_JOB_NAME com o nome completo do job de
+// fine-tuning que VOCÊ rodou (projects/.../tuningJobs/...), criado no
+// Módulo 3.2 -- não há valor padrão, cada aluno usa o próprio job.
+const NOME_JOB = process.env.TUNING_JOB_NAME;
+if (!NOME_JOB) {
+  throw new Error('Defina a variável de ambiente TUNING_JOB_NAME com o nome completo do seu job de fine-tuning antes de rodar este script.');
+}
 
 /* --------------------------------------------------------------------------
  * 1. Validação client-side de hiperparâmetro (a mitigação real)
@@ -209,7 +216,7 @@ async function main() {
   rodarTestes();
 
   console.log();
-  console.log('== Reprodução do problema real encontrado antes de gravar ==');
+  console.log('== Reprodução do problema real: epochCount inválido aceito sem erro ==');
   console.log('Pedido: epochCount=0, learningRateMultiplier=5.0');
   try {
     validarHiperparametros({ epochCount: 0, learningRateMultiplier: 5.0 });

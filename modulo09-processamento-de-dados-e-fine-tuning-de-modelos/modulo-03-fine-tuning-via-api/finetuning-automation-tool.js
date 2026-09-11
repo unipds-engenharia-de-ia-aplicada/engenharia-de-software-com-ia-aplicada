@@ -18,6 +18,9 @@
  * provar o acompanhamento sozinho de ponta a ponta.
  *
  * Uso: node finetuning-automation-tool.js
+ * Requer: GCP_PROJECT_ID (seu projeto) e TUNING_JOB_NAME (nome completo do
+ * SEU job de fine-tuning) definidas -- veja README.md, seção "Antes de
+ * rodar".
  *
  * Nota de validade (ago/2026): os exemplos de job usam gemini-2.5-flash como
  * base_model. O processo de automação -- upload, criação de job com trava de
@@ -34,9 +37,18 @@
 const assert = require('assert').strict;
 const { execSync } = require('child_process');
 
-const PROJETO = 'amplitude-seguros-demo';
+// CONFIGURAÇÃO: cada aluno usa o próprio projeto GCP e o próprio job de
+// fine-tuning, criado no Módulo 3.2 -- nenhum valor padrão aponta pro
+// autor do curso.
+const PROJETO = process.env.GCP_PROJECT_ID;
+if (!PROJETO) {
+  throw new Error('Defina a variável de ambiente GCP_PROJECT_ID com o ID do seu projeto GCP antes de rodar este script.');
+}
 const REGIAO = 'us-central1';
-const JOB_REAL_M32 = 'projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744';
+const JOB_REAL_M32 = process.env.TUNING_JOB_NAME;
+if (!JOB_REAL_M32) {
+  throw new Error('Defina a variável de ambiente TUNING_JOB_NAME com o nome completo do seu job de fine-tuning antes de rodar este script.');
+}
 
 /* --------------------------------------------------------------------------
  * 1. Conversão e validação (reusadas dos Módulos 3.2 e 3.3, mesma lógica)
@@ -237,7 +249,7 @@ async function acompanharAteFinalizar(nomeJob, {
 
 /**
  * Encadeia converter → validar → subir → criar job → acompanhar, na ordem
- * que o vídeo descreve, falhando rápido em qualquer passo em vez de seguir
+ * correta do pipeline de fine-tuning, falhando rápido em qualquer passo em vez de seguir
  * com estado inconsistente. Cada passo reusa a função já testada isolada
  * acima -- esta função só orquestra, não duplica nenhuma lógica.
  *

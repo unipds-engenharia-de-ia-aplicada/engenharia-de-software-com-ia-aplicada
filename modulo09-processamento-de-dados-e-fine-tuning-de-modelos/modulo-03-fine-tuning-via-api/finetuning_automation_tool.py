@@ -18,6 +18,9 @@ A demo principal NAO cria job novo: reusa o job real do Modulo 3.2 pra
 provar o acompanhamento sozinho de ponta a ponta.
 
 Uso: python3 finetuning_automation_tool.py
+Requer: GCP_PROJECT_ID (seu projeto) e TUNING_JOB_NAME (nome completo do
+SEU job de fine-tuning) definidas -- veja README.md, secao "Antes de
+rodar".
 
 Nota de validade (ago/2026): os exemplos de job usam gemini-2.5-flash como
 base_model. O processo de automacao -- upload, criacao de job com trava de
@@ -31,12 +34,26 @@ quais modelos estao disponiveis no momento e troque base_model.
 
 import asyncio
 import json
+import os
 import subprocess
 import urllib.request
 
-PROJETO = "amplitude-seguros-demo"
+# CONFIGURACAO: cada aluno usa o proprio projeto GCP e o proprio job de
+# fine-tuning, criado no Modulo 3.2 -- nenhum valor padrao aponta pro
+# autor do curso.
+PROJETO = os.environ.get("GCP_PROJECT_ID")
+if not PROJETO:
+    raise RuntimeError(
+        "Defina a variavel de ambiente GCP_PROJECT_ID com o ID do seu "
+        "projeto GCP antes de rodar este script."
+    )
 REGIAO = "us-central1"
-JOB_REAL_M32 = "projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744"
+JOB_REAL_M32 = os.environ.get("TUNING_JOB_NAME")
+if not JOB_REAL_M32:
+    raise RuntimeError(
+        "Defina a variavel de ambiente TUNING_JOB_NAME com o nome completo "
+        "do seu job de fine-tuning antes de rodar este script."
+    )
 
 FAIXAS_VALIDAS = {
     "epoch_count": {"min": 1, "max": 20},
@@ -243,7 +260,7 @@ async def _talvez_async(fn, arg):
 
 async def automatizar_fine_tuning(exemplos, config, opcoes=None):
     """Encadeia converter -> validar -> subir -> criar job -> acompanhar,
-    na ordem que o video descreve, falhando rapido em qualquer passo em vez
+    na ordem correta do pipeline de fine-tuning, falhando rapido em qualquer passo em vez
     de seguir com estado inconsistente. Cada passo reusa a funcao ja testada
     isolada acima -- esta funcao so orquestra, nao duplica nenhuma logica.
 

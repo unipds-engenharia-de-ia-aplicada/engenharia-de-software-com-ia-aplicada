@@ -7,12 +7,11 @@
  * oficina, recibo médico) num exemplo estruturado de treino em JSONL.
  *
  * Este NÃO é um pipeline simulado: chama o binário `tesseract` de verdade
- * (Tesseract 5.5.3, pacote de idioma português instalado nesta máquina --
- * ver nota no cabeçalho do case) contra 4 imagens sintéticas em
- * documentos-brutos/, cada uma com layout de campo diferente, exatamente
- * pra provar o ponto do Módulo 1: cada oficina/clínica tem o próprio
- * formato, então o parser tem que aceitar variação de rótulo, não só
- * posição fixa de texto.
+ * (Tesseract 5.5.3, pacote de idioma português instalado nesta máquina)
+ * contra 4 imagens sintéticas em documentos-brutos/, cada uma com layout
+ * de campo diferente, exatamente pra provar o ponto do Módulo 1: cada
+ * oficina/clínica tem o próprio formato, então o parser tem que aceitar
+ * variação de rótulo, não só posição fixa de texto.
  *
  * Uso: node extraction-to-jsonl-tool.js
  * Requer o binário `tesseract` instalado com o pacote de idioma `por`

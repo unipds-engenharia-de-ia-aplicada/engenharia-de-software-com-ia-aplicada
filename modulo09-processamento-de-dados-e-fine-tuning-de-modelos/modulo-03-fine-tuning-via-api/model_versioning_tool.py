@@ -9,9 +9,11 @@ mesmo principio de versionamento por conteudo que git e Docker usam), nao
 em nome de arquivo ou data, que podem mudar sem o conteudo mudar.
 
 Uso: python3 model_versioning_tool.py
+Requer: TUNING_JOB_NAME definida com o nome completo do SEU job de
+fine-tuning (veja README.md, secao "Antes de rodar").
 
 Nota de validade (ago/2026): este script nao tem constante de modelo pra
-trocar - ele consulta o job real (JOB_REAL acima) e usa o que a API
+trocar - ele consulta o job real (TUNING_JOB_NAME acima) e usa o que a API
 devolver (job["baseModel"]), entao sempre reflete a versao de verdade
 usada naquele job especifico, nao uma suposicao hardcoded. A Google
 aposenta versoes do Gemini com aviso previo (a familia 2.5 tem retirement
@@ -31,13 +33,24 @@ import urllib.request
 from datetime import datetime
 
 REGIAO = "us-central1"
-JOB_REAL = "projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744"
+# CONFIGURACAO: defina TUNING_JOB_NAME com o nome completo do job de
+# fine-tuning que VOCE rodou (projects/.../tuningJobs/...), criado no
+# Modulo 3.2 -- nao ha valor padrao, cada aluno usa o proprio job.
+JOB_REAL = os.environ.get("TUNING_JOB_NAME")
+if not JOB_REAL:
+    raise RuntimeError(
+        "Defina a variavel de ambiente TUNING_JOB_NAME com o nome completo "
+        "do seu job de fine-tuning antes de rodar este script."
+    )
 CAMINHO_DATASET = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset-treinado.jsonl")
 
-# Job real de preference tuning (DPO) do Modulo 3.5, continuacao do job SFT
-# acima sobre o mesmo modelo base. Historico e congelado (ja concluido em
-# 2026-08), por isso e uma constante, nao uma consulta nova a API a cada
-# rodada -- ao contrario do job SFT acima, que e sempre revalidado de verdade.
+# Job de preference tuning (DPO) do Modulo 3.5, continuacao do job SFT
+# acima sobre o mesmo modelo base. Historico e congelado (job ja
+# concluido), por isso e uma constante, nao uma consulta nova a API a cada
+# rodada -- ao contrario do job SFT acima, que e sempre revalidado de
+# verdade. Este e o resultado de referencia do curso, ilustrativo, nao um
+# recurso que voce chama: se voce rodar seu proprio DPO no Modulo 3.5,
+# edite esta secao com o ID e as metricas do seu job.
 JOB_DPO_REAL = {
     "jobId": "tuningJobs/3733013646142341120",
     "estado": "JOB_STATE_SUCCEEDED",

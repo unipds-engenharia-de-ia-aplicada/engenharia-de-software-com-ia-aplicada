@@ -170,7 +170,7 @@ function rodarTestes() {
 if (require.main === module) {
   rodarTestes();
   enviarOuPrever('file-exemplo-amplitude-seguros').catch((erro) => {
-    console.error(erro);
+    console.error('Erro:', erro.message);
     process.exit(1);
   });
 }

@@ -29,6 +29,7 @@ Uso: python3 lora_managed_api_preview_tool.py
 
 import json
 import os
+import sys
 import urllib.error
 import urllib.request
 
@@ -179,7 +180,11 @@ def rodar_testes():
 
 if __name__ == "__main__":
     ok = rodar_testes()
-    enviar_ou_prever("file-exemplo-amplitude-seguros")
+    try:
+        enviar_ou_prever("file-exemplo-amplitude-seguros")
+    except RuntimeError as erro:
+        print(f"Erro: {erro}")
+        sys.exit(1)
     if not ok:
         raise SystemExit(1)
 

@@ -51,7 +51,7 @@
 const assert = require('assert').strict;
 
 /* --------------------------------------------------------------------------
- * 1. Geração do dataset simulado (mesma escala/casos da versão anterior)
+ * 1. Geração do dataset simulado
  * -------------------------------------------------------------------------- */
 
 function normalizarTexto(texto) {

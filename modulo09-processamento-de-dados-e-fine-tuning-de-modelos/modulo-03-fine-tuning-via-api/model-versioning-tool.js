@@ -9,9 +9,11 @@
  * não em nome de arquivo ou data, que podem mudar sem o conteúdo mudar.
  *
  * Uso: node model-versioning-tool.js
+ * Requer: TUNING_JOB_NAME definida com o nome completo do SEU job de
+ * fine-tuning (veja README.md, seção "Antes de rodar").
  *
  * Nota de validade (ago/2026): este script não tem constante de modelo pra
- * trocar - ele consulta o job real (JOB_REAL acima) e usa o que a API
+ * trocar - ele consulta o job real (TUNING_JOB_NAME acima) e usa o que a API
  * devolver (job.baseModel), então sempre reflete a versão de verdade usada
  * naquele job específico, não uma suposição hardcoded. A Google aposenta
  * versões do Gemini com aviso prévio (a família 2.5 tem retirement anunciado
@@ -32,13 +34,22 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const REGIAO = 'us-central1';
-const JOB_REAL = 'projects/113512199474/locations/us-central1/tuningJobs/4180970763655839744';
+// CONFIGURAÇÃO: defina TUNING_JOB_NAME com o nome completo do job de
+// fine-tuning que VOCÊ rodou (projects/.../tuningJobs/...), criado no
+// Módulo 3.2 -- não há valor padrão, cada aluno usa o próprio job.
+const JOB_REAL = process.env.TUNING_JOB_NAME;
+if (!JOB_REAL) {
+  throw new Error('Defina a variável de ambiente TUNING_JOB_NAME com o nome completo do seu job de fine-tuning antes de rodar este script.');
+}
 const CAMINHO_DATASET = path.join(__dirname, 'dataset-treinado.jsonl');
 
-// Job real de preference tuning (DPO) do Módulo 3.5, continuação do job SFT
-// acima sobre o mesmo modelo base. Histórico e congelado (já concluído em
-// 2026-08), por isso é uma constante, não uma consulta nova à API a cada
-// rodada -- ao contrário do job SFT acima, que é sempre revalidado de verdade.
+// Job de preference tuning (DPO) do Módulo 3.5, continuação do job SFT
+// acima sobre o mesmo modelo base. Histórico e congelado (job já
+// concluído), por isso é uma constante, não uma consulta nova à API a cada
+// rodada -- ao contrário do job SFT acima, que é sempre revalidado de
+// verdade. Este é o resultado de referência do curso, ilustrativo, não um
+// recurso que você chama: se você rodar seu próprio DPO no Módulo 3.5,
+// edite esta seção com o ID e as métricas do seu job.
 const JOB_DPO_REAL = {
   jobId: 'tuningJobs/3733013646142341120',
   estado: 'JOB_STATE_SUCCEEDED',

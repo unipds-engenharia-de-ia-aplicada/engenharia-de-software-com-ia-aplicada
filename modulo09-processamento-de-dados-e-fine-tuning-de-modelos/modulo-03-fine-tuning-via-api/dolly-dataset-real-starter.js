@@ -95,13 +95,10 @@ function contarPorFonteLocal(exemplos, caso) {
 }
 
 /**
- * Correção 25/08 (achado de painel de avaliação): comparar só `entrada`
- * confunde pares de PERGUNTA DIFERENTE sobre o mesmo trecho de contexto
- * (Jaccard=1,0 na entrada) com duplicata real - problema que o próprio
- * companion.md já identificava, mas que a v1 deste arquivo não corrigia de
- * verdade no código, só discutia como hipótese. `textoParaDedup` concatena
- * instrução+entrada antes de shinglar, então duas perguntas diferentes
- * sobre o mesmo texto-fonte já não colidem mais.
+ * Comparar só `entrada` confunde pares de PERGUNTA DIFERENTE sobre o mesmo
+ * trecho de contexto (Jaccard=1,0 na entrada) com duplicata real.
+ * `textoParaDedup` concatena instrução+entrada antes de shinglar, então
+ * duas perguntas diferentes sobre o mesmo texto-fonte já não colidem mais.
  */
 function textoParaDedup(exemplo) {
   return `${exemplo.instrucao}\n${exemplo.entrada}`;
@@ -122,11 +119,10 @@ function dedupGenerico(exemplos, n = N_SHINGLE) {
 }
 
 /**
- * Pipeline completo de preparo (achado de painel: v1 não exportava isso,
- * então os números do model card não eram reproduzíveis a partir do
- * arquivo entregue - só uma amostra de 1500 era testada). Roda dedup no
- * dataset INTEIRO (não amostra) e balanceia pro alvo pedido. É exatamente
- * o que gerou o dataset do job real.
+ * Pipeline completo de preparo: roda dedup no dataset INTEIRO (não amostra)
+ * e balanceia pro alvo pedido, pra que os números do model card sejam
+ * reproduzíveis a partir do arquivo entregue. É exatamente o que gerou o
+ * dataset do job real.
  */
 function prepararDatasetCompleto(caminhoJsonl, alvoTotal) {
   const bruto = carregarDolly(caminhoJsonl);
@@ -218,7 +214,7 @@ function rodarTestes(caminhoJsonl) {
     assert.equal(porFonte.summarization, 1188);
   });
 
-  console.log('\n== Testes: dedup genérico, comparando instrução+entrada (correção pós-painel de avaliação) ==');
+  console.log('\n== Testes: dedup genérico, comparando instrução+entrada ==');
 
   testar('entrada sozinha teria Jaccard 1,0 (é POR ISSO que comparar só entrada é errado aqui)', () => {
     const a = mapeados.find((e) => e.instrucao === 'What caused the Global Financial Crises?');
@@ -233,7 +229,7 @@ function rodarTestes(caminhoJsonl) {
     assert.ok(m2.similaridadeJaccardExata(textoParaDedup(a), textoParaDedup(b), N_SHINGLE) < 1);
   });
 
-  console.log('\n== Testes: pipeline completo (dataset inteiro, não amostra - correção pós-painel) ==');
+  console.log('\n== Testes: pipeline completo (dataset inteiro, não amostra) ==');
 
   const completo = prepararDatasetCompleto(caminhoJsonl, 200);
   testar('roda contra os 4.467 exemplos inteiros, não uma amostra', () => {
@@ -291,7 +287,7 @@ function rodarDemo(caminhoJsonl) {
   console.log(`Dedup no dataset INTEIRO (comparando instrução+entrada): ${c.dedup.candidatosLSH} candidatos LSH de ${c.dedup.totalForcaBruta} pares força-bruta, ${c.dedup.pares.length} pares confirmados, ${c.itensRemovidos} itens únicos removidos -> ${c.semDuplicatas.length} restantes`);
   console.log(`Balanceado pro alvo: ${JSON.stringify(c.alocacao)}, total ${c.balanceado.length}`);
   console.log(`Entropia antes/depois do balanceamento: ${m2.entropiaShannon(r.distAntes).toFixed(4)} -> ${m2.entropiaShannon(r.distDepois).toFixed(4)} nats`);
-  console.log('\nCorreção pós-painel de avaliação (25/08): a v1 deste arquivo comparava só `entrada` no dedup, o que confundia pares de PERGUNTA DIFERENTE sobre o MESMO trecho de contexto (Jaccard=1,0 na entrada) com duplicata real - ex.: duas perguntas diferentes sobre a crise financeira de 2008, mesmo texto-fonte. Comparar instrução+entrada corrige isso: esse par específico não é mais candidato a duplicata.');
+  console.log('\nComparar só `entrada` no dedup confundiria pares de PERGUNTA DIFERENTE sobre o MESMO trecho de contexto (Jaccard=1,0 na entrada) com duplicata real - ex.: duas perguntas diferentes sobre a crise financeira de 2008, mesmo texto-fonte. Comparar instrução+entrada evita isso: esse par específico não é candidato a duplicata.');
 }
 
 module.exports = {
