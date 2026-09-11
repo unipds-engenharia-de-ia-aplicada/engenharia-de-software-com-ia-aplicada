@@ -1,4 +1,4 @@
-# 🧭 Arquitetura de Sistemas com IA
+# 🧩 Arquitetura de Sistemas com IA
 
 Este repositório centraliza os prompts, canvases, códigos e atividades desenvolvidos durante a disciplina de **Arquitetura de Sistemas com IA**. Ao longo de 5 módulos, construímos os padrões de arquitetura de referência para sistemas de IA agentic sobre um caso único — o **TrialForge**, sistema de geração de documentos clínicos regulatórios da Vitalis Pharma — indo do diagrama de referência (Gateway → Orquestrador → Modelo+RAG → Approval Gate, com banda de Observabilidade) até um protótipo enterprise com model tiering e trilha de auditoria.
 
