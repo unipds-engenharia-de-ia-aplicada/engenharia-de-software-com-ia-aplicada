@@ -1,0 +1,50 @@
+{
+  "baseline": {
+    "medido": "100% (11/11 schema válido, precisão média por campo)",
+    "medidoPct": 100,
+    "n": 11,
+    "medidoEm": "2026-09-11",
+    "origem": "Módulo 5.1",
+    "script": "model_evaluation_harness_tool.py"
+  },
+  "robusto-formato": {
+    "medido": "100% (zero queda de schema/precisão contra o baseline)",
+    "medidoPct": 100,
+    "n": 6,
+    "medidoEm": "2026-09-11",
+    "origem": "Módulo 5.3 (round 1)",
+    "script": "overfitting-stress-test-tool.js"
+  },
+  "robusto-estrutura": {
+    "medido": "100% (N=58 execuções, zero erros; uma checagem inicial com N pequeno pode sugerir um erro de fraseado que não se confirma em amostra maior)",
+    "medidoPct": 100,
+    "n": 58,
+    "medidoEm": "2026-09-12",
+    "origem": "Módulo 5.3 (round 2, N=58)",
+    "script": "overfitting_stress_test_tool.py"
+  },
+  "bate-generico": {
+    "medido": "11/11 vs. 0/11 schema sem hint; 100,0% vs. 66,7% precisão com hint no melhor caso observado (N=20 execuções reais: média 61,2%, mínimo 54,5%, máximo 66,7%)",
+    "comparacao": {
+      "finetunado": 100.0,
+      "generico": 66.7
+    },
+    "n": 20,
+    "medidoEm": "2026-09-11",
+    "origem": "Módulo 5.2 (reconfirmado com N=20 repetições reais)",
+    "script": "ab_and_domain_tradeoff_tool.py"
+  },
+  "junto-bate-separado": {
+    "medido": "Auto 100,0% vs. 100,0% (empate, estável em N=20 chamadas reais repetidas); Saúde Empresarial 100,0% vs. 0,0%",
+    "comparacao": {
+      "conjuntoAuto": 100.0,
+      "separadoAuto": 100.0,
+      "conjuntoSaude": 100.0,
+      "separadoSaude": 0.0
+    },
+    "n": 20,
+    "medidoEm": "2026-09-11",
+    "origem": "Módulo 5.2 (Auto reconfirmado com N=20 repetições reais)",
+    "script": "ab_and_domain_tradeoff_tool.py"
+  }
+}
