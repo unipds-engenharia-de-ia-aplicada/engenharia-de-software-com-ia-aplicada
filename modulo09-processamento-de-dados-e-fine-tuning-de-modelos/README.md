@@ -16,17 +16,17 @@ Cada módulo tem sua pasta com os artefatos usados nas demos dos vídeos: ferram
 ├── modulo-02-preparacao-datasets/   # Extração OCR, schema JSONL, deduplicação (MinHash+LSH), balanceamento, comparativo OCR vs. LLM multimodal
 ├── modulo-03-fine-tuning-via-api/   # Upload, hiperparâmetros, automação, versionamento (Vertex AI)
 ├── modulo-04-lora-e-peft/           # LoRA, DoRA, QLoRA e full fine-tuning local (MLX/Apple Silicon), comparação de rank e custo-benefício, alternativas Colab/CUDA pra quem não tem Mac
-├── modulo-05-avaliacao-modelos/     # (em breve)
+├── modulo-05-avaliacao-modelos/     # Harness de avaliação (baseline vs. genérico, domínio conjunto/separado), teste de estresse a variação de formato/estrutura, avaliação local (MLX + Colab), NPV real vs. projetado, veredito de escala
 └── modulo-06-projeto-final/         # (em breve)
 ```
 
 ## 💳 Antes de rodar: a API é paga, e a versão do modelo muda
 
-As ferramentas que chamam a Vertex AI/Gemini de verdade (a maioria dos módulos 2 e 3) fazem chamada real e paga -- não é simulação nem mock. Dois avisos práticos antes de rodar por conta própria:
+As ferramentas que chamam a Vertex AI/Gemini de verdade (a maioria dos módulos 2, 3 e 5) fazem chamada real e paga -- não é simulação nem mock. Dois avisos práticos antes de rodar por conta própria:
 
-- **Custo real, mas baixo**: o job de fine-tuning supervisionado do Módulo 3.5 (200 exemplos, `gemini-2.5-flash`) custou R$2,39, conferido direto no billing real do Google Cloud (ver `model-card-amplitude-auto-saude-m3-200.md`). Ainda assim, é preciso conta Google Cloud com faturamento ativado e cartão cadastrado (a autorização inicial é só verificação, não cobrança automática do que você não usar). Contas novas costumam vir com crédito de avaliação (na época desta atualização, US$300 por 90 dias) -- mas o valor, o prazo, e principalmente **as exclusões pra serviços de IA generativa mudam com frequência e não são as mesmas pra todo produto de IA do Google** (ex.: a documentação oficial já exclui explicitamente "Gemini API in AI Studio" desse crédito, mesmo sendo Google). Não assuma que o crédito cobre automaticamente o fine-tuning via Vertex AI: confira o status vigente e as exclusões atuais em [cloud.google.com/free](https://cloud.google.com/free) antes de rodar, e trate o pagamento próprio como cenário real, não exceção.
+- **Custo real, mas baixo**: o job de fine-tuning supervisionado do Módulo 3.5 (200 exemplos, `gemini-2.5-flash`) custou R$2,39, conferido direto no billing real do Google Cloud (ver `model-card-amplitude-auto-saude-m3-200.md`). Os dois treinos por domínio único do Módulo 5.2 (Auto sozinho, Saúde Empresarial sozinha) custaram R$1,53 e R$0,86 respectivamente, também conferidos no billing real. Ainda assim, é preciso conta Google Cloud com faturamento ativado e cartão cadastrado (a autorização inicial é só verificação, não cobrança automática do que você não usar). Contas novas costumam vir com crédito de avaliação (na época desta atualização, US$300 por 90 dias) -- mas o valor, o prazo, e principalmente **as exclusões pra serviços de IA generativa mudam com frequência e não são as mesmas pra todo produto de IA do Google** (ex.: a documentação oficial já exclui explicitamente "Gemini API in AI Studio" desse crédito, mesmo sendo Google). Não assuma que o crédito cobre automaticamente o fine-tuning via Vertex AI: confira o status vigente e as exclusões atuais em [cloud.google.com/free](https://cloud.google.com/free) antes de rodar, e trate o pagamento próprio como cenário real, não exceção.
 - **Versão do modelo muda**: os nomes de modelo citados no código (`gemini-2.5-flash`, etc.) valiam no momento da gravação (ago-set/2026). Provedor gerenciado aposenta versão com aviso prévio -- confira `risco-validade-modelo-companion.md` (raiz deste repositório) antes de rodar, pra saber se a versão citada ainda está disponível e qual constante trocar no código se não estiver.
-- **Alternativa sem custo de API nenhum**: o Módulo 4 tem caminho 100% local (MLX, Apple Silicon), sem nenhuma chamada paga -- ver `local-lora-training-tool.js`/`.py`, e o companion Colab (GPU T4 gratuita) pra quem não tem Mac Apple Silicon.
+- **Alternativa sem custo de API nenhum**: os módulos 4 e 5.4 têm caminho 100% local (MLX, Apple Silicon), sem nenhuma chamada paga -- ver `local-lora-training-tool.js`/`.py` e `avaliacao-modelo-local-tool.js`/`.py`, e os companions Colab (GPU T4 gratuita) pra quem não tem Mac Apple Silicon.
 
 ## 🔑 Antes de rodar: cada aluno configura os próprios recursos
 
@@ -36,8 +36,9 @@ Vários scripts desta disciplina precisam de um projeto GCP ou job de fine-tunin
 
 | Você já tem... | Defina | Usado em |
 |---|---|---|
-| Um projeto GCP com Vertex AI habilitado | `GCP_PROJECT_ID` | M2 (extração multimodal), M3 (pipeline Dolly, automação) |
+| Um projeto GCP com Vertex AI habilitado | `GCP_PROJECT_ID` | M2 (extração multimodal), M3 (pipeline Dolly, automação), M5.2 (comparação com modelo genérico) |
 | Um job de fine-tuning rodado (Missão Prática #3) | `TUNING_JOB_NAME` | M3 (upload/tracking, automação, hyperparameter/monitoring, versioning) |
+| Um endpoint publicado do seu modelo (200 exemplos, M3.2) | `ENDPOINT_MODULO32` | M5.1 (harness de avaliação, base reutilizada por M5.2-5.4) |
 
 Exemplo de uso:
 ```bash
@@ -45,14 +46,16 @@ export GCP_PROJECT_ID=meu-projeto-aqui
 node extracao-llm-multimodal-tool.js
 ```
 
-**Não tem Mac Apple Silicon, ou quer rodar sem custo de nuvem nenhum?** O Módulo 4 tem caminho 100% local: `local-lora-training-tool.js`/`.py` (M4.2) treina de verdade via MLX (Apple Silicon) -- pra quem não tem Mac, `colab-lora-training-notebook.ipynb` faz o mesmo treino via Hugging Face na GPU T4 gratuita do Colab (guia completo em `colab-lora-training-companion.md`).
+**Opcional, só pra reproduzir a comparação avançada do Módulo 5.2** (conjunto vs. separado por domínio): treine dois endpoints extras, um só com dado de Auto e outro só com dado de Saúde Empresarial (mesmo padrão do Módulo 3.2), e publique via `ENDPOINT_AUTO_ONLY` / `ENDPOINT_SAUDE_ONLY`. Sem essas variáveis, essa seção específica é pulada com um aviso -- o resto do Módulo 5.2 roda normalmente.
+
+**Não tem Mac Apple Silicon, ou quer rodar sem custo de nuvem nenhum?** Os módulos 4 e 5.4 têm caminho 100% local: `local-lora-training-tool.js`/`.py` (M4.2) treina de verdade via MLX (Apple Silicon), e `avaliacao-modelo-local-tool.js`/`.py` (M5.4) avalia o adaptador treinado do mesmo jeito -- pra quem não tem Mac, `colab-lora-training-notebook.ipynb` (M4.2) e `colab-model-evaluation-notebook.ipynb` (M5.4) fazem o mesmo caminho via Hugging Face na GPU T4 gratuita do Colab (guias completos em `colab-lora-training-companion.md` e `colab-model-evaluation-companion.md`).
 
 ## 🗂️ Tipos de arquivo em cada módulo
 
 | Padrão | O que é |
 |--------|---------|
 | `*-tool.js` / `*_tool.py` | Ferramenta executável do módulo (JS e Python equivalentes) |
-| `decision-framework-tool.js/.py` | Framework de decisão do Módulo 1, reutilizado por M3 e M4 |
+| `decision-framework-tool.js/.py` | Framework de decisão do Módulo 1, reutilizado por M3, M4 e M5 |
 | `amplitude-seguros-casos.json` | Os 3 casos reais de fine-tuning da Amplitude Seguros (Auto, Saúde Empresarial, Atendimento) |
 | `*.jsonl` | Datasets no formato JSONL, sintéticos, gerados para fins didáticos |
 | `documentos-brutos/` | Imagens sintéticas de documento usadas na demo de extração via OCR (M2.1) |
@@ -72,6 +75,11 @@ node extracao-llm-multimodal-tool.js
 | `rank-adapter-comparison-companion.md` | Comparação de saída entre os 3 ranks de LoRA treinados (4, 8, 16) contra o mesmo exemplo novo (M4.3) |
 | `*-notebook.ipynb` | Notebook Colab, alternativa multiplataforma pra quem não tem Apple Silicon (M4.2) |
 | `gpu-cuda-anatomia-poster.html` | Pôster de campo com corte transversal real de GPU/CUDA (M4.2) |
+| `model-evaluation-harness-tool.js/.py` | Harness de avaliação do Módulo 5 (schema + precisão por campo), reutilizado por M5.2-5.4 (M5.1) |
+| `casos-llm-as-judge-companion.md` | Texto completo (prompt, respostas, vereditos) dos casos de LLM-as-judge que rolam no terminal sem slide próprio (M5.2) |
+| `colab-model-evaluation-companion.md` / `colab-model-evaluation-notebook.ipynb` | Avaliação alternativa multiplataforma via Hugging Face na GPU T4 gratuita do Colab (M5.4) |
+| `npv-real-vs-projetado-companion.md` | Reabre o NPV do Módulo 1.4 trocando o custo de treino estimado pelo custo real medido (M5.4) |
+| `resultado-medido.json` | Ledger dos números reais medidos nos Módulos 5.1-5.3, usado pelo veredito de escala (M5.4) |
 | `Atividade N - Módulo N.pdf` | Missão Prática do módulo |
 | `Exemplo - Módulo N.pdf` | Exemplo resolvido da atividade |
 
@@ -100,7 +108,7 @@ Essa não é uma dicotomia teórica: os dois pilotos deste repositório rodaram 
 
 1. Assista ao vídeo do módulo.
 2. Para rodar uma ferramenta: `node <arquivo>.js` (ou `python3 <arquivo>.py`), sem dependências externas, só bibliotecas nativas de Node/Python.
-3. Alguns scripts do Módulo 3 e 4 importam ferramentas de módulos anteriores (ex.: `reavaliacao-saude-empresarial.js`, M3.2, usa o framework de decisão do Módulo 1); os caminhos já apontam para as pastas deste repositório, então funcionam sem ajuste.
+3. Alguns scripts do Módulo 3, 4 e 5 importam ferramentas de módulos anteriores (ex.: `reavaliacao-saude-empresarial.js`, M3.2, usa o framework de decisão do Módulo 1; `avaliacao-modelo-local-tool.js`, M5.4, reutiliza o harness de avaliação do Módulo 5.1); os caminhos já apontam para as pastas deste repositório, então funcionam sem ajuste.
 4. **Adaptadores LoRA (Módulo 4):** os arquivos `adapter_config.json` estão incluídos, mas os pesos treinados (`adapters.safetensors`) não: são grandes demais para git (o checkpoint de full fine-tuning sozinho tem 1,9GB). Para gerar os seus, instale o [MLX-LM](https://github.com/ml-explore/mlx-lm), baixe o Gemma 4 E2B, e rode `local-lora-training-tool.js` (ou `.py`) na pasta `modulo-04-lora-e-peft/`; os splits de treino já estão em `mlx-data/`.
 5. Faça a Missão Prática (`Atividade N - Módulo N.pdf`) e confira com o `Exemplo - Módulo N.pdf`.
 
