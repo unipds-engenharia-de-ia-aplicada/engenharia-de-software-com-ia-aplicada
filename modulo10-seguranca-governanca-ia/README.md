@@ -10,3 +10,10 @@ Os seguintes arquivos estão presentes na pasta:
 - Aula 4: Arquivo PDF "Estudo de Caso: Responsabilidade em IA Atualizado";
 - Aula 5: Arquivo PDF "Manual de Segurança" e Arquivo ipynb denominado "demonstração.ipynb"
 com demonstração sobre prompt injection.
+
+Sugestões de ferramentas:
+
+- Aula 3 - Vieses e Responsabilidade em IA
+
+Fairlearn: https://fairlearn.org/
+
