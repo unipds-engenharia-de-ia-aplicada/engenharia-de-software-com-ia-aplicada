@@ -22,6 +22,8 @@ Duas famílias de modelo aparecem aqui, com risco de validade bem diferente uma 
 | M2.1 | `modulo-02-preparacao-datasets/extracao-llm-multimodal-tool.js` / `.py` |
 | M3.4 | `modulo-03-fine-tuning-via-api/finetuning-automation-tool.js` / `.py`, `dolly-vertex-pipeline.js` / `.py`, `model-card-dolly-extra-200.md` |
 | M3.5 | `modulo-03-fine-tuning-via-api/model-versioning-tool.js` / `.py`, `model-card-amplitude-auto-saude-m3-200.md` |
+| M5.2 | `modulo-05-avaliacao-modelos/ab-and-domain-tradeoff-tool.js` / `.py` |
+| M6.1/6.3 | reusam os scripts acima (harness do M5.1, endpoint do M3.2) - mesma dependência, sem citar o nome de novo |
 
 **Lista vigente no momento da gravação (ago/2026):** `gemini-2.5-pro` / `gemini-2.5-flash` / `gemini-2.5-flash-lite` (GA - suporte oficial completo), `gemini-3.1-flash-lite` / `gemini-3.5-flash` (Preview, regiões `us-central1`/`europe-west4` - a disciplina já usa `us-central1`).
 
@@ -46,6 +48,8 @@ Risco diferente do Gemini: um peso já baixado **nunca para de funcionar** - nã
 |---|---|
 | M1.3 | `modulo-01-decision-framework/grpo-verifiable-reward-demo.js` / `.py` |
 | M4.2 | `modulo-04-lora-e-peft/local-lora-training-tool.js` / `.py`, `colab-lora-training-notebook.ipynb`, `colab-lora-training-companion.md` |
+| M5.4 | `modulo-05-avaliacao-modelos/avaliacao-modelo-local-tool.js` / `avaliacao_modelo_local_tool.py`, `colab-model-evaluation-notebook.ipynb`, `colab-model-evaluation-companion.md` |
+| M6.2 | `modulo-06-projeto-final/chamar_modelo_local.py`, `chamar-modelo-local-hf.py` (alternativa Windows/Linux CUDA), `colab-local-model-notebook.ipynb`, `colab-local-model-companion.md` |
 
 **Link de checagem, página oficial da Google, sempre atual (não precisa trocar quando sair a próxima geração):**
 [huggingface.co/google](https://huggingface.co/google)
