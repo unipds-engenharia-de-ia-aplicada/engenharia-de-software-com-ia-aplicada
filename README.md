@@ -496,3 +496,55 @@ npx -y skills add https://github.com/unipds-engenharia-de-ia-aplicada/engenharia
 
 /windowsfy <caminho do exemplo>
 ```
+
+## Modulo 10 - Segurança e Governança em IA
+
+Disciplina completa em [modulo10-seguranca-governanca-ia](https://github.com/unipds-engenharia-de-ia-aplicada/engenharia-de-software-com-ia-aplicada/blob/main/modulo10-seguranca-governanca-ia) 
+
+### Módulo Interpretabilidade e Explicabilidade em Modelos de IA
+
+- https://christophm.github.io/interpretable-ml-book/
+- https://www.anthropic.com/research/mapping-mind-language-model
+- Trustworthy AI: From Principles to Practices [https://dl.acm.org/doi/full/10.1145/3555803]
+- Towards Trustworthy AI: A Review of Ethical and RobustLarge Language Models [https://dl.acm.org/doi/epdf/10.1145/3777382]
+
+
+### Módulo Vieses e Responsabilidade em IA
+- Gender bias perpetuation and mitigation in AI technologies: challenges and opportunities | AI & SOCIETY | Springer Nature Link
+O’Connor, S., Liu, H. Gender bias perpetuation and mitigation in AI technologies: challenges and opportunities. AI & Soc 39, 2045–2057 (2024). [https://doi.org/10.1007/s00146-023-01675-4]
+
+- Racial bias in AI-generated images | AI & SOCIETY | Springer Nature Link
+Yang, Y. Racial bias in AI-generated images. AI & Soc 40, 5425–5437 (2025). [https://doi.org/10.1007/s00146-025-02282-1]
+
+### Módulo Gerenciamento de Riscos em Inteligência Artificial - Aspectos Humanos e Éticos
+
+- Mais mulheres tornam-se vítimas de deepfakes gerados por inteligência artificial [https://news.un.org/pt/story/2026/03/1852522]
+- Sobre o Medo de Ficar para Trás [https://medium.com/jessica-costa/sobre-o-medo-de-ficar-para-tr%C3%A1s-1f233fb658d1]
+
+### Módulo Gerenciamento de Riscos em Inteligência Artificial - Aspectos Regulatórios
+
+- Teoria cunhada pela Profa. Anu Bradford (Columbia Law School),
+Efeito Bruxelas [https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2770634]
+
+### Módulo Custos Financeiros em Inteligência Artificial
+
+- TSMC, ASML, Nvidia: as ações que surfam a onda dos hiperchips [https://vocesa.abril.com.br/economia/nvidia-e-cia-as-acoes-que-surfam-a-onda-dos-hiperchips/]
+- AI Costs More Than The People It Replaced [https://www.forbes.com/sites/jemmagreen/2026/07/02/ai-costs-more-than-the-people-it-replaced/]
+
+### Módulo Custos Ambientais em Inteligência Artificial
+
+- Data centre water consumption [https://www.nature.com/articles/s41545-021-00101-w]
+- https://www.ashrae.org/technical-resources/ai-data-center-framework/energy-and-thermal-efficiency
+- https://technav.ieee.org/topic/power-usage-effectiveness/
+- https://www.dw.com/en/pushback-on-data-centers-artificial-intelligence-water-drought-environmental-problems/a-78064418
+- https://portal.fgv.br/noticias/estudo-da-fgv-aponta-que-data-centers-com-ia-geram-mais-de-12-mil-empregos-e-mobilizam-25-bilhoes
+- https://www.wri.org/insights/us-data-center-growth-impacts
+- The water use of data center workloads: A review and assessment of key determinants [https://www.sciencedirect.com/science/article/abs/pii/S0921344925001892?via%3Dihub]
+
+
+#### Ferramentas:
+- https://www.datacentermap.com/
+- https://aidatacentermap.org/map
+- https://www.submarinecablemap.com/
+- https://app.electricitymaps.com/
+
