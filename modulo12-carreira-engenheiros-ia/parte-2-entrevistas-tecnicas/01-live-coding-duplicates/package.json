@@ -1,0 +1,12 @@
+{
+  "name": "live-coding-duplicates",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Live coding warm-up: return the numbers that appear more than once",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "node --test",
+    "test:solution": "node scripts/verify-solution.js"
+  }
+}

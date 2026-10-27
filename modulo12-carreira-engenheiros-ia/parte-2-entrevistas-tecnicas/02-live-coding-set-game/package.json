@@ -1,0 +1,16 @@
+{
+  "name": "set-game",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Live coding exercise in 4 levels: the Set card game with object-oriented JavaScript",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "test": "node --test",
+    "test:1": "node --test test/level1.test.js",
+    "test:2": "node --test test/level2.test.js",
+    "test:3": "node --test test/level3.test.js",
+    "test:4": "node --test test/level4.test.js",
+    "test:solution": "node scripts/verify-solution.js"
+  }
+}
