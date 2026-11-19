@@ -1,0 +1,122 @@
+[
+  {
+    "text": "Qual é o resultado de 0 === false?",
+    "correct": "false",
+    "wrong": [
+      "true",
+      "undefined",
+      "TypeError"
+    ],
+    "explanation": "A comparação estrita não converte tipos diferentes."
+  },
+  {
+    "text": "Qual é o resultado de typeof \"42\"?",
+    "correct": "string",
+    "wrong": [
+      "number",
+      "object",
+      "NaN"
+    ],
+    "explanation": "As aspas tornam esse valor uma string."
+  },
+  {
+    "text": "Qual valor é falsy?",
+    "correct": "0",
+    "wrong": [
+      "\"0\"",
+      "[]",
+      "{}"
+    ],
+    "explanation": "0 é falsy; a string \"0\" é truthy."
+  },
+  {
+    "text": "O que typeof null retorna?",
+    "correct": "object",
+    "wrong": [
+      "null",
+      "undefined",
+      "boolean"
+    ],
+    "explanation": "Por compatibilidade histórica, typeof null é object."
+  },
+  {
+    "text": "Qual operador evita undefined em acesso encadeado?",
+    "correct": "?.",
+    "wrong": [
+      "??",
+      "&&",
+      "||"
+    ],
+    "explanation": "Optional chaining (?.) para acessos seguros."
+  },
+  {
+    "text": "Como declarar uma constante?",
+    "correct": "const",
+    "wrong": [
+      "let",
+      "var",
+      "static"
+    ],
+    "explanation": "const declara binding que não pode ser reatribuído."
+  },
+  {
+    "text": "Qual método transforma cada item de um array?",
+    "correct": "map",
+    "wrong": [
+      "filter",
+      "find",
+      "reduce"
+    ],
+    "explanation": "map devolve um novo array com o resultado de cada item."
+  },
+  {
+    "text": "Qual comparação é estrita?",
+    "correct": "===",
+    "wrong": [
+      "==",
+      "=",
+      "!=="
+    ],
+    "explanation": "=== compara valor e tipo, sem coerção."
+  },
+  {
+    "text": "Qual palavra-chave pausa uma função async?",
+    "correct": "await",
+    "wrong": [
+      "yield",
+      "pause",
+      "defer"
+    ],
+    "explanation": "await espera a Promise dentro de uma função async."
+  },
+  {
+    "text": "Qual estrutura remove duplicatas facilmente?",
+    "correct": "Set",
+    "wrong": [
+      "Map",
+      "Array",
+      "Object"
+    ],
+    "explanation": "Set mantém valores únicos."
+  },
+  {
+    "text": "Qual método junta elementos em string?",
+    "correct": "join",
+    "wrong": [
+      "concat",
+      "flat",
+      "splice"
+    ],
+    "explanation": "join une os itens com um separador."
+  },
+  {
+    "text": "O que JSON.parse espera?",
+    "correct": "texto JSON válido",
+    "wrong": [
+      "objeto JS",
+      "função",
+      "Map"
+    ],
+    "explanation": "JSON.parse converte texto JSON em valor."
+  }
+]
