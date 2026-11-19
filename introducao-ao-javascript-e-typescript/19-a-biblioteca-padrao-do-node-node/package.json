@@ -1,0 +1,11 @@
+{
+  "name": "quiz-passo-19",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node --env-file=.env src/main.js"
+  }
+}
