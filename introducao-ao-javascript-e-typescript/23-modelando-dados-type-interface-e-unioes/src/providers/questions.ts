@@ -1,16 +1,15 @@
-import type { Question } from '../types.ts';
+import type { Question } from '../types';
 import {
   DOWNLOAD_TIMEOUT_MS,
   QUESTIONS_PER_RUN,
   QUESTIONS_URL,
-} from '../config.ts';
-import { selectQuestions } from '../questions.ts';
+} from '../config';
+import { selectQuestions } from '../questions';
 
 export const loadQuestions = async (
-  limit = QUESTIONS_PER_RUN,
-  fetchFn: typeof fetch = fetch
+  limit = QUESTIONS_PER_RUN
 ): Promise<Question[]> => {
-  const response = await fetchFn(QUESTIONS_URL, {
+  const response = await fetch(QUESTIONS_URL, {
     signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
   });
 
@@ -21,6 +20,5 @@ export const loadQuestions = async (
   }
 
   const questions: unknown = await response.json();
-
   return selectQuestions(questions, limit);
 };

@@ -1,7 +1,7 @@
-export const shuffle = <T>(
-  items: T[],
+export const shuffle = (
+  items: any[],
   random: () => number = Math.random
-): T[] =>
+): any[] =>
   items
     .map((item) => ({ item, order: random() }))
     .sort((first, second) => first.order - second.order)
