@@ -1,44 +1,84 @@
 # Playground — Introdução ao JavaScript e TypeScript
+
 Exemplos no [JS Playground](https://wellwelwel.github.io/js-playground/) (Weslley Araújo).
+
 Aulas **01–09** usam o playground. A **aula 10** inicia o projeto do quiz nas pastas de snapshot.
+
+Cada link abaixo abre o exemplo da aula. O texto do link descreve o que você vai ver.
+
 ---
-## O que o javascript faz diferente
-O que o javascript faz diferente — https://wellwelwel.github.io/js-playground/#code=dc8_C4MwEIfh3U8RXJIsWpVObt26FQqdtc1FAmdO8qfUb1-yX-aX5_hd34vXihQgikdwu0vuS7FpPuQjIXRIm0rnAWSFTPBLUs9ca0tr-baUtuiZPTqME6-Gcequl4pKIQPP7IoRKspnRF5lb8A6D6Yin-f-JlTSGamrcz1fbm67-6TKo3r-Aw
-O que o javascript faz diferente — https://wellwelwel.github.io/js-playground/#code=09dXcEvMKa5USFUIKSotyajk4tKHCnEl5-cV5-ek6uXkp2soKqYl5hSnalqjiDrl5-ekJuZpGGjikFBXxyWTV5qTg0uuNC8lNS0zLzUFlwK_RD-QFMipUFdjU1VSVJqKywRDnC4uSa0owenq6FhcMtW1IBkA
-O que o javascript faz diferente — https://wellwelwel.github.io/js-playground/#code=09dXcM5PLTq8_PDifIXM3IKcw2uTM0sSFTQSbG0TNBVSFZzzcwsSixIhClwrUBTYJmhycekjm-AJN4ErOT-vOD8nVS8nP13DQMHWViEtMac4VdMaRUJdHZdMXmlODkiuNC8lNS0zLzVF0xpqF4Z7SjKTMa3DYx9eC1FtBAA
 
-## Valores primitivos strings e numeros
-Valores primitivos strings e numeros — https://wellwelwel.github.io/js-playground/#code=bY0xCsJAEEX7nGIYhHERkn4XSwsLsUmZYpcw6OIkG5INCOIBPIeFB8nFJEGEGNv_3v8_yyDnqhEXGcRHbp10GvZ15LYJ4obX8AzAcOglevH12SVJlkEZ6i4IpxJOa8r5GgN0vmqEu5SU-TXw2Mc2QJx5qMxiCgvUqkBcThBqhfSnQgVpVdC_V9KKppcxjVC7imELdtf68mI_8VceHhAAYTNpysygneDqNqK7VSZ5Aw
-Valores primitivos strings e numeros — https://wellwelwel.github.io/js-playground/#code=jY-xTsNADIb3PoWZnErRRcBYMbGARFUW1Nm5mPSqy_m4c6hQ1Qdi5hH6YqgtRIVIiNHf__22XFUw37-rNJKhYciaXGihz3QAJOAltAKHodt_NL2XPJlYCVkh0eY-xF7hBhDu2HuBpSTfXADOTo54Nl7a4ts0mlxXTKezv1Kj8iAbTreU-R_uU4xn7g8Za6bECai2l1fXaLJS0rx0uhoi_H0AKb307lXMOktAw6H5KpzAWC_r0qLJ0TstsBwLyl30pAxWOthug3S826FJHD1ZLnBAJeCckqPxConqJJAHuyIXXGjRuGB933AucGDH96sKzquLes1WTcv6mERF3yIvngs8up8
-Valores primitivos strings e numeros — https://wellwelwel.github.io/js-playground/#code=dZCxTsMwEIb3PsVtdaTIISEdQieEYOsCT3DE12LJ9kW2k4ZHgrUba14MJVJTpdDxP_n7zvdnGeyGr8iKAygCN_xY8hygDTiOkMGwOzCMwQ4n1RoOq1WWwRO7jnwk4DMEDXqEEL12h1XNLrAhafgg4mdDvAdRFomM_DY9EEmynTyP3pNip_AiWsDiXuZlvqlG9EX3pERxRl8psncjaFGzhw4N-wW8ttg_rFPYYfyQFnuRp1ClUP5jIHfDoN3FoN214dlQh9DauYQxIDQch29Xa1zKGj7OsoaPokghv_vbxFQkg3aRtJ-uC9D44dRruyxn7bl1alZOSRRyc0NZa3v1oZq0mfExiELmN-h31P3V-r1h9jM_JVHIKkm2vw
-Valores primitivos strings e numeros — https://wellwelwel.github.io/js-playground/#code=8yvNTUot0isoyi_JL6ksSNVLyS9NyklVsFVIK81LLsnMz1PQ0FSo5lJQKEotKS3KUyjJyCxW0FIwsuaq5eJKzs8rzs9J1cvJT9fQMNKEatbQ1ESVMUWWAQA
+## 01: O que o JavaScript faz diferente
 
-## Operadores modernos
-Operadores modernos — https://wellwelwel.github.io/js-playground/#code=XY5NCoMwEIX3nmLcJApS9xUXtquCtGcIcQhSTUpGd7lVj9CLlfgz0u6GNx_fe2UJjxd61TmPBO3nbXrtCLK0ACEKCCFPEu0sTWDViFCDlNUW9NR0Y2-hhsnPeKStMwY7jrd8JvT3VbGYQgAZM9ZpZRutkQhqVgvBvsN_GZx-LgXpzoUQ7x1cSDfgaXAmk7H0LAsekFe__6uysBZHilf8YzeCrThivCKvki8
-Operadores modernos — https://wellwelwel.github.io/js-playground/#code=09dX8C8oyczPS8xRcM5IzMzLzEtX0Eiw10vQ5OJKzs8rLlFIKyrNLClWsFWIVv8wv7dPXUcBRLerx1pzcenrK4AU5eek6uXkp2uUVBak5qdBdegllmgYaWpaQ8yBKUHIGWjqlRRl5mqAlGBXYUhQhZGmPSElxnAlCjU1CurBqbkg95UkqmtacwEA
-Operadores modernos — https://wellwelwel.github.io/js-playground/#code=fcsxDsIwDIXhPad4I13aSIiFqMoNuEMVmWAptaXanSh3Z2hhQqzv_94w4La2xvZA0amRFZYK-o6TGVeZSTyEomKOonLnihFPOM-kq18R8Up710Z903raVX8IbBsuMcYu_UM5f1A4ykK-MBlyHnH-9e1SeAM
-Operadores modernos — https://wellwelwel.github.io/js-playground/#code=dZA9a8MwEIZ3_YrbHEOwDKWLRQhxx7Z06BgyKPbFUW3riiQPpvS_h7OcYBKySXfvx8NJCV_HHwzkhZBSwgfZ5qxtLSqyPsDg0e1gA39gdY8FJJ_aGZ2swVHHX133xibwr6L7-0wuLOxsgs3VpeYpe3kazWpRVd6qYsMUzGvqMOuoWU08WRTEN8tS9SAqF6LyKpoY36j_HQLW8I6jn7tbHBkomB5pCDekiuzJNMwkAPYtjocCXvM8XwsAh8EZ9AW8iHtIPmgVshZHv4oR6R1hnG6zKfPJboZJlbgA
-Operadores modernos — https://wellwelwel.github.io/js-playground/#code=Xc7BCsIwDAbge58itzoYnecVH8GHiG2QaG1kibvI3l10FZy38PPx_xkGOJKmgjULyOlCJgpJbqD3iTA7l6SqAVc2xgIHeIIa2kNH8JwL-R5MrlR1hD0ssXE1nIzylmMynsn_KFJlqR8VQmgb_fv-Fixx_UAKhSLnXTNd3KRN_6drfRfdCw
-Operadores modernos — https://wellwelwel.github.io/js-playground/#code=VYwxDoMwFEP3nMJbQKqAORFn6BkKWCgQ5Q_5nareHZE_sdnWex5HvJeDKgGpgNiYqXRulVIVVT9KzPi19K0BPm2Z_gWVk6UGTPhHoyVzyLJ33lB__zW_j87ZrfXB3Pi0bHxYFw
+- [Primitivos e typeof](https://wellwelwel.github.io/js-playground/#code=dc8_C4MwEIfh3U8RXJIsWpVObt26FQqdtc1FAmdO8qfUb1-yX-aX5_hd34vXihQgikdwu0vuS7FpPuQjIXRIm0rnAWSFTPBLUs9ca0tr-baUtuiZPTqME6-Gcequl4pKIQPP7IoRKspnRF5lb8A6D6Yin-f-JlTSGamrcz1fbm67-6TKo3r-Aw)
+- [Truthy e Falsy](https://wellwelwel.github.io/js-playground/#code=09dXcEvMKa5USFUIKSotyajk4tKHCnEl5-cV5-ek6uXkp2soKqYl5hSnalqjiDrl5-ekJuZpGGjikFBXxyWTV5qTg0uuNC8lNS0zLzUFlwK_RD-QFMipUFdjU1VSVJqKywRDnC4uSa0owenq6FhcMtW1IBkA)
+- [Coerção e comparação](https://wellwelwel.github.io/js-playground/#code=09dXcM5PLTq8_PDifIXM3IKcw2uTM0sSFTQSbG0TNBVSFZzzcwsSixIhClwrUBTYJmhycekjm-AJN4ErOT-vOD8nVS8nP13DQMHWViEtMac4VdMaRUJdHZdMXmlODkiuNC8lNS0zLzVF0xpqF4Z7SjKTMa3DYx9eC1FtBAA)
 
-## Condicionais
-Condicionais — https://wellwelwel.github.io/js-playground/
+## 02: Valores primitivos: strings e números
 
-## Loops
-Loops — https://wellwelwel.github.io/js-playground/
+- [Strings e template literals](https://wellwelwel.github.io/js-playground/#code=bY0xCsJAEEX7nGIYhHERkn4XSwsLsUmZYpcw6OIkG5INCOIBPIeFB8nFJEGEGNv_3v8_yyDnqhEXGcRHbp10GvZ15LYJ4obX8AzAcOglevH12SVJlkEZ6i4IpxJOa8r5GgN0vmqEu5SU-TXw2Mc2QJx5qMxiCgvUqkBcThBqhfSnQgVpVdC_V9KKppcxjVC7imELdtf68mI_8VceHhAAYTNpysygneDqNqK7VSZ5Aw)
+- [Métodos de string](https://wellwelwel.github.io/js-playground/#code=jY-xTsNADIb3PoWZnErRRcBYMbGARFUW1Nm5mPSqy_m4c6hQ1Qdi5hH6YqgtRIVIiNHf__22XFUw37-rNJKhYciaXGihz3QAJOAltAKHodt_NL2XPJlYCVkh0eY-xF7hBhDu2HuBpSTfXADOTo54Nl7a4ts0mlxXTKezv1Kj8iAbTreU-R_uU4xn7g8Za6bECai2l1fXaLJS0rx0uhoi_H0AKb307lXMOktAw6H5KpzAWC_r0qLJ0TstsBwLyl30pAxWOthug3S826FJHD1ZLnBAJeCckqPxConqJJAHuyIXXGjRuGB933AucGDH96sKzquLes1WTcv6mERF3yIvngs8up8)
+- [Métodos de números e Math](https://wellwelwel.github.io/js-playground/#code=dZCxTsMwEIb3PsVtdaTIISEdQieEYOsCT3DE12LJ9kW2k4ZHgrUba14MJVJTpdDxP_n7zvdnGeyGr8iKAygCN_xY8hygDTiOkMGwOzCMwQ4n1RoOq1WWwRO7jnwk4DMEDXqEEL12h1XNLrAhafgg4mdDvAdRFomM_DY9EEmynTyP3pNip_AiWsDiXuZlvqlG9EX3pERxRl8psncjaFGzhw4N-wW8ttg_rFPYYfyQFnuRp1ClUP5jIHfDoN3FoN214dlQh9DauYQxIDQch29Xa1zKGj7OsoaPokghv_vbxFQkg3aRtJ-uC9D44dRruyxn7bl1alZOSRRyc0NZa3v1oZq0mfExiELmN-h31P3V-r1h9jM_JVHIKkm2vw)
+- [Prototype](https://wellwelwel.github.io/js-playground/#code=8yvNTUot0isoyi_JL6ksSNVLyS9NyklVsFVIK81LLsnMz1PQ0FSo5lJQKEotKS3KUyjJyCxW0FIwsuaq5eJKzs8rzs9J1cvJT9fQMNKEatbQ1ESVMUWWAQA)
 
-## Funcoes as varias formas de declarar
-Funcoes as varias formas de declarar — https://wellwelwel.github.io/js-playground/
+## 03: Operadores modernos
 
-## Arrays e o estilo funcional
-Arrays e o estilo funcional — https://wellwelwel.github.io/js-playground/
+- [Operadores lógicos](https://wellwelwel.github.io/js-playground/#code=XY5NCoMwEIX3nmLcJApS9xUXtquCtGcIcQhSTUpGd7lVj9CLlfgz0u6GNx_fe2UJjxd61TmPBO3nbXrtCLK0ACEKCCFPEu0sTWDViFCDlNUW9NR0Y2-hhsnPeKStMwY7jrd8JvT3VbGYQgAZM9ZpZRutkQhqVgvBvsN_GZx-LgXpzoUQ7x1cSDfgaXAmk7H0LAsekFe__6uysBZHilf8YzeCrThivCKvki8)
+- [Optional chaining](https://wellwelwel.github.io/js-playground/#code=09dX8C8oyczPS8xRcM5IzMzLzEtX0Eiw10vQ5OJKzs8rLlFIKyrNLClWsFWIVv8wv7dPXUcBRLerx1pzcenrK4AU5eek6uXkp2uUVBak5qdBdegllmgYaWpaQ8yBKUHIGWjqlRRl5mqAlGBXYUhQhZGmPSElxnAlCjU1CurBqbkg95UkqmtacwEA)
+- [Nullish coalescing e nullish assignment](https://wellwelwel.github.io/js-playground/#code=fcsxDsIwDIXhPad4I13aSIiFqMoNuEMVmWAptaXanSh3Z2hhQqzv_94w4La2xvZA0amRFZYK-o6TGVeZSTyEomKOonLnihFPOM-kq18R8Up710Z903raVX8IbBsuMcYu_UM5f1A4ykK-MBlyHnH-9e1SeAM)
+- [Objetos](https://wellwelwel.github.io/js-playground/#code=dZA9a8MwEIZ3_YrbHEOwDKWLRQhxx7Z06BgyKPbFUW3riiQPpvS_h7OcYBKySXfvx8NJCV_HHwzkhZBSwgfZ5qxtLSqyPsDg0e1gA39gdY8FJJ_aGZ2swVHHX133xibwr6L7-0wuLOxsgs3VpeYpe3kazWpRVd6qYsMUzGvqMOuoWU08WRTEN8tS9SAqF6LyKpoY36j_HQLW8I6jn7tbHBkomB5pCDekiuzJNMwkAPYtjocCXvM8XwsAh8EZ9AW8iHtIPmgVshZHv4oR6R1hnG6zKfPJboZJlbgA)
+- [Spread em objetos](https://wellwelwel.github.io/js-playground/#code=Xc7BCsIwDAbge58itzoYnecVH8GHiG2QaG1kibvI3l10FZy38PPx_xkGOJKmgjULyOlCJgpJbqD3iTA7l6SqAVc2xgIHeIIa2kNH8JwL-R5MrlR1hD0ssXE1nIzylmMynsn_KFJlqR8VQmgb_fv-Fixx_UAKhSLnXTNd3KRN_6drfRfdCw)
+- [in e delete](https://wellwelwel.github.io/js-playground/#code=VYwxDoMwFEP3nMJbQKqAORFn6BkKWCgQ5Q_5nareHZE_sdnWex5HvJeDKgGpgNiYqXRulVIVVT9KzPi19K0BPm2Z_gWVk6UGTPhHoyVzyLJ33lB__zW_j87ZrfXB3Pi0bHxYFw)
 
-## Objetos
-Objetos — https://wellwelwel.github.io/js-playground/
+## 04: Condicionais
 
-## Desestruturacao abrir estruturas em uma linha
-Desestruturacao abrir estruturas em uma linha — https://wellwelwel.github.io/js-playground/
+- [if, else if e else](https://wellwelwel.github.io/js-playground/#code=bY69DcIwFIR7T3GdkyYLRCkQNIiGhgGe7Jdgyc5DdoKEENNQMEgWQ8YUkaC9n-_OyJgm0MUd-IYOWrfKfCSXdhwEHaY4c6uU61GVWI27AnJKPDdehkpvz3RlWMLmuM9O74Y5kqVG1616gH1iZECB_gGcEo1WEMQKLMNyyCciLa_lKWvK7_R3jUEwqxul9AY)
+- [Ternário](https://wellwelwel.github.io/js-playground/#code=VY1BCsIwEEX3PcVfCLGboltDEA_g1nXTZJBA0oFJdqUH0mv0YtJQK-7-vM-f53jMBcKRYKCsT2FUunGVRjtQhNlas_e4Qt3WFHIR61kULlB3SoPwPnZCPpQMg5NuKuNIXeTnsb5t9R_rH-yWNwolHKZtOv9itZ9Xr5Pl5UPhqvweWc1d3-oP)
+- [switch](https://wellwelwel.github.io/js-playground/#code=hc0xDsIwDAXQPafwlnbJAag4jHFMWmHZVeKIAXF3RFsxVWL9_-t9Mm0OSL6YwhUioRJLnEJoz8VphmHvRngFAMLGEBvNnLtwvAQAADJtJpzEyhCxsGbUbFvcxTGlFMdpW94q42P6OcfXibI3f5nMd-ziJ0Dltppm_gor19LVEQpXlMN5fwA)
 
-## Instalando o node e criando o projeto
-Instalando o node e criando o projeto — sem link de playground (início do projeto Node).
+## 05: Loops
 
+- [Arrays: declaração e acesso — exemplo 1](https://wellwelwel.github.io/js-playground/#code=S87PKy5RyCxJzS1WsFWIVi8oysxNzSzKV9dRUM9NzQTTh3fllGTm5qvHWnMl5-cV5-ek6uXkp2uANWlaAwA)
+- [Arrays: declaração e acesso — exemplo 2](https://wellwelwel.github.io/js-playground/#code=S87PKy5RKCxNLU1VsFWIVi8oysxNzSzKV9dRUM9NzQTTh3fllGTm5qvHWnNxJefnFefnpOrl5KdrgHXp5aTmpZdkaFpjSkUbxOpAjNZLLNHQNdTEqsg4VtMaAA)
+- [for clássico](https://wellwelwel.github.io/js-playground/#code=S87PKy5RyMnMzSxRsFUwtubiSssvUtDISS1RSCwpSc0tAAkbWsM5NrYQxXARbW1NhWouBYXk_Lzi_JxUvZz8dI2EoNTC0szizMPLDy_OV1CphiqtVUhJVVCpBuuvTdC05qoFAA)
+- [for...of](https://wellwelwel.github.io/js-playground/#code=S87PKy5RyM1PSc0pVrBViFYHM_MVcvKTE3PUdRRg_KLU3PySfPVYay6utPwiBY1khD6F_DSoAZoK1VwKCiCp_JxUvZz8dA11X4j2lMzigvy8w2vLUnOs1HUgyjWtuWpRTEvOSCwCGaaemJSsroliDkhK0xoA)
+- [for...in — exemplo 1](https://wellwelwel.github.io/js-playground/#code=LcuxCoAgFEbh3af4x4QIIVqMniSa5CqieUFtkOjdo3A7cPgMp1JhOFnvsOFG9SfxVTUWpdSITDV7KhoznlUIyxmD-U2gBp86lbgFvi4caYrshkBt7HMP1A65iucF)
+- [for...in — exemplo 2](https://wellwelwel.github.io/js-playground/#code=RcxBCsIwEAXQfU7xlwmUEihuWjyDBxAXNvyWaMxAMi1I6d3FgniA94LkqqhUjXmuOGODxhdl0R4n732DQi2RtUeHfTBmkgIbDnV98t1gvaeFN8iEy_hg0Jb5APaXOofNAF8jiW2S2f6hG8z-AQ)
+- [break e continue](https://wellwelwel.github.io/js-playground/#code=TU3LCQIxFLy_KsZTElgswJCDBYgFiIcYskswH8iLJ7EYj9axjUkgKx6Ggfm6krkheWa7eIbBRZzj-hYTRAfbUDsf2_pBsoHFVRPNpUK6_ybK_BtReBIQZsjdkBRcyS3kh9fD2WrGmHGicKve3jUReppL9PtYFilOPvdoOohpu1CaXl8)
+- [while e do...while](https://wellwelwel.github.io/js-playground/#code=S87PKy5RKEotKcpMLVawVTCw5spJLVEoz8jMSQ0qzUMSSskPRxXkAitS0IBptlMw0FSo5lJAaNbWtuaq5eJKyQcLIxkAllDAot-aiys5P684PydVLyc_XUMdrMRKXQdhpqY1qoqUfD09PbgyJDs0rQE)
+
+## 06: Funções: as várias formas de declarar
+
+- [Declaração vs. função anônima](https://wellwelwel.github.io/js-playground/#code=hc47DgIxDITh3qeYMoaIgkcVcZqQRZGyNoqdAiHujngslLTzS58mq5i2sml6DjbmsI3YMSeiaUj2qoLnOtVuHmElq5wYNwJ68dEFr4L1JyW6E2UVc8yjeb20K474Un-d1c9Jb2j5tnBhH3FgTg8)
+- [Corpo de expressão e bloco](https://wellwelwel.github.io/js-playground/#code=S87PKy5RSMkvTcpJVbBV0ChLzClN1VSwtVMAsxS0FIysuZLBikqKMgvQFVVzKSgUpZaUFuXB1Rtbc9XCtOQmZqf6phYXJ6aD9ZWkVpSAtWlUK4DYCrWa1lxgpfk5qXo5-ekaEIdoGGnqQK3TMNLUtEZRgmSmhrp_zuGF6pqa1gA)
+- [this léxico](https://wellwelwel.github.io/js-playground/#code=TY3BCoQwDETv-Yo5tihlz1vqz5SgQjcFzYIg_rukKniaDG9mkqusilz_orwgYSdc7otPT8AseeEfizrfmFFrCG-KBOeRBnSdTvMaWi-2kGHn7T56OiLR_SG89iLZVC0cSh3dE2jq4wk)
+- [Parâmetros default e rest](https://wellwelwel.github.io/js-playground/#code=dY27CcMwEIZ7TfF3skBoAZMdQjKBI52Ngnwn9KiMp0mXNbxYwJWb9N9j7uxbFMarxxTuRdbchlUCJdyg8xTK8RFt4ZyLXFvpJ10NNgUUar0wNpyCxZXAPqpdKS9cJZFLsgzXRedAc2QKFvpBNQuHCbQiS2l96ce3agv9pPcEL-xjFW3M-DfHPSVjxh8)
+- [Closures](https://wellwelwel.github.io/js-playground/#code=ZY2xCgIxEET7_YopE07EPsTGf7APYTnBuIF1A4L478IRz5yWw7x5k6vcDbd05VNtYqyIcB7xiCcBhQ25qbLYOZXGiDgEApStqXRwmkYk0CsQ5UUr_Fh3w4XzoQNJql1Yv9c_1ILVwvtSZ7fanN9hCN32wbbOv3ozfAM)
+- [Higher-order functions e callbacks](https://wellwelwel.github.io/js-playground/#code=S87PKy5RSCwoyKlUsFXQKClKzCtOyy_K1VEoS8wpTdVUsLVTgAtqQMSsubiS8_OK83NS9XLy0zXAmjU08kpzk1KLwBogTAVtBWMdBUMDTU1rAA)
+- [IIFE](https://wellwelwel.github.io/js-playground/#code=09DQVLC1U6jmUlBIzs8rzs9J1cvJT9dQD04tLj68OF8hMy8zOTMxJVFPXdOaq1ZTQ9MaAA)
+- [Prototype (bem de leve)](https://wellwelwel.github.io/js-playground/#code=8yvNTUot0isoyi_JL6ksSNVLyS9NyklVsFVIK81LLsnMz1PQ0FSo5lJQKEotKS3KUyjJyCxW0FIwsuaqtebiSs7PK87PSdXLyU_X0DDShOrW0NS0RpUyRZYCAA)
+
+## 07: Arrays e o estilo funcional
+
+- [filter, map, reduce e forEach](https://wellwelwel.github.io/js-playground/#code=dZAxTsQwEEX7nGK62MKywlYoUShAlFBBhShGZsJGODEa2zSIw3AWLoZsZ1dWJEp73vz_bONWHyB6Yg8jPDcAX7DiQj2098gztgrQhPmTeggcSUFw77T6Hi4PHXyrmr_huLqKn9D6auFqz98i2__zD13mX4amMdmxYA-4UDLNxg2AnmYbiIVIFxLG6zzRBZYJWPBjP00CcthygwtoH3PrKVczvUZDQuSZgvN2PsNFSSmmCjq5OTpL2ro3UZluLadJ1XXuZ_LRBhjrB-rJ8R2aoxBZNVXXMe2Tj78_PLu-Vfk35a6nZMrhDw)
+- [flat e flatMap](https://wellwelwel.github.io/js-playground/#code=XcwxCsMwDIXhPafQJgmML2CSE7QnMB6EcR2DiQPS0OOXmGTp9uD_eHkcamBSFVaIEZugA5RaDiuKyUHEvIthSmHJj301temxiXusg1uGZcrRi--j0vXtP12MmMN_mU-zvuUksvI1hnWDa3g9ezNCh8wcfg)
+- [Buscar](https://wellwelwel.github.io/js-playground/#code=dZHNCoJAFEb3PsVtpYIMJgRhaFBtWkQPEC0GvcrQOBMzoxTRu8eMBiK6u4tzvvtXSKENtBqVhgxuHsAHBG0wBf9CFaN-BLQwrMMUjGoxAiMfKHQK6ySGbzTmD6oVcsRXlOuRsJ3yR6r4cn4SO_6-87xCCi05Ei7rwE1KKibKwNUhZDmsbEX6nHBPbH64W9DOosTXyHVq3xRy2MRxOKtq2eDUGhrO8tihei8LzjDuEvbuvdPQ59SYWcU5hNk1rlUwfGk6xB8qeFuiDvwTw1pa6gc)
+- [Mutar](https://wellwelwel.github.io/js-playground/#code=dY2xDoIwFEV3vuI5vZI0jczEMDg5GAfdCAOWIjVtX8MDEz_HD_Ar-DEHcRLmc-65mgIP0FkeqH_CDko8uemFEvAyNgRX4wus8iTRFJicUY5uYrZVHLkTeLZ-g2maLysUxRobA3e2HQQewvTWllYjX22VRme1EZmETALuyRNEYiao72NT98VftlRKzeMqzZPkF2qtcwKPJnB9Mx564-lhmxolbCVky-9p_gE)
+- [concat, join, slice e spread](https://wellwelwel.github.io/js-playground/#code=hc4xCsIwFIDh3VM8p5dADegaiogHEOfSIcRQU5I-yUsGwcs4eo5eTCgtCAru3w-_pYEzXD1nSneoocFTGJ9YAR4pEtyImcD05WLSHlu9spOPjtl0jqFeUmVpsCaLBs_FJYISITkukRS2Uq-mjoJTgTqx1KonPwiEB6CU-jfh4K0T2wp2f8jmCzRKqfmuAjzk8QXReF5PQ59wRlK_AQ)
+- [sort e reverse](https://wellwelwel.github.io/js-playground/#code=ZY3LCsIwEEX3_Yq7TCAOEXEV6o9IVukohdKRmeD3SxJcaLfn3EeR3SpeuhY2zLhfYsA14BxjTlPp0kQrL00S0UhmatC5x6pWA4yL7IvHfEMnOH1RmvqIbEybPN1hwfv0Exhff7C1hsik_GY1PhTHqk8f)
+
+## 08: Objetos
+
+- [Getters e setters](https://wellwelwel.github.io/js-playground/#code=ZY7BCoJAGITv-xRzEFQIMaFL4rVjhw6eXbc_E7b9w92NQnz3sBTMzvPNN6PYWAepFHvjUKAXQC21NIpKqT3tsU3TjQAacnMQxR8M6Mj5zqA6BQh6d21tsqwmjg_tk85RFg9VLoBh9NiF5zFis-yvjwJHf6upm7hJMeRCTH9nHAXCbJeGuVBsLGtKNDfRCop_U_e6E1-wgsrv0hs)
+
+## 09: Desestruturação: abrir estruturas em uma linha
+
+- [Propriedades e default](https://wellwelwel.github.io/js-playground/#code=RYxBCoAgFET3nWKWBRFCtFE8jZgIP3_odxXdPbKo5TDvPcepCBynNQZYHNg5i4YaIXHzXEUjVSKcpnMNfQhYzEr9FCyWtrOXHH25f5ywb9l0zWbyE3Ho78Knfs5gLg)
+- [Rest em objetos](https://wellwelwel.github.io/js-playground/#code=LcxNCoAgFEbRuav4ZhaI0FRxCS1C7BWCafjTJNx7JM3PvS7FUtEKZRg88JvCIhDtSQp8tdlbLmBd9Tcp1NwIXTM3ok8LSCmvnHYfCB1mnDQbIgWSIR3Tp34y6xc)
+- [De array](https://wellwelwel.github.io/js-playground/#code=VYxBCoAgEEX3nWJ2JogXkE4iLsImEaqpmfH-kdGi3efx3s90iEJV3AUmiObkumNlMg6MYGnH0qci5w9fbWYlk8KQexzXyqIOHHjvGUUTTO9jGLpCG_qNytg9G37s8W24AQ)
+- [Renomeação e desestruturação aninhada](https://wellwelwel.github.io/js-playground/#code=dY6xCcMwFER7TXGdYwgpQioLD5ABMoAjf4xA6AedXBkNk1myWLCwAy7S3r_3_jmNzEjCl0YKeiwYhzx0WDBT0n3scLuioFjjanW_U0ivEQX9D987lJx9nFh1TkMQl71Grtbx-aAkdmhmzp938srm4Df4g6Cczfptt1tTEQ1yCTqdtkGtPaQb29ov)
+- [Em parâmetros](https://wellwelwel.github.io/js-playground/#code=bY1NCsIwGAX3OcVbFNJAKe6EFvECLboXoaH9LGJ-apqsQk7jynP0YhLBncsZhvduwYz-bg3k-ujtRKqMeAZas6ugs8EBfJGT216WIwlEBjjywRkMlyJ-m3TFmdwcjJcNivhbSEPLEmOjNatVVCs7l39-GvBTBmxvBI2u64-8gie9kJM-OGqwq_dIQrQf)
+
+## 10 — Instalando o Node e criando o projeto
+
+Sem playground — a partir daqui o curso segue no projeto Node (pastas de snapshot).
