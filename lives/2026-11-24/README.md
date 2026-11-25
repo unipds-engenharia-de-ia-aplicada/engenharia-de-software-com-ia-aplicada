@@ -84,6 +84,36 @@ static/index.html  a página
 
 Com um harness experimental, esta parte mostra na prática o que um harness completo monta por baixo dos panos: o system prompt cru e bruto que ele envia junto ao prompt, como o modelo enxerga as chamadas de cada ferramenta e por que o modelo nem sempre abre uma skill, mesmo quando pedimos explicitamente.
 
+### Tags XML ou bloco cercado
+
+Os harnesses costumam separar as partes do system prompt com tags no estilo XML, e não com blocos cercados:
+
+````
+<rules>
+Read a file before editing it.
+Before finishing, run the tests with:
+
+```bash
+npm test
+```
+</rules>
+
+<project-instructions>
+(contents of AGENTS.md)
+</project-instructions>
+
+<available-skills>
+code-review: reviews the current changes for bugs
+</available-skills>
+````
+
+O modelo lê o conteúdo de cada tag no papel que o nome dela indica, e cada harness escolhe os próprios nomes. Um bloco cercado, por outro lado, tende a ser lido como código ou texto literal, e não como uma ordem. Por isso, no exemplo, a instrução de rodar os testes fica na tag, e o bloco cercado guarda só o comando.
+
+Ao escrever para o modelo, use:
+
+- Tags para instruções, contexto e exemplos que ele deve levar em conta.
+- Blocos cercados para código, comandos e saídas que ele deve ler ao pé da letra.
+
 ### Instruções do projeto
 
 O modelo sempre lê o `AGENTS.md` (ou `CLAUDE.md`), porque o próprio harness o embute na mensagem do usuário via System Prompt, sem depender de uma decisão do modelo. Os `AGENTS.md` de subdiretórios também chegam ao modelo da mesma forma determinística, sendo somados ao conteúdo do `AGENTS.md` principal.
@@ -135,6 +165,7 @@ Até um hook pode ser contornado. Um ReDoS no scanner determinístico, por exemp
 
 - **Prompt**: o texto que o modelo recebe a cada chamada. O usuário escreve só o pedido, e o harness monta o resto em volta dele.
 - **System prompt**: a parte do prompt com as instruções do harness para o modelo, como o comportamento esperado e as ferramentas disponíveis. O usuário normalmente não a vê.
+- **Tag XML**: um par de marcações no estilo XML, como `<rules>` e `</rules>`, que delimita e nomeia um trecho do prompt.
 - **Contexto**: tudo o que o modelo sabe sobre a tarefa numa chamada, com o histórico e os resultados de ferramentas acumulados até ali. Tem um tamanho máximo, a janela de contexto, e o modelo não guarda nada entre uma chamada e outra.
 - **Token**: a unidade em que o modelo lê e escreve texto, em geral um pedaço de palavra. O tamanho do contexto e o preço de uso são medidos em tokens.
 
