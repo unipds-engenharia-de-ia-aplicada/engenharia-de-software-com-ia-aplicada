@@ -2,6 +2,34 @@
 
 Abaixo são as referências e links complementares às aulas, dividido por módulos e submodulos:
 
+## Introdução ao JavaScript e TypeScript
+
+Material da disciplina de fundamentos de JS/TS (quiz de terminal progressivo).
+
+- Playground (aulas 01–09): [playground/PLAYGROUND.md](./introducao-ao-javascript-e-typescript/playground/PLAYGROUND.md)
+- Mapa e snapshots a partir da aula 10: [introducao-ao-javascript-e-typescript/](./introducao-ao-javascript-e-typescript/)
+
+### Aulas com projeto (snapshots)
+
+| Aula | Pasta |
+| --- | --- |
+| 10 — Instalando o node e criando o projeto | [10-…](./introducao-ao-javascript-e-typescript/10-instalando-o-node-e-criando-o-projeto/) |
+| 11 — Colecoes set e map | [11-…](./introducao-ao-javascript-e-typescript/11-colecoes-set-e-map-quando-objeto-array-nao-bastam/) |
+| 12 — Json serializacao e desserializacao | [12-…](./introducao-ao-javascript-e-typescript/12-json-serializacao-e-desserializacao/) |
+| 14 — Erros | [14-…](./introducao-ao-javascript-e-typescript/14-erros-lancar-capturar-e-estreitar/) |
+| 15 — Modulos import e export | [15-…](./introducao-ao-javascript-e-typescript/15-modulos-import-e-export/) |
+| 16 — O que e o node | [16-…](./introducao-ao-javascript-e-typescript/16-o-que-e-o-node-e-como-ele-executa-o-codigo/) |
+| 17 — Process / .env / --limit | [17-…](./introducao-ao-javascript-e-typescript/17-process-argumentos-ambiente-e-o-ciclo-de-vida/) |
+| 18 — Terminal / readline | [18-…](./introducao-ao-javascript-e-typescript/18-interagindo-pelo-terminal-cli-e-repl/) |
+| 19 — fetch / Gist | [19-…](./introducao-ao-javascript-e-typescript/19-a-biblioteca-padrao-do-node-node/) |
+| 20 — Testes nativos | [20-…](./introducao-ao-javascript-e-typescript/20-testes-nativos-do-node/) |
+| 21 — Pacotes npm / TypeScript | [21-…](./introducao-ao-javascript-e-typescript/21-usando-pacotes-de-terceiros-com-node/) |
+| 23 — type / Question | [23-…](./introducao-ao-javascript-e-typescript/23-modelando-dados-type-interface-e-unioes/) |
+| 24 — Generics | [24-…](./introducao-ao-javascript-e-typescript/24-generics-e-utility-types-tipos-que-se-adaptam/) |
+| 25 — Fechamento | [25-…](./introducao-ao-javascript-e-typescript/25-fechamento-quiz-de-javascript/) |
+
+---
+
 ## Modulo 01 - Fundamentos de IA e LLMs para Programadores
 
 ### 1.1 - Módulo - Introdução
