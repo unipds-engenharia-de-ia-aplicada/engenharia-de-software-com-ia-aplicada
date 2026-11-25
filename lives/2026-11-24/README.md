@@ -1,4 +1,4 @@
-# Abrindo o capô dos harnesses: mini-harness
+# Harness, Modelos e Agentes: Recriando o Claude Code
 
 - **Data:** 24 de novembro de 2026
 - **Professores:**
