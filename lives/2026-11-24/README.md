@@ -1,6 +1,6 @@
 # Abrindo o capô dos harnesses: mini-harness
 
-- **Data:** 25 de novembro de 2026
+- **Data:** 24 de novembro de 2026
 - **Professor:**
   - [**Aurélio Oliveira**](https://www.linkedin.com/in/aurelioolive/)
 
@@ -12,7 +12,7 @@ Ele responde num protocolo de texto: uma frase curta e um bloco cercado por resp
 
 ## Como rodar
 
-    cd lives/2026-11-25
+    cd lives/2026-11-24
     python3 server.py
 
 Abra http://127.0.0.1:8000, escolha a pasta do projeto no botão de pasta abaixo do campo de texto, escreva uma tarefa e aperte Enter.
